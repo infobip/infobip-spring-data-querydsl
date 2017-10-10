@@ -17,8 +17,8 @@ Infobip Spring Data JPA Querydsl provides new functionality that enables the use
     * [List instead of Iterable return type](#ListInsteadOfIterableReturnType)
     * [Transactional support](#TransactionalSupport)
     * [Optional](#Optional)
-2. [Requirements](#Requirements)
-3. [Setup](#Setup)
+2. [Setup](#Setup)
+3. [Requirements](#Requirements)
 4. [Contributing](#Contributing)
 
 ## <a name="FeaturesAndExamples"></a> Features and examples:
