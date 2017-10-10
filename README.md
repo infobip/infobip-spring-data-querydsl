@@ -17,6 +17,7 @@ Infobip Spring Data JPA Querydsl provides new functionality that enables the use
     * [List instead of Iterable return type](#ListInsteadOfIterableReturnType)
     * [Transactional support](#TransactionalSupport)
     * [Optional](#Optional)
+    * [Stored procedure builder](#StoredProcedureBuilder)
 2. [Setup](#Setup)
 3. [Requirements](#Requirements)
 3. [Further reading](#FurtherReading)
@@ -118,6 +119,39 @@ Methods which can return null (like findOne(id) or findOne(Predicate)) have been
 ```
 Optional<Person> actual = repository.findOneById(johnDoe.getId());
 Optional<Person> actual = repository.findOneByPredicate(person.firstName.eq("John"));
+```
+
+### <a name="StoredProcedureBuilder"></a> Stored procedure builder
+
+JPA support for stored procedures is quite cumbersome and it also requires a reference to EntityManager which leads to code like this:
+
+```
+@PersistenceContext
+private EntityManager entityManager
+...
+ 
+@SuppressWarnings("unchecked")
+public List<Person> delete(Person personToDelete) {
+    return (List<Person>) entityManager
+            .createStoredProcedureQuery("Person_Delete")
+            .registerStoredProcedureParameter("FirstName", String.class, ParameterMode.IN)
+            .registerStoredProcedureParameter("LastName", String.class, ParameterMode.IN)
+            .setParameter("FirstName", personToDelete.getFirstName())
+            .setParameter("LastName", personToDelete.getLastName())
+            .getResultList(); // returns untyped List => unchecked
+}
+```
+
+For this case, executeStoredProcedure method was added which supports Q class attributes:
+
+```
+public List<Person> delete(Person personToDelete) {
+    return repository.executeStoredProcedure(
+            "Person_Delete",
+            builder -> builder.addInParameter(person.firstName, personToDelete.getFirstName())
+                              .addInParameter(person.lastName, personToDelete.getLastName())
+                              .getResultList());
+}
 ```
 
 ## <a name="Setup"></a> Setup:
