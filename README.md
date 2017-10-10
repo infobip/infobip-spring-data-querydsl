@@ -23,6 +23,8 @@ Infobip Spring Data JPA Querydsl provides new functionality that enables the use
 
 ## <a name="FeaturesAndExamples"></a> Features and examples:
 
+All examples have corresponding tests in the project and can be found [here](https://github.com/infobip/infobip-spring-data-jpa-querydsl/blob/master/src/test/java/com/infobip/spring/data/SqlServerQueryDslJpaRepositoryTest.java).
+
 ### <a name="NativeQueriesWithQuerydsl"></a> Native queries with Querydsl:
 
 Example which uses union clause (unions aren't available in JPA):
