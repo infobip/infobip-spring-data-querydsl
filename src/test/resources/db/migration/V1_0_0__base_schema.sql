@@ -27,7 +27,7 @@ AS
 GO
 
 CREATE PROCEDURE Person_Delete
-    @LastName NVARCHAR(20)
+    @FirstName NVARCHAR(20), @LastName NVARCHAR(20)
 AS
   SET NOCOUNT ON;
   DECLARE @DeletedPerson TABLE(
@@ -37,5 +37,5 @@ AS
   );
   DELETE FROM Person
   OUTPUT Deleted.Id, Deleted.FirstName, Deleted.LastName INTO @DeletedPerson(Id, FirstName, LastName)
-  WHERE LastName = @LastName
+  WHERE FirstName = @FirstName AND LastName = @LastName
   SELECT Id, FirstName, LastName FROM @DeletedPerson;

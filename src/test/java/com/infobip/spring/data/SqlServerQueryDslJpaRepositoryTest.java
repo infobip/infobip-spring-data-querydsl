@@ -235,16 +235,17 @@ public class SqlServerQueryDslJpaRepositoryTest extends TestBase {
         repository.save(johnDoe, johnyRoe, janeDoe, johnRoe, janieDoe);
 
         // when
-        List<Person> actual = repository.executeStoredProcedure("Person_Delete",
-                                                                builder -> builder.addInParameter(
-                                                                        person.lastName, johnyRoe.getLastName())
-                                                                                  .setResultClasses(Person.class)
-                                                                                  .getResultList());
+        List<Person> actual = repository.executeStoredProcedure(
+                "Person_Delete",
+                builder -> builder.addInParameter(person.firstName, johnyRoe.getFirstName())
+                                  .addInParameter(person.lastName, johnyRoe.getLastName())
+                                  .setResultClasses(Person.class)
+                                  .getResultList());
 
         // then
-        then(actual).usingFieldByFieldElementComparator().containsExactlyInAnyOrder(johnyRoe, johnRoe);
+        then(actual).usingFieldByFieldElementComparator().containsExactlyInAnyOrder(johnyRoe);
         then(repository.findAll()).usingFieldByFieldElementComparator()
-                                  .containsExactlyInAnyOrder(johnDoe, janeDoe, janieDoe);
+                                  .containsExactlyInAnyOrder(johnDoe, janeDoe, johnRoe, janieDoe);
     }
 
     @Value
