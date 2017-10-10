@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:jtds:sqlserver://localhost:1433/InfobipSpringDataJpaQuerydslTest
+    username: sa
+    password: <YourStrong!Passw0rd>
+    hikari:
+      connection-test-query: SELECT 1
+  jpa:
+    properties.hibernate.show_sql: true
+    database-platform: org.hibernate.dialect.SQLServer2012Dialect
+    hibernate:
+     ddl_auto: validate
+     naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
