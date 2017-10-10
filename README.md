@@ -19,6 +19,8 @@ Infobip Spring Data JPA Querydsl provides new functionality that enables the use
     * [Optional](#Optional)
 2. [Setup](#Setup)
 3. [Requirements](#Requirements)
+3. [Further reading](#FurtherReading)
+3. [Running tests](#RunningTests)
 4. [Contributing](#Contributing)
 
 ## <a name="FeaturesAndExamples"></a> Features and examples:
@@ -162,6 +164,13 @@ interface FooRepository extends ExtendedQueryDslJpaRepository<Foo, ID> {
 - Hibernate (if you need support for other JPA implementors please open an issue)
 - Spring Data
 - Querydsl
+
+## <a name="FurtherReading"></a> Further reading
+
+- [Querydsl documentation](http://www.querydsl.com/static/querydsl/latest/reference/html_single/)
+- [Atlassian Querydsl examples](https://bitbucket.org/atlassian/querydsl-examples)
+- [Querydsl google group](https://groups.google.com/forum/#!forum/querydsl)
+- [Spring Data JPA documentation](http://docs.spring.io/spring-data/jpa/docs/current/reference/html/)
 
 ## <a name="RunningTests"></a> Running tests
 
