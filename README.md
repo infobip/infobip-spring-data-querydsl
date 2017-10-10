@@ -1,7 +1,7 @@
 # Infobip Spring Data JPA Querydsl
 
 [![Build Status](https://travis-ci.org/infobip/infobip-spring-data-jpa-querydsl.svg?branch=master)](https://travis-ci.org/infobip/infobip-spring-data-jpa-querydsl)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.infobip/infobip-spring-data-jpa-querydsl-spring-boot-starter/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.infobip/infobip-spring-data-jpa-querydsl-spring-boot-starter)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.infobip/infobip-spring-data-jpa-querydsl/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.infobip/infobip-spring-data-jpa-querydsl)
 [![Coverage Status](https://coveralls.io/repos/github/infobip/infobip-spring-data-jpa-querydsl/badge.svg?branch=master)](https://coveralls.io/github/infobip/infobip-spring-data-jpa-querydsl?branch=master)
 
 Infobip Spring Data JPA Querydsl provides new functionality that enables the user to leverage the full power of Querydsl API on top of Spring Data repository infrastructure.
