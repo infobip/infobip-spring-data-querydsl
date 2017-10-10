@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:jtds:sqlserver://localhost:1433/InfobipSpringDataJpaQuerydslTest
     username: sa
-    password: <YourStrong!Passw0rd>
+    password: <YourStrong!Passw0rd2>
     hikari:
       connection-test-query: SELECT 1
   jpa:
