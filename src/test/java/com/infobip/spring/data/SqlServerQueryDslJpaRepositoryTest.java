@@ -150,6 +150,7 @@ public class SqlServerQueryDslJpaRepositoryTest extends TestBase {
         then(numberOfAffectedRows).isEqualTo(3L);
     }
 
+    // https://github.com/querydsl/querydsl/issues/1917
     @Ignore
     @Test
     public void shouldJpaSqlQuery() {
@@ -181,6 +182,7 @@ public class SqlServerQueryDslJpaRepositoryTest extends TestBase {
         then(actual).usingFieldByFieldElementComparator().containsExactly(janeDoe, janieDoe, johnDoe, johnRoe);
     }
 
+    // https://github.com/querydsl/querydsl/issues/1917
     @Ignore
     @Test
     public void shouldBeAbleToJoin() {
