@@ -2,6 +2,7 @@ package com.infobip.spring.data;
 
 import com.querydsl.core.types.Projections;
 import lombok.Value;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -149,6 +150,7 @@ public class SqlServerQueryDslJpaRepositoryTest extends TestBase {
         then(numberOfAffectedRows).isEqualTo(3L);
     }
 
+    @Ignore
     @Test
     public void shouldJpaSqlQuery() {
 
@@ -179,6 +181,7 @@ public class SqlServerQueryDslJpaRepositoryTest extends TestBase {
         then(actual).usingFieldByFieldElementComparator().containsExactly(janeDoe, janieDoe, johnDoe, johnRoe);
     }
 
+    @Ignore
     @Test
     public void shouldBeAbleToJoin() {
 
