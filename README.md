@@ -192,6 +192,12 @@ interface FooRepository extends ExtendedQueryDslJpaRepository<Foo, ID> {
 
 4. Done
 
+If you need other features from `@EnableJpaRepositories` you can use:
+
+```
+@EnableJpaRepositories(repositoryBaseClass = SimpleExtendedQueryDslJpaRepository.class)
+```
+
 ## <a name="Requirements"></a> Requirements:
 
 - Java 8
