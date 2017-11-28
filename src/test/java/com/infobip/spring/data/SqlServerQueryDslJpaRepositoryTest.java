@@ -183,7 +183,7 @@ public class SqlServerQueryDslJpaRepositoryTest extends TestBase {
     }
 
     // https://github.com/querydsl/querydsl/issues/1917
-    @Ignore
+//    @Ignore
     @Test
     public void shouldBeAbleToJoin() {
 
