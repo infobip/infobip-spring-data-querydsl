@@ -4,7 +4,7 @@
 
 	<groupId>com.infobip</groupId>
 	<artifactId>infobip-spring-data-jpa-querydsl</artifactId>
-	<version>1.0.2-SNAPSHOT</version>
+	<version>2.0.0</version>
 
 	<name>Infobip Spring Data JPA Querydsl</name>
 
