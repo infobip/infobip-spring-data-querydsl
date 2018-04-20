@@ -89,22 +89,22 @@ This along with Querydsl 4 API improvement can lead to code that looks more like
 
 ```
 List<Person> actual = repository.query(query -> query
-                                .select(person)
-                                .from(person)
-                                .where(person.firstName.in("John", "Jane"))
-                                .orderBy(person.firstName.asc(), person.lastName.asc())
-                                .limit(1)
-                                .offset(1)
-                                .fetch());
+        .select(person)
+        .from(person)
+        .where(person.firstName.in("John", "Jane"))
+        .orderBy(person.firstName.asc(), person.lastName.asc())
+        .limit(1)
+        .offset(1)
+        .fetch());
 ```
 
 ### <a name="Update"></a> Update
 
 ```
 repository.update(query -> query
-          .set(person.firstName, "John")
-          .where(person.firstName.eq("Johny"))
-          .execute());
+        .set(person.firstName, "John")
+        .where(person.firstName.eq("Johny"))
+        .execute());
 ```
 
 ### <a name="Delete"></a> Delete
@@ -193,6 +193,12 @@ interface FooRepository extends ExtendedQueryDslJpaRepository<Foo, ID> {
 ```
 
 4. Done
+
+If you need other features from `@EnableJpaRepositories` you can use:
+
+```
+@EnableJpaRepositories(repositoryBaseClass = SimpleExtendedQueryDslJpaRepository.class)
+```
 
 ## <a name="Requirements"></a> Requirements:
 
