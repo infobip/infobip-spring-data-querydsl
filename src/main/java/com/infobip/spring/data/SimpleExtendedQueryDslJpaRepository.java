@@ -47,16 +47,6 @@ class SimpleExtendedQueryDslJpaRepository<T, ID extends Serializable> extends Qu
     }
 
     @Override
-    public Optional<T> findOneById(ID id) {
-        return super.findById(id);
-    }
-
-    @Override
-    public Optional<T> findOneByPredicate(Predicate predicate) {
-        return findOne(predicate);
-    }
-
-    @Override
     public <O> O query(Function<JPAQuery<?>, O> query) {
         return query.apply(jpaQueryFactory.query());
     }

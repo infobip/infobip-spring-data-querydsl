@@ -5,15 +5,13 @@ import com.querydsl.jpa.JPQLQueryFactory;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAUpdateClause;
 import com.querydsl.jpa.sql.JPASQLQuery;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -21,18 +19,6 @@ import java.util.function.Function;
 public interface ExtendedQueryDslJpaRepository<T, ID extends Serializable> extends JpaRepository<T, ID>, QuerydslPredicateExecutor<T> {
 
     List<T> save(T... iterable);
-
-    /**
-     * @deprecated use {@link CrudRepository#findById(Object)} instead.
-     */
-    @Deprecated
-    Optional<T> findOneById(ID id);
-
-    /**
-     * @deprecated use {@link QuerydslPredicateExecutor#findOne(Predicate)})} instead.
-     */
-    @Deprecated
-    Optional<T> findOneByPredicate(Predicate predicate);
 
     @Override
     List<T> findAll(Predicate predicate);

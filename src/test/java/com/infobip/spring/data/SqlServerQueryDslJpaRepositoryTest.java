@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.Optional;
 
 import static com.infobip.spring.data.QPerson.person;
 import static com.infobip.spring.data.QPersonSettings.personSettings;
@@ -20,41 +19,6 @@ public class SqlServerQueryDslJpaRepositoryTest extends TestBase {
 
     @Autowired
     private PersonSettingsRepository personSettingsRepository;
-
-    @Test
-    public void shouldFindUserById() {
-
-        // given
-        Person johnDoe = new Person("John", "Doe");
-        repository.save(johnDoe);
-
-        // when
-        Optional<Person> actual = repository.findOneById(johnDoe.getId());
-
-        then(actual.orElse(null)).isEqualToComparingFieldByField(johnDoe);
-    }
-
-    @Test
-    public void shouldFindUserByIdForMissingUser() {
-
-        // when
-        Optional<Person> actual = repository.findOneById(1L);
-
-        then(actual).isEmpty();
-    }
-
-    @Test
-    public void shouldFindOneByPredicate() {
-
-        // given
-        Person johnDoe = new Person("John", "Doe");
-        repository.save(johnDoe);
-
-        // when
-        Optional<Person> actual = repository.findOneByPredicate(person.firstName.eq("John"));
-
-        then(actual.orElse(null)).isEqualToComparingFieldByField(johnDoe);
-    }
 
     @Test
     public void shouldFindAllWithPredicate() {
