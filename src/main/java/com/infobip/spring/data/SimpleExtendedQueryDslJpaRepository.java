@@ -10,7 +10,7 @@ import com.querydsl.sql.SQLTemplates;
 import com.querydsl.sql.SQLTemplatesRegistry;
 import org.hibernate.engine.spi.SessionImplementor;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
-import org.springframework.data.jpa.repository.support.QueryDslJpaRepository;
+import org.springframework.data.jpa.repository.support.QuerydslJpaRepository;
 import org.springframework.data.querydsl.SimpleEntityPathResolver;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +22,7 @@ import java.util.*;
 import java.util.function.*;
 
 @Transactional(readOnly = true)
-public class SimpleExtendedQueryDslJpaRepository<T, ID extends Serializable> extends QueryDslJpaRepository<T, ID>
+class SimpleExtendedQueryDslJpaRepository<T, ID extends Serializable> extends QuerydslJpaRepository<T, ID>
         implements ExtendedQueryDslJpaRepository<T, ID> {
 
     private final EntityPath<T> path;
@@ -43,17 +43,7 @@ public class SimpleExtendedQueryDslJpaRepository<T, ID extends Serializable> ext
     @SafeVarargs
     @Override
     public final List<T> save(T... iterable) {
-        return save(Arrays.asList(iterable));
-    }
-
-    @Override
-    public Optional<T> findOneById(ID id) {
-        return Optional.ofNullable(super.findOne(id));
-    }
-
-    @Override
-    public Optional<T> findOneByPredicate(Predicate predicate) {
-        return Optional.ofNullable(findOne(predicate));
+        return saveAll(Arrays.asList(iterable));
     }
 
     @Override

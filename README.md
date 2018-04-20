@@ -8,7 +8,8 @@ Infobip Spring Data JPA Querydsl provides new functionality that enables the use
 
 ## Contents
 
-1. [Features and examples](#FeaturesAndExamples)
+1. [News](#News)
+2. [Features and examples](#FeaturesAndExamples)
     * [Native queries with Querydsl](#NativeQueriesWithQuerydsl)
     * [Projections](#Projections)
     * [Query](#Query)
@@ -16,13 +17,23 @@ Infobip Spring Data JPA Querydsl provides new functionality that enables the use
     * [Delete](#Delete)
     * [List instead of Iterable return type](#ListInsteadOfIterableReturnType)
     * [Transactional support](#TransactionalSupport)
-    * [Optional](#Optional)
     * [Stored procedure builder](#StoredProcedureBuilder)
-2. [Setup](#Setup)
-3. [Requirements](#Requirements)
-3. [Further reading](#FurtherReading)
-3. [Running tests](#RunningTests)
-4. [Contributing](#Contributing)
+3. [Setup](#Setup)
+4. [Requirements](#Requirements)
+5. [Further reading](#FurtherReading)
+6. [Running tests](#RunningTests)
+7. [Contributing](#Contributing)
+
+## <a name="News"></a> News
+
+### 2.0.0
+
+Upgrade to Spring Data 2 (Spring Boot 2).
+
+Breaking change: new repository methods introduced in Spring Data 2 `CrudRepository#findById(Object)` and
+`QuerydslPredicateExecutor#findOne(Predicate)` replace old `ExtendedQueryDslJpaRepository.findOneById(Object)`
+and `ExtendedQueryDslJpaRepository.findOneByPredicate(Predicate)` (they were removed).
+
 
 ## <a name="FeaturesAndExamples"></a> Features and examples:
 
@@ -111,15 +122,6 @@ Those methods were overridden and now return a List which is easier to use and i
 
 Query execution is always done inside the repository implementation (loan pattern) in a transaction so transactions don't have to be 
 handled manually (like they do if you are manually managing JPAQuery and other Querydsl constructs).
-
-### <a name="Optional"></a> Optional
-
-Methods which can return null (like findOne(id) or findOne(Predicate)) have been deprecated and replaced with alternative methods that return Optional:
-
-```
-Optional<Person> actual = repository.findOneById(johnDoe.getId());
-Optional<Person> actual = repository.findOneByPredicate(person.firstName.eq("John"));
-```
 
 ### <a name="StoredProcedureBuilder"></a> Stored procedure builder
 
