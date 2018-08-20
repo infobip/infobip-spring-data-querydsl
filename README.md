@@ -243,7 +243,7 @@ interface FooCustomRepository {
 }
 ```
 
-Make FooRepository extend FooCustomRepository:
+Make `FooRepository` extend `FooCustomRepository`:
 
 ```java
 interface FooRepository extends ExtendedQueryDslJpaRepository<Foo, ID>, FooCustomRepository {
