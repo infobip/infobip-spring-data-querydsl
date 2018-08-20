@@ -264,11 +264,11 @@ class FooCustomRepositoryImpl implements FooCustomRepository {
     @Override
     public List<Foo> findAll(String barName, Long limit, Long offset) {
         return repository.query(query -> query.select(foo)
-                                                      .from(foo)
-                                                      .where(foo.bar.name.eq(barName))
-                                                      .limit(limit)
-                                                      .offset(offset)
-                                                      .fetch());
+                                              .from(foo)
+                                              .where(foo.bar.name.eq(barName))
+                                              .limit(limit)
+                                              .offset(offset)
+                                              .fetch());
     }
 }
 ```
