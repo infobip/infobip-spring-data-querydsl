@@ -22,7 +22,7 @@ import java.util.*;
 import java.util.function.*;
 
 @Transactional(readOnly = true)
-class SimpleExtendedQueryDslJpaRepository<T, ID extends Serializable> extends QuerydslJpaRepository<T, ID>
+public class SimpleExtendedQueryDslJpaRepository<T, ID extends Serializable> extends QuerydslJpaRepository<T, ID>
         implements ExtendedQueryDslJpaRepository<T, ID> {
 
     private final EntityPath<T> path;
