@@ -24,6 +24,7 @@ Infobip Spring Data JPA Querydsl provides new functionality that enables the use
 6. [Further reading](#FurtherReading)
 7. [Running tests](#RunningTests)
 8. [Contributing](#Contributing)
+9. [License](#License)
 
 ## <a name="News"></a> News
 
