@@ -26,6 +26,11 @@ Infobip Spring Data JPA Querydsl provides new functionality that enables the use
 
 ## <a name="News"></a> News
 
+### 2.0.1
+
+Changed scope of SimpleExtendedQueryDslJpaRepository to public.
+
+
 ### 2.0.0
 
 Upgrade to Spring Data 2 (Spring Boot 2).
