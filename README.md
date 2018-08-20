@@ -257,7 +257,7 @@ class FooCustomRepositoryImpl implements FooCustomRepository {
 
     private final ExtendedQueryDslJpaRepository<Foo, ID> repository;
 
-    ChatApplicationRepositoryImpl(@Lazy ExtendedQueryDslJpaRepository<Foo, ID> repository) {
+    FooCustomRepositoryImpl(@Lazy ExtendedQueryDslJpaRepository<Foo, ID> repository) {
         this.repository = repository;
     }
     
