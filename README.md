@@ -19,10 +19,11 @@ Infobip Spring Data JPA Querydsl provides new functionality that enables the use
     * [Transactional support](#TransactionalSupport)
     * [Stored procedure builder](#StoredProcedureBuilder)
 3. [Setup](#Setup)
-4. [Requirements](#Requirements)
-5. [Further reading](#FurtherReading)
-6. [Running tests](#RunningTests)
-7. [Contributing](#Contributing)
+4. [Domain Driven Design concerns](#DomainDrivenDesignConcerns)
+5. [Requirements](#Requirements)
+6. [Further reading](#FurtherReading)
+7. [Running tests](#RunningTests)
+8. [Contributing](#Contributing)
 
 ## <a name="News"></a> News
 
@@ -203,6 +204,90 @@ If you need other features from `@EnableJpaRepositories` you can use:
 
 ```
 @EnableJpaRepositories(repositoryBaseClass = SimpleExtendedQueryDslJpaRepository.class)
+```
+
+## <a name="DomainDrivenDesignConcerns"></a> Domain Driven Design concerns
+
+In following example one could argue that database related logic has leaked from repository to service layer:
+
+```java
+class FooService {
+
+    private final FooRepository repository;
+    
+    ...
+    
+    List<Foo> findAllBy(String barName, Long limit, Long offset) {
+        
+        ...
+        
+        return repository.query(query -> query.select(foo)
+                                              .from(foo)
+                                              .where(foo.bar.name.eq(barName))
+                                              .limit(limit)
+                                              .offset(offset)
+                                              .fetch());
+    }
+}
+```
+
+In order to prevent this, you can [customize the repository](https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories.single-repository-behavior).
+
+First, create a custom repository:
+
+```java
+interface FooCustomRepository {
+
+    List<Foo> findAllBy(String barName, Long limit, Long offset);
+}
+```
+
+Make FooRepository extend FooCustomRepository:
+
+```java
+interface FooRepository extends ExtendedQueryDslJpaRepository<Foo, ID>, FooCustomRepository {
+}
+```
+
+Provide an implementation for `FooCustomRepository`:
+
+```java
+class FooCustomRepositoryImpl implements FooCustomRepository {
+
+    private final ExtendedQueryDslJpaRepository<Foo, ID> repository;
+
+    ChatApplicationRepositoryImpl(@Lazy ExtendedQueryDslJpaRepository<Foo, ID> repository) {
+        this.repository = repository;
+    }
+    
+    @Override
+    public List<Foo> findAll(String barName, Long limit, Long offset) {
+        return repository.query(query -> query.select(foo)
+                                                      .from(foo)
+                                                      .where(foo.bar.name.eq(barName))
+                                                      .limit(limit)
+                                                      .offset(offset)
+                                                      .fetch());
+    }
+}
+```
+
+Refactor service layer to use the new method:
+
+```java
+class FooService {
+
+    private final FooRepository repository;
+    
+    ...
+    
+    List<Foo> findAll(String barName, Long limit, Long offset) {
+        
+        ...
+        
+        return repository.findAll(barName, limit, offset);
+    }
+}
 ```
 
 ## <a name="Requirements"></a> Requirements:
