@@ -218,7 +218,7 @@ class FooService {
     
     ...
     
-    List<Foo> findAllBy(String barName, Long limit, Long offset) {
+    List<Foo> findAll(String barName, Long limit, Long offset) {
         
         ...
         
@@ -239,7 +239,7 @@ First, create a custom repository:
 ```java
 interface FooCustomRepository {
 
-    List<Foo> findAllBy(String barName, Long limit, Long offset);
+    List<Foo> findAll(String barName, Long limit, Long offset);
 }
 ```
 
