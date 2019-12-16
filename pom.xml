@@ -51,11 +51,9 @@
 
 	<properties>
 		<!-- DEPENDENCY VERSIONS -->
-		<spring-boot.version>2.0.1.RELEASE</spring-boot.version>
+		<spring-boot.version>2.2.1.RELEASE</spring-boot.version>
+		<mssqlserver.version>1.12.3</mssqlserver.version>
 		<querydsl.version>4.2.1</querydsl.version>
-
-		<jtds.version>1.3.1</jtds.version>
-		<assertj-core.version>3.9.1</assertj-core.version>
 
 		<!-- PLUGIN VERSIONS -->
 		<maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
@@ -89,7 +87,6 @@
 		<dependency>
 			<groupId>com.querydsl</groupId>
 			<artifactId>querydsl-jpa</artifactId>
-			<version>${querydsl.version}</version>
 		</dependency>
 
 		<dependency>
@@ -124,10 +121,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>net.sourceforge.jtds</groupId>
-			<artifactId>jtds</artifactId>
-			<version>${jtds.version}</version>
-			<scope>test</scope>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>mssql-jdbc</artifactId>
 		</dependency>
 
 		<dependency>
@@ -139,7 +134,13 @@
 		<dependency>
 			<groupId>org.assertj</groupId>
 			<artifactId>assertj-core</artifactId>
-			<version>${assertj-core.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>mssqlserver</artifactId>
+			<version>${mssqlserver.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
