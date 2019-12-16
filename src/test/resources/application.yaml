@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:jtds:sqlserver://localhost:1433/InfobipSpringDataJpaQuerydslTest
-    username: sa
-    password: <YourStrong!Passw0rd>
+    url: jdbc:sqlserver://localhost:<port>;database=InfobipSpringDataJpaQuerydslTest
+    username: SA
+    password: A_Str0ng_Required_Password
     hikari:
       connection-test-query: SELECT 1
   jpa:
@@ -11,4 +11,6 @@ spring:
     hibernate:
       ddl_auto: validate
       naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-    properties.hibernate.default_schema: dbo
+    properties.hibernate:
+      default_schema: dbo
+      use_nationalized_character_data: true
