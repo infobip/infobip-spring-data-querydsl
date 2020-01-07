@@ -1,4 +1,4 @@
-# Infobip Spring Data JPA Querydsl
+# Infobip Spring Data Querydsl
 
 [![Build Status](https://travis-ci.org/infobip/infobip-spring-data-jpa-querydsl.svg?branch=master)](https://travis-ci.org/infobip/infobip-spring-data-jpa-querydsl)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.infobip/infobip-spring-data-jpa-querydsl/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.infobip/infobip-spring-data-jpa-querydsl)
