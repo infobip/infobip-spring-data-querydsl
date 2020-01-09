@@ -18,16 +18,15 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
     private PersonRepository repository;
 
     @Autowired
-    private PersonSettingsRepository personSettingsRepository;
+    private PersonSettingsRepository settingsRepository;
 
     @Test
     public void shouldFindAllWithPredicate() {
 
         // given
-        Person johnDoe = new Person("John", "Doe");
-        Person johnyRoe = new Person("Johny", "Roe");
-        Person janeDoe = new Person("Jane", "Doe");
-        repository.save(johnDoe, johnyRoe, janeDoe);
+        Person johnDoe = givenSavedPerson("John", "Doe");
+        Person johnyRoe = givenSavedPerson("Johny", "Roe");
+        givenSavedPerson("Jane", "Doe");
 
         // when
         List<Person> actual = repository.findAll(person.firstName.in("John", "Johny"));
@@ -39,12 +38,11 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
     public void shouldQuery() {
 
         // given
-        Person johnDoe = new Person("John", "Doe");
-        Person johnyRoe = new Person("Johny", "Roe");
-        Person janeDoe = new Person("Jane", "Doe");
-        Person johnRoe = new Person("John", "Roe");
-        Person janieDoe = new Person("Janie", "Doe");
-        repository.save(johnDoe, johnyRoe, janeDoe, johnRoe, janieDoe);
+        Person johnDoe = givenSavedPerson("John", "Doe");
+        givenSavedPerson("Johny", "Roe");
+        givenSavedPerson("Jane", "Doe");
+        givenSavedPerson("John", "Roe");
+        givenSavedPerson("Janie", "Doe");
 
         // when
         List<Person> actual = repository.query(query -> query
@@ -63,8 +61,7 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
     public void shouldProject() {
 
         // given
-        Person johnDoe = new Person("John", "Doe");
-        repository.save(johnDoe);
+        Person johnDoe = givenSavedPerson("John", "Doe");
 
         // when
         List<PersonProjection> actual = repository.query(query -> query
@@ -81,10 +78,9 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
     public void shouldUpdate() {
 
         // given
-        Person johnDoe = new Person("John", "Doe");
-        Person johnyRoe = new Person("Johny", "Roe");
-        Person janeDoe = new Person("Jane", "Doe");
-        repository.save(johnDoe, johnyRoe, janeDoe);
+        givenSavedPerson("John", "Doe");
+        givenSavedPerson("Johny", "Roe");
+        givenSavedPerson("Jane", "Doe");
 
         // when
         repository.update(query -> query
@@ -101,11 +97,10 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
     public void shouldDelete() {
 
         // given
-        Person johnDoe = new Person("John", "Doe");
-        Person johnyRoe = new Person("Johny", "Roe");
-        Person janeDoe = new Person("Jane", "Doe");
-        Person johnRoe = new Person("John", "Roe");
-        repository.save(johnDoe, johnyRoe, janeDoe, johnRoe);
+        givenSavedPerson("John", "Doe");
+        givenSavedPerson("Johny", "Roe");
+        Person janeDoe = givenSavedPerson("Jane", "Doe");
+        givenSavedPerson("John", "Roe");
 
         // when
         long numberOfAffectedRows = repository.deleteWhere(person.firstName.like("John%"));
@@ -120,12 +115,11 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
     public void shouldJpaSqlQuery() {
 
         // given
-        Person johnDoe = new Person("John", "Doe");
-        Person johnyRoe = new Person("Johny", "Roe");
-        Person janeDoe = new Person("Jane", "Doe");
-        Person johnRoe = new Person("John", "Roe");
-        Person janieDoe = new Person("Janie", "Doe");
-        repository.save(johnDoe, johnyRoe, janeDoe, johnRoe, janieDoe);
+        Person johnDoe = givenSavedPerson("John", "Doe");
+        givenSavedPerson("Johny", "Roe");
+        Person janeDoe = givenSavedPerson("Jane", "Doe");
+        Person johnRoe = givenSavedPerson("John", "Roe");
+        Person janieDoe = givenSavedPerson("Janie", "Doe");
 
         // when
         List<Person> actual = repository.jpaSqlQuery(query -> query
@@ -152,12 +146,10 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
     public void shouldBeAbleToJoin() {
 
         // given
-        Person johnDoe = new Person("John", "Doe");
-        Person johnyRoe = new Person("Johny", "Roe");
-        repository.save(johnDoe, johnyRoe);
-        PersonSettings johnDoeSettings = new PersonSettings(johnDoe.getId());
-        PersonSettings johnyRoeSettings = new PersonSettings(johnyRoe.getId());
-        personSettingsRepository.save(johnDoeSettings, johnyRoeSettings);
+        Person johnDoe = givenSavedPerson("John", "Doe");
+        Person johnyRoe = givenSavedPerson("Johny", "Roe");
+        PersonSettings johnDoeSettings = givenSavedPersonSettings(johnDoe);
+        givenSavedPersonSettings(johnyRoe);
 
         // when
         List<Person> actual = repository.jpaSqlQuery(query -> query
@@ -175,12 +167,11 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
     public void shouldExecuteStoredProcedure() {
 
         // given
-        Person johnDoe = new Person("John", "Doe");
-        Person johnyRoe = new Person("Johny", "Roe");
-        Person janeDoe = new Person("Jane", "Doe");
-        Person johnRoe = new Person("John", "Roe");
-        Person janieDoe = new Person("Janie", "Doe");
-        repository.save(johnDoe, johnyRoe, janeDoe, johnRoe, janieDoe);
+        Person johnDoe = givenSavedPerson("John", "Doe");
+        Person johnyRoe = givenSavedPerson("Johny", "Roe");
+        Person janeDoe = givenSavedPerson("Jane", "Doe");
+        Person johnRoe = givenSavedPerson("John", "Roe");
+        Person janieDoe = givenSavedPerson("Janie", "Doe");
 
         // when
         List<String> actual = repository.executeStoredProcedure("Person_DeleteAndGetFirstNames", builder ->
@@ -196,12 +187,11 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
     public void shouldExecuteStoredProcedureWithResultClasses() {
 
         // given
-        Person johnDoe = new Person("John", "Doe");
-        Person johnyRoe = new Person("Johny", "Roe");
-        Person janeDoe = new Person("Jane", "Doe");
-        Person johnRoe = new Person("John", "Roe");
-        Person janieDoe = new Person("Janie", "Doe");
-        repository.save(johnDoe, johnyRoe, janeDoe, johnRoe, janieDoe);
+        Person johnDoe = givenSavedPerson("John", "Doe");
+        Person johnyRoe = givenSavedPerson("Johny", "Roe");
+        Person janeDoe = givenSavedPerson("Jane", "Doe");
+        Person johnRoe = givenSavedPerson("John", "Roe");
+        Person janieDoe = givenSavedPerson("Janie", "Doe");
 
         // when
         List<Person> actual = repository.executeStoredProcedure(
@@ -221,5 +211,13 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
     public static class PersonProjection {
         private final String firstName;
         private final String lastName;
+    }
+
+    private Person givenSavedPerson(String john, String doe) {
+        return repository.save(new Person(john, doe));
+    }
+
+    private PersonSettings givenSavedPersonSettings(Person person) {
+        return settingsRepository.save(new PersonSettings(person.getId()));
     }
 }

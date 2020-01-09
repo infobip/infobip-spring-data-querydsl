@@ -5,7 +5,7 @@ import lombok.With;
 import org.springframework.data.annotation.Id;
 
 @Value
-class Person {
+public class Person {
 
 	@With
 	@Id

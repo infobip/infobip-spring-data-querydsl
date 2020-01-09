@@ -15,7 +15,8 @@
  */
 package com.infobip.spring.data.jdbc;
 
-import com.querydsl.sql.SQLQueryFactory;
+import com.querydsl.core.types.*;
+import com.querydsl.sql.*;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
 import org.springframework.data.jdbc.core.convert.DataAccessStrategy;
@@ -23,7 +24,15 @@ import org.springframework.data.jdbc.core.convert.JdbcConverter;
 import org.springframework.data.mapping.callback.EntityCallbacks;
 import org.springframework.data.relational.core.mapping.RelationalMappingContext;
 import org.springframework.data.repository.core.RepositoryInformation;
+import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Parameter;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 class QuerydslJdbcRepositoryFactory extends org.springframework.data.jdbc.repository.support.JdbcRepositoryFactory {
 
@@ -45,7 +54,7 @@ class QuerydslJdbcRepositoryFactory extends org.springframework.data.jdbc.reposi
         this.context = context;
         this.converter = converter;
         this.accessStrategy = dataAccessStrategy;
-	    this.sqlQueryFactory = sqlQueryFactory;
+        this.sqlQueryFactory = sqlQueryFactory;
     }
 
     public void setEntityCallbacks(EntityCallbacks entityCallbacks) {
@@ -54,19 +63,67 @@ class QuerydslJdbcRepositoryFactory extends org.springframework.data.jdbc.reposi
     }
 
     @Override
+    protected Class<?> getRepositoryBaseClass(RepositoryMetadata repositoryMetadata) {
+        return SimpleQuerydslJdbcRepository.class;
+    }
+
+    @Override
     protected Object getTargetRepository(RepositoryInformation repositoryInformation) {
 
         JdbcAggregateTemplate template = new JdbcAggregateTemplate(publisher, context, converter, accessStrategy);
 
-        SimpleQuerydslJdbcRepository<?, Object> repository = new SimpleQuerydslJdbcRepository<>(template,
-                                                                                                context.getRequiredPersistentEntity(
-                                                                                            repositoryInformation.getDomainType()),
-                                                                                                sqlQueryFactory);
+        Class<?> type = repositoryInformation.getDomainType();
+        RelationalPath<?> relationalPathBase = getRelationalPathBase(type);
+        ConstructorExpression<?> constructor = getConstructorExpression(type, relationalPathBase);
+        SimpleQuerydslJdbcRepository<?, Object> repository = new SimpleQuerydslJdbcRepository(template,
+                                                                                              context.getRequiredPersistentEntity(
+                                                                                                      type),
+                                                                                              sqlQueryFactory,
+                                                                                              constructor,
+                                                                                              relationalPathBase);
 
         if (entityCallbacks != null) {
             template.setEntityCallbacks(entityCallbacks);
         }
 
         return repository;
+    }
+
+    private ConstructorExpression<?> getConstructorExpression(Class<?> type, RelationalPath<?> pathBase) {
+        Constructor<?>[] constructors = type.getConstructors();
+
+        if (constructors.length != 1) {
+            throw new IllegalArgumentException(
+                    "Spring Data JDBC Querydsl supports only entities with only one constructor");
+        }
+
+        Constructor<?> constructor = constructors[0];
+
+        Map<String, Path<?>> columnNameToColumn = pathBase.getColumns()
+                                                          .stream()
+                                                          .collect(Collectors.toMap(
+                                                                  column -> column.getMetadata().getName(),
+                                                                  Function.identity()));
+
+        Path<?>[] paths = Stream.of(constructor.getParameters())
+                                .map(Parameter::getName)
+                                .map(columnNameToColumn::get)
+                                .toArray(Path[]::new);
+
+        return Projections.constructor(type, paths);
+    }
+
+    private RelationalPathBase<?> getRelationalPathBase(Class<?> type) {
+        String qClassName = type.getPackage().getName() + ".Q" + type.getSimpleName();
+        try {
+            return (RelationalPathBase<?>) getClass().getClassLoader()
+                                                     .loadClass(qClassName)
+                                                     .getField(type.getSimpleName())
+                                                     .get(null);
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException("Could not find " + qClassName);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 }
