@@ -4,49 +4,142 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.infobip/infobip-spring-data-jpa-querydsl/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.infobip/infobip-spring-data-jpa-querydsl)
 [![Coverage Status](https://coveralls.io/repos/github/infobip/infobip-spring-data-jpa-querydsl/badge.svg?branch=master)](https://coveralls.io/github/infobip/infobip-spring-data-jpa-querydsl?branch=master)
 
-Infobip Spring Data JPA Querydsl provides new functionality that enables the user to leverage the full power of Querydsl API on top of Spring Data repository infrastructure.
+Infobip Spring Data Querydsl provides new functionality that enables the user to leverage the full power of Querydsl API on top of Spring Data repository infrastructure.
+
+The project is divided into 2 modules: infobip-spring-data-jdbc-querydsl and infobip-spring-data-jpa-querydsl.
 
 ## Contents
 
 1. [News](#News)
-2. [Features and examples](#FeaturesAndExamples)
-    * [Native queries with Querydsl](#NativeQueriesWithQuerydsl)
-    * [Projections](#Projections)
-    * [Query](#Query)
-    * [Update](#Update)
-    * [Delete](#Delete)
-    * [List instead of Iterable return type](#ListInsteadOfIterableReturnType)
-    * [Transactional support](#TransactionalSupport)
-    * [Stored procedure builder](#StoredProcedureBuilder)
-3. [Setup](#Setup)
+2. [JDBC module:](#JDBC)
+3. [JPA module:](#JPA)
+    * [Requirements](#Requirements)
+    * [Setup](#Setup)
+    * [Features and examples:](#FeaturesAndExamples)
+        * [Native queries with Querydsl](#NativeQueriesWithQuerydsl)
+        * [Projections](#Projections)
+        * [Query](#Query)
+        * [Update](#Update)
+        * [Delete](#Delete)
+        * [List instead of Iterable return type](#ListInsteadOfIterableReturnType)
+        * [Transactional support](#TransactionalSupport)
+        * [Stored procedure builder](#StoredProcedureBuilder)
 4. [Domain Driven Design concerns](#DomainDrivenDesignConcerns)
-5. [Requirements](#Requirements)
-6. [Further reading](#FurtherReading)
-7. [Running tests](#RunningTests)
-8. [Contributing](#Contributing)
-9. [License](#License)
+5. [Further reading](#FurtherReading)
+6. [Running tests](#RunningTests)
+7. [Contributing](#Contributing)
+8. [License](#License)
 
 ## <a name="News"></a> News
 
-### 2.0.1
+### 3.0.0
 
-Changed scope of SimpleExtendedQueryDslJpaRepository to public.
+Breaking change: renamed `@EnableExtendedRepositories` to `@EnableExtendedJpaRepositories`
+Added new module - infobip-spring-data-jdbc-querydsl.
 
+## <a name="JDBC"></a> JDBC module:
 
-### 2.0.0
+## <a name="Requirements"></a> Requirements:
 
-Upgrade to Spring Data 2 (Spring Boot 2).
+- Java 8 with [parameter names preserved in byte code](https://stackoverflow.com/a/20594685/607767) (used to map columns to constructor parameters)
+- Spring Data JDBC
+- Querydsl
 
-Breaking change: new repository methods introduced in Spring Data 2 `CrudRepository#findById(Object)` and
-`QuerydslPredicateExecutor#findOne(Predicate)` replace old `ExtendedQueryDslJpaRepository.findOneById(Object)`
-and `ExtendedQueryDslJpaRepository.findOneByPredicate(Predicate)` (they were removed).
+## <a name="JPA"></a> JPA module:
 
+## <a name="Requirements"></a> Requirements:
 
-## <a name="FeaturesAndExamples"></a> Features and examples:
+- Java 8
+- Hibernate (if you need support for other JPA implementors please open an issue)
+- Spring Data JPA
+- Querydsl
+
+### <a name="Setup"></a> Setup:
+
+1. Generate [querydsl Q (query) classes](http://www.querydsl.com/static/querydsl/4.1.3/reference/html_single/#d0e725).
+   As an example how to do this check out infobip-spring-data-jdbc-querydsl pom.xml and test code.
+
+2. Dependency:
+
+```xml
+<dependency>
+   <groupId>com.infobip</groupId>
+   <artifactId>infobip-spring-data-jdbc-querydsl</artifactId>
+   <version>${infobip-spring-data-jdbc-querydsl.version}</version>
+</dependency>
+```
+
+3. Add @EnableQuerydslJdbcRepositories to your Main class:
+
+```java
+@EnableQuerydslJdbcRepositories // replaces @EnableJpaRepositories
+@SpringBootApplication
+public class Main {
+ 
+    public static void main(String[] args) {
+        new SpringApplicationBuilder(Main.class).run(args);
+    }
+}
+```
+
+3. Refactor repository interfaces to use `QuerydslJdbcRepository` instead of `CrudRepository`:
+
+```java
+interface FooRepository extends QuerydslJdbcRepository<Foo, QFoo, ID> {
+}
+```
+
+4. Done
+
+### <a name="Setup"></a> Setup:
+
+1. Dependency:
+
+```xml
+<dependency>
+   <groupId>com.infobip</groupId>
+   <artifactId>infobip-spring-data-jpa-querydsl</artifactId>
+   <version>${infobip-spring-data-jpa-querydsl.version}</version>
+</dependency>
+```
+
+As this project depends on querydsl-apt with jpa classifier you don't need to set up explicit Maven build phase for Q classes generation.
+For building Q classes without Maven, make sure your IDE has Annotation processing enabled.
+
+2. Add @EnableExtendedJpaRepositories to your Main class:
+
+```java
+@EnableExtendedJpaRepositories // replaces @EnableJpaRepositories
+@SpringBootApplication
+public class Main {
+ 
+    public static void main(String[] args) {
+        new SpringApplicationBuilder(Main.class).run(args);
+    }
+}
+```
+
+3. Refactor repository interfaces to use `ExtendedQueryDslJpaRepository` instead of `JpaRepository` and `QueryDslPredicateExecutor` (note that ExtendedQueryDslJpaRepository extends and provides the API of both):
+
+```java
+// ExtendedQueryDslJpaRepository replaces both JpaRepository and QueryDslPredicateExecutor
+interface FooRepository extends ExtendedQueryDslJpaRepository<Foo, ID> {
+}
+```
+
+4. Done
+
+If you need other features from `@EnableJpaRepositories` you can use:
+
+```
+@EnableJpaRepositories(repositoryBaseClass = SimpleExtendedQueryDslJpaRepository.class)
+```
+
+### <a name="FeaturesAndExamples"></a> Features and examples:
 
 All examples have corresponding tests in the project and can be found [here](https://github.com/infobip/infobip-spring-data-jpa-querydsl/blob/master/src/test/java/com/infobip/spring/data/SqlServerQueryDslJpaRepositoryTest.java).
 
-### <a name="NativeQueriesWithQuerydsl"></a> Native queries with Querydsl:
+#### <a name="NativeQueriesWithQuerydsl"></a> Native queries with Querydsl:
 
 Example which uses union clause (unions aren't available in JPA):
 
@@ -67,7 +160,7 @@ List<Person> actual = repository.jpaSqlQuery(query -> query
 );
 ```
 
-### <a name="Projections"></a> Projections
+#### <a name="Projections"></a> Projections
 
 For examples how to construct projections refer to the official documentation - [section result handling](http://www.querydsl.com/static/querydsl/latest/reference/html_single/#result_handling).
 
@@ -87,7 +180,7 @@ List<PersonProjection> actual = repository.query(query -> query
                                           .fetch());
 ```
 
-### <a name="Query"></a> Query
+#### <a name="Query"></a> Query
 
 Query exposes full API of JPAQuery ([QueryDslPredicateExecutor](https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/querydsl/QuerydslPredicateExecutor.html) 
 only exposes where clause (Predicate) and order clause (OrderSpecifier)).
@@ -105,7 +198,7 @@ List<Person> actual = repository.query(query -> query
         .fetch());
 ```
 
-### <a name="Update"></a> Update
+#### <a name="Update"></a> Update
 
 ```
 repository.update(query -> query
@@ -114,23 +207,23 @@ repository.update(query -> query
         .execute());
 ```
 
-### <a name="Delete"></a> Delete
+#### <a name="Delete"></a> Delete
 
 ```
 long numberOfAffectedRows = repository.deleteWhere(person.firstName.like("John%"));
 ```
 
-### <a name="ListInsteadOfIterableReturnType"></a> List instead of Iterable return type
+#### <a name="ListInsteadOfIterableReturnType"></a> List instead of Iterable return type
 
 [QueryDslPredicateExecutor](https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/querydsl/QuerydslPredicateExecutor.html)#findAll methods return Iterable which can be cumbersome to use. 
 Those methods were overridden and now return a List which is easier to use and is easier to convert to Stream.
 
-### <a name="TransactionalSupport"></a> Transactional support
+#### <a name="TransactionalSupport"></a> Transactional support
 
 Query execution is always done inside the repository implementation (loan pattern) in a transaction so transactions don't have to be 
 handled manually (like they do if you are manually managing JPAQuery and other Querydsl constructs).
 
-### <a name="StoredProcedureBuilder"></a> Stored procedure builder
+#### <a name="StoredProcedureBuilder"></a> Stored procedure builder
 
 JPA support for stored procedures is quite cumbersome and it also requires a reference to EntityManager which leads to code like this:
 
@@ -161,50 +254,6 @@ public List<Person> delete(Person personToDelete) {
                               .addInParameter(person.lastName, personToDelete.getLastName())
                               .getResultList());
 }
-```
-
-## <a name="Setup"></a> Setup:
-
-1. Dependency:
-
-```xml
-<dependency>
-   <groupId>com.infobip</groupId>
-   <artifactId>infobip-spring-data-jpa-querydsl</artifactId>
-   <version>${infobip-spring-data-jpa-querydsl.version}</version>
-</dependency>
-```
-
-As this project depends on querydsl-apt with jpa classifier you don't need to set up explicit Maven build phase for Q classes generation.
-For building Q classes without Maven, make sure your IDE has Annotation processing enabled.
-
-2. Add @EnableExtendedRepositories to your Main class:
-
-```java
-@EnableExtendedRepositories // replaces @EnableJpaRepositories
-@SpringBootApplication
-public class Main {
- 
-    public static void main(String[] args) {
-        new SpringApplicationBuilder(Main.class).run(args);
-    }
-}
-```
-
-3. Refactor repository interfaces to use `ExtendedQueryDslJpaRepository` instead of `JpaRepository` and `QueryDslPredicateExecutor` (note that ExtendedQueryDslJpaRepository extends and provides the API of both):
-
-```java
-// ExtendedQueryDslJpaRepository replaces both JpaRepository and QueryDslPredicateExecutor
-interface FooRepository extends ExtendedQueryDslJpaRepository<Foo, ID> {
-}
-```
-
-4. Done
-
-If you need other features from `@EnableJpaRepositories` you can use:
-
-```
-@EnableJpaRepositories(repositoryBaseClass = SimpleExtendedQueryDslJpaRepository.class)
 ```
 
 ## <a name="DomainDrivenDesignConcerns"></a> Domain Driven Design concerns
@@ -290,13 +339,6 @@ class FooService {
     }
 }
 ```
-
-## <a name="Requirements"></a> Requirements:
-
-- Java 8
-- Hibernate (if you need support for other JPA implementors please open an issue)
-- Spring Data
-- Querydsl
 
 ## <a name="FurtherReading"></a> Further reading
 
