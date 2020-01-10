@@ -5,7 +5,7 @@ import org.springframework.data.relational.core.mapping.RelationalPersistentProp
 import org.springframework.stereotype.Component;
 
 @Component
-public class CustomNamingStrategy implements NamingStrategy {
+public class PascalCaseNamingStrategy implements NamingStrategy {
 
     @Override
     public String getTableName(Class<?> type) {
