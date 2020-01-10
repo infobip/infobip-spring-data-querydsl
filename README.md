@@ -12,18 +12,20 @@ The project is divided into 2 modules: infobip-spring-data-jdbc-querydsl and inf
 
 1. [News](#News)
 2. [JDBC module:](#JDBC)
+    * [Requirements](#JDBCRequirements)
+    * [Setup](#JDBCSetup)
 3. [JPA module:](#JPA)
-    * [Requirements](#Requirements)
-    * [Setup](#Setup)
-    * [Features and examples:](#FeaturesAndExamples)
-        * [Native queries with Querydsl](#NativeQueriesWithQuerydsl)
-        * [Projections](#Projections)
-        * [Query](#Query)
-        * [Update](#Update)
-        * [Delete](#Delete)
-        * [List instead of Iterable return type](#ListInsteadOfIterableReturnType)
-        * [Transactional support](#TransactionalSupport)
-        * [Stored procedure builder](#StoredProcedureBuilder)
+    * [Requirements](#JPARequirements)
+    * [Setup](#JPASetup)
+    * [Features and examples:](#JPAFeaturesAndExamples)
+        * [Native queries with Querydsl](#JPANativeQueriesWithQuerydsl)
+        * [Projections](#JPAProjections)
+        * [Query](#JPAQuery)
+        * [Update](#JPAUpdate)
+        * [Delete](#JPADelete)
+        * [List instead of Iterable return type](#JPAListInsteadOfIterableReturnType)
+        * [Transactional support](#JPATransactionalSupport)
+        * [Stored procedure builder](#JPAStoredProcedureBuilder)
 4. [Domain Driven Design concerns](#DomainDrivenDesignConcerns)
 5. [Further reading](#FurtherReading)
 6. [Running tests](#RunningTests)
@@ -39,22 +41,13 @@ Added new module - infobip-spring-data-jdbc-querydsl.
 
 ## <a name="JDBC"></a> JDBC module:
 
-## <a name="Requirements"></a> Requirements:
+## <a name="JDBCRequirements"></a> Requirements:
 
 - Java 8 with [parameter names preserved in byte code](https://stackoverflow.com/a/20594685/607767) (used to map columns to constructor parameters)
 - Spring Data JDBC
 - Querydsl
 
-## <a name="JPA"></a> JPA module:
-
-## <a name="Requirements"></a> Requirements:
-
-- Java 8
-- Hibernate (if you need support for other JPA implementors please open an issue)
-- Spring Data JPA
-- Querydsl
-
-### <a name="Setup"></a> Setup:
+### <a name="JDBCSetup"></a> Setup:
 
 1. Generate [querydsl Q (query) classes](http://www.querydsl.com/static/querydsl/4.1.3/reference/html_single/#d0e725).
    As an example how to do this check out infobip-spring-data-jdbc-querydsl pom.xml and test code.
@@ -91,7 +84,16 @@ interface FooRepository extends QuerydslJdbcRepository<Foo, QFoo, ID> {
 
 4. Done
 
-### <a name="Setup"></a> Setup:
+## <a name="JPA"></a> JPA module:
+
+## <a name="JPARequirements"></a> Requirements:
+
+- Java 8
+- Hibernate (if you need support for other JPA implementors please open an issue)
+- Spring Data JPA
+- Querydsl
+
+### <a name="JPASetup"></a> Setup:
 
 1. Dependency:
 
@@ -135,11 +137,11 @@ If you need other features from `@EnableJpaRepositories` you can use:
 @EnableJpaRepositories(repositoryBaseClass = SimpleExtendedQueryDslJpaRepository.class)
 ```
 
-### <a name="FeaturesAndExamples"></a> Features and examples:
+### <a name="JPAFeaturesAndExamples"></a> Features and examples:
 
 All examples have corresponding tests in the project and can be found [here](https://github.com/infobip/infobip-spring-data-jpa-querydsl/blob/master/src/test/java/com/infobip/spring/data/SqlServerQueryDslJpaRepositoryTest.java).
 
-#### <a name="NativeQueriesWithQuerydsl"></a> Native queries with Querydsl:
+#### <a name="JPANativeQueriesWithQuerydsl"></a> Native queries with Querydsl:
 
 Example which uses union clause (unions aren't available in JPA):
 
@@ -160,7 +162,7 @@ List<Person> actual = repository.jpaSqlQuery(query -> query
 );
 ```
 
-#### <a name="Projections"></a> Projections
+#### <a name="JPAProjections"></a> Projections
 
 For examples how to construct projections refer to the official documentation - [section result handling](http://www.querydsl.com/static/querydsl/latest/reference/html_single/#result_handling).
 
@@ -180,7 +182,7 @@ List<PersonProjection> actual = repository.query(query -> query
                                           .fetch());
 ```
 
-#### <a name="Query"></a> Query
+#### <a name="JPAQuery"></a> Query
 
 Query exposes full API of JPAQuery ([QueryDslPredicateExecutor](https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/querydsl/QuerydslPredicateExecutor.html) 
 only exposes where clause (Predicate) and order clause (OrderSpecifier)).
@@ -198,7 +200,7 @@ List<Person> actual = repository.query(query -> query
         .fetch());
 ```
 
-#### <a name="Update"></a> Update
+#### <a name="JPAUpdate"></a> Update
 
 ```
 repository.update(query -> query
@@ -207,23 +209,23 @@ repository.update(query -> query
         .execute());
 ```
 
-#### <a name="Delete"></a> Delete
+#### <a name="JPADelete"></a> Delete
 
 ```
 long numberOfAffectedRows = repository.deleteWhere(person.firstName.like("John%"));
 ```
 
-#### <a name="ListInsteadOfIterableReturnType"></a> List instead of Iterable return type
+#### <a name="JPAListInsteadOfIterableReturnType"></a> List instead of Iterable return type
 
 [QueryDslPredicateExecutor](https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/querydsl/QuerydslPredicateExecutor.html)#findAll methods return Iterable which can be cumbersome to use. 
 Those methods were overridden and now return a List which is easier to use and is easier to convert to Stream.
 
-#### <a name="TransactionalSupport"></a> Transactional support
+#### <a name="JPATransactionalSupport"></a> Transactional support
 
 Query execution is always done inside the repository implementation (loan pattern) in a transaction so transactions don't have to be 
 handled manually (like they do if you are manually managing JPAQuery and other Querydsl constructs).
 
-#### <a name="StoredProcedureBuilder"></a> Stored procedure builder
+#### <a name="JPAStoredProcedureBuilder"></a> Stored procedure builder
 
 JPA support for stored procedures is quite cumbersome and it also requires a reference to EntityManager which leads to code like this:
 
