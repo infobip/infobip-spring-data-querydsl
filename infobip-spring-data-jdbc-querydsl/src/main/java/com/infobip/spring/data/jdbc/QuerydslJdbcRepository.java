@@ -30,5 +30,10 @@ public interface QuerydslJdbcRepository<T, QT extends RelationalPathBase<QT>, ID
      */
     long deleteWhere(Predicate predicate);
 
+    /**
+     * Returns entity projection used for mapping {@code QT} to {@code T}.
+     *
+     * @return entity projection
+     */
     Expression<T> entityProjection();
 }
