@@ -36,7 +36,9 @@ The project is divided into 2 modules: infobip-spring-data-jdbc-querydsl and inf
 
 ### 3.0.0
 
-* Breaking change: renamed `@EnableExtendedRepositories` to `@EnableExtendedJpaRepositories`
+* Breaking changes: 
+    * renamed `@EnableExtendedRepositories` to `@EnableExtendedJpaRepositories`
+    * renamed `ExtendedQueryDslJpaRepository` to `ExtendedQuerydslJpaRepository`
 * Added new module - infobip-spring-data-jdbc-querydsl.
 
 ## <a name="JDBC"></a> JDBC module:
