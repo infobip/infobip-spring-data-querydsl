@@ -18,6 +18,7 @@ package com.infobip.spring.data.jdbc;
 import com.querydsl.core.types.*;
 import com.querydsl.sql.*;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.core.ResolvableType;
 import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
 import org.springframework.data.jdbc.core.convert.DataAccessStrategy;
 import org.springframework.data.jdbc.core.convert.JdbcConverter;
@@ -26,9 +27,9 @@ import org.springframework.data.relational.core.mapping.RelationalMappingContext
 import org.springframework.data.repository.core.RepositoryInformation;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Parameter;
+import java.lang.reflect.*;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -73,14 +74,14 @@ class QuerydslJdbcRepositoryFactory extends org.springframework.data.jdbc.reposi
         JdbcAggregateTemplate template = new JdbcAggregateTemplate(publisher, context, converter, accessStrategy);
 
         Class<?> type = repositoryInformation.getDomainType();
-        RelationalPath<?> relationalPathBase = getRelationalPathBase(type);
+        RelationalPath<?> relationalPathBase = getRelationalPathBase(repositoryInformation);
         ConstructorExpression<?> constructor = getConstructorExpression(type, relationalPathBase);
-        SimpleQuerydslJdbcRepository<?, Object> repository = new SimpleQuerydslJdbcRepository(template,
-                                                                                              context.getRequiredPersistentEntity(
-                                                                                                      type),
-                                                                                              sqlQueryFactory,
-                                                                                              constructor,
-                                                                                              relationalPathBase);
+        SimpleQuerydslJdbcRepository<?, ?, ?> repository = new SimpleQuerydslJdbcRepository(template,
+                                                                                            context.getRequiredPersistentEntity(
+                                                                                                    type),
+                                                                                            sqlQueryFactory,
+                                                                                            constructor,
+                                                                                            relationalPathBase);
 
         if (entityCallbacks != null) {
             template.setEntityCallbacks(entityCallbacks);
@@ -113,17 +114,25 @@ class QuerydslJdbcRepositoryFactory extends org.springframework.data.jdbc.reposi
         return Projections.constructor(type, paths);
     }
 
-    private RelationalPathBase<?> getRelationalPathBase(Class<?> type) {
-        String qClassName = type.getPackage().getName() + ".Q" + type.getSimpleName();
-        try {
-            return (RelationalPathBase<?>) getClass().getClassLoader()
-                                                     .loadClass(qClassName)
-                                                     .getField(type.getSimpleName())
-                                                     .get(null);
-        } catch (ClassNotFoundException e) {
-            throw new IllegalStateException("Could not find " + qClassName);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new IllegalArgumentException(e);
+    private RelationalPathBase<?> getRelationalPathBase(RepositoryInformation repositoryInformation) {
+
+        ResolvableType queryType = ResolvableType.forClass(repositoryInformation.getRepositoryInterface())
+                                                 .as(QuerydslJdbcRepository.class)
+                                                 .getGeneric(1);
+        if (queryType.getRawClass() == null) {
+            throw new IllegalArgumentException("Could not resolve query class for " + repositoryInformation);
         }
+
+        return getRelationalPathBase(queryType.getRawClass());
+    }
+
+    private RelationalPathBase<?> getRelationalPathBase(Class<?> queryType) {
+        Field field = ReflectionUtils.findField(queryType, queryType.getSimpleName().substring(1));
+
+        if (field == null) {
+            throw new IllegalArgumentException("Did not find a static field of the same type in " + queryType);
+        }
+
+        return (RelationalPathBase<?>) ReflectionUtils.getField(field, null);
     }
 }

@@ -1,6 +1,7 @@
 package com.infobip.spring.data.jdbc;
 
 import com.querydsl.core.types.*;
+import com.querydsl.sql.RelationalPathBase;
 import com.querydsl.sql.SQLQuery;
 import com.querydsl.sql.dml.SQLUpdateClause;
 import org.springframework.data.repository.CrudRepository;
@@ -11,7 +12,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 @NoRepositoryBean
-public interface QuerydslJdbcRepository<T, ID> extends CrudRepository<T, ID> {
+public interface QuerydslJdbcRepository<T, QT extends RelationalPathBase<QT>, ID> extends CrudRepository<T, ID> {
 
     List<T> save(T... iterable);
 

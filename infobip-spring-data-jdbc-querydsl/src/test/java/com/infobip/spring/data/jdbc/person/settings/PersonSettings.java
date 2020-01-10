@@ -1,11 +1,11 @@
-package com.infobip.spring.data.jdbc;
+package com.infobip.spring.data.jdbc.person.settings;
 
 import lombok.Value;
 import lombok.With;
 import org.springframework.data.annotation.Id;
 
 @Value
-class PersonSettings {
+public class PersonSettings {
 
 	@With
 	@Id

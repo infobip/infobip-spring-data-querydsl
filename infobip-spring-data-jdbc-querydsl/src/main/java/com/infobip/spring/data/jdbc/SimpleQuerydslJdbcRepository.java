@@ -30,8 +30,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Transactional(readOnly = true)
-public class SimpleQuerydslJdbcRepository<T, ID> extends SimpleJdbcRepository<T, ID>
-        implements QuerydslJdbcRepository<T, ID> {
+public class SimpleQuerydslJdbcRepository<T, QT extends RelationalPathBase<QT>, ID> extends SimpleJdbcRepository<T, ID>
+        implements QuerydslJdbcRepository<T, QT, ID> {
 
     private final SQLQueryFactory sqlQueryFactory;
     private final ConstructorExpression<T> constructorExpression;

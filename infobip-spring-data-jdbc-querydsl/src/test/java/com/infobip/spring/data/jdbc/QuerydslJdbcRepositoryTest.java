@@ -1,11 +1,18 @@
 package com.infobip.spring.data.jdbc;
 
+import com.infobip.spring.data.jdbc.person.Person;
+import com.infobip.spring.data.jdbc.person.PersonRepository;
+import com.infobip.spring.data.jdbc.person.settings.PersonSettings;
+import com.infobip.spring.data.jdbc.person.settings.PersonSettingsRepository;
 import com.querydsl.core.types.Projections;
 import lombok.Value;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
+import org.springframework.core.type.filter.AnnotationTypeFilter;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
@@ -33,6 +40,8 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
 
     @Test
     public void shouldQuery() {
+
+
 
         // given
         Person johnDoe = givenSavedPerson("John", "Doe");
