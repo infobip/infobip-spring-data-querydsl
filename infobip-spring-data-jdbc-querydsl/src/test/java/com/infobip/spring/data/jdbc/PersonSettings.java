@@ -1,4 +1,4 @@
-package com.infobip.spring.data.jdbc.person.settings;
+package com.infobip.spring.data.jdbc;
 
 import lombok.Value;
 import lombok.With;
