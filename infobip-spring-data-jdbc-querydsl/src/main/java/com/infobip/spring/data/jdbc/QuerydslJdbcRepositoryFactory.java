@@ -22,18 +22,19 @@ import org.springframework.core.ResolvableType;
 import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
 import org.springframework.data.jdbc.core.convert.DataAccessStrategy;
 import org.springframework.data.jdbc.core.convert.JdbcConverter;
+import org.springframework.data.mapping.PreferredConstructor;
 import org.springframework.data.mapping.callback.EntityCallbacks;
+import org.springframework.data.mapping.model.PreferredConstructorDiscoverer;
 import org.springframework.data.relational.core.mapping.RelationalMappingContext;
 import org.springframework.data.repository.core.RepositoryInformation;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 class QuerydslJdbcRepositoryFactory extends org.springframework.data.jdbc.repository.support.JdbcRepositoryFactory {
 
@@ -91,14 +92,12 @@ class QuerydslJdbcRepositoryFactory extends org.springframework.data.jdbc.reposi
     }
 
     private ConstructorExpression<?> getConstructorExpression(Class<?> type, RelationalPath<?> pathBase) {
-        Constructor<?>[] constructors = type.getConstructors();
+        PreferredConstructor<?, ?> constructor = PreferredConstructorDiscoverer.discover(type);
 
-        if (constructors.length != 1) {
+        if (constructor == null) {
             throw new IllegalArgumentException(
-                    "Spring Data JDBC Querydsl supports only entities with only one constructor");
+                    "Could not discover preferred constructor for " + type);
         }
-
-        Constructor<?> constructor = constructors[0];
 
         Map<String, Path<?>> columnNameToColumn = pathBase.getColumns()
                                                           .stream()
@@ -106,10 +105,11 @@ class QuerydslJdbcRepositoryFactory extends org.springframework.data.jdbc.reposi
                                                                   column -> column.getMetadata().getName(),
                                                                   Function.identity()));
 
-        Path<?>[] paths = Stream.of(constructor.getParameters())
-                                .map(Parameter::getName)
-                                .map(columnNameToColumn::get)
-                                .toArray(Path[]::new);
+        Path<?>[] paths = constructor.getParameters()
+                                     .stream()
+                                     .map(PreferredConstructor.Parameter::getName)
+                                     .map(columnNameToColumn::get)
+                                     .toArray(Path[]::new);
 
         return Projections.constructor(type, paths);
     }
