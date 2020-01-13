@@ -34,8 +34,6 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
     @Test
     public void shouldQuery() {
 
-
-
         // given
         Person johnDoe = givenSavedPerson("John", "Doe");
         givenSavedPerson("Johny", "Roe");
