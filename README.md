@@ -14,6 +14,11 @@ The project is divided into 2 modules: infobip-spring-data-jdbc-querydsl and inf
 2. [JDBC module:](#JDBC)
     * [Requirements](#JDBCRequirements)
     * [Setup](#JDBCSetup)
+    * [Features and examples:](#JDBCFeaturesAndExamples)
+        * [Projections](#JDBCProjections)
+        * [Query](#JDBCQuery)
+        * [Update](#JPAUpdate)
+        * [Delete](#JPADelete)
 3. [JPA module:](#JPA)
     * [Requirements](#JPARequirements)
     * [Setup](#JPASetup)
@@ -67,7 +72,7 @@ The project is divided into 2 modules: infobip-spring-data-jdbc-querydsl and inf
 3. Add @EnableQuerydslJdbcRepositories to your Main class:
 
 ```java
-@EnableQuerydslJdbcRepositories // replaces @EnableJpaRepositories
+@EnableQuerydslJdbcRepositories // replaces @EnableJdbcRepositories
 @SpringBootApplication
 public class Main {
  
@@ -85,6 +90,12 @@ interface FooRepository extends QuerydslJdbcRepository<Foo, QFoo, ID> {
 ```
 
 4. Done
+
+### <a name="JDBCFeaturesAndExamples"></a> Features and examples:
+
+All examples have corresponding tests in the project and can be found [here](https://github.com/infobip/infobip-spring-data-querydsl/blob/master/infobip-spring-data-jdbc-querydsl/src/test/java/com/infobip/spring/data/jdbc/QuerydslJdbcRepositoryTest.java).
+
+Feature set is similar to the JPA module with the exception of Stored Procedure support (neither Spring Data JDBC nor Querydsl has support for it).
 
 ## <a name="JPA"></a> JPA module:
 
@@ -141,7 +152,7 @@ If you need other features from `@EnableJpaRepositories` you can use:
 
 ### <a name="JPAFeaturesAndExamples"></a> Features and examples:
 
-All examples have corresponding tests in the project and can be found [here](https://github.com/infobip/infobip-spring-data-jpa-querydsl/blob/master/src/test/java/com/infobip/spring/data/SqlServerQueryDslJpaRepositoryTest.java).
+All examples have corresponding tests in the project and can be found [here](https://github.com/infobip/infobip-spring-data-querydsl/blob/master/infobip-spring-data-jpa-querydsl/src/test/java/com/infobip/spring/data/jpa/ExtendedQuerydslJpaRepositoryTest.java).
 
 #### <a name="JPANativeQueriesWithQuerydsl"></a> Native queries with Querydsl:
 
