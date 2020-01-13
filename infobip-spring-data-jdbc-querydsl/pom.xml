@@ -99,6 +99,7 @@
 					<url>jdbc:sqlserver://127.0.0.1:1433</url>
 					<username>sa</username>
 					<password>${mssql.test.password}</password>
+					<skip>${sql-maven-plugin.skip}</skip>
 				</configuration>
 				<executions>
 					<execution>

@@ -67,6 +67,7 @@
 		<coveralls-maven-plugin.version>4.3.0</coveralls-maven-plugin.version>
 		<jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
 		<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+		<maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
 
 		<!-- OTHER PROPERTIES -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -143,6 +144,18 @@
 	</dependencies>
 
 	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>${maven-javadoc-plugin.version}</version>
+					<configuration>
+						<source>${java.version}</source>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
