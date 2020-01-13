@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    url: jdbc:sqlserver://localhost:<port>;database=InfobipSpringDataJdbcQuerydslTest
+    username: SA
+    password: A_Str0ng_Required_Password
+    hikari:
+      connection-test-query: SELECT 1

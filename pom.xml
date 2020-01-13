@@ -3,13 +3,14 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.infobip</groupId>
-	<artifactId>infobip-spring-data-jpa-querydsl</artifactId>
-	<version>2.0.2-SNAPSHOT</version>
+	<artifactId>infobip-spring-data-querydsl</artifactId>
+	<version>3.0.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
 
-	<name>Infobip Spring Data JPA Querydsl</name>
+	<name>Infobip Spring Data Querydsl</name>
 
 	<description>
-		Infobip Spring Data JPA Querydsl provides new functionality that enables the user to leverage the full power of Querydsl API on top of Spring Data repository infrastructure.
+		Infobip Spring Data Querydsl provides new functionality that enables the user to leverage the full power of Querydsl API on top of Spring Data repository infrastructure.
 	</description>
 
 	<organization>
@@ -17,7 +18,7 @@
 		<url>https://www.infobip.com/</url>
 	</organization>
 
-	<url>https://github.com/infobip/infobip-spring-data-jpa-querydsl</url>
+	<url>https://github.com/infobip/infobip-spring-data-querydsl</url>
 
 	<licenses>
 		<license>
@@ -29,10 +30,15 @@
 	</licenses>
 
 	<scm>
-		<url>https://github.com/infobip/infobip-spring-data-jpa-querydsl.git</url>
-		<connection>scm:git:git://github.com:infobip/infobip-spring-data-jpa-querydsl.git</connection>
-		<developerConnection>scm:git:git@github.com:infobip/infobip-spring-data-jpa-querydsl.git</developerConnection>
+		<url>https://github.com/infobip/infobip-spring-data-querydsl.git</url>
+		<connection>scm:git:git://github.com:infobip/infobip-spring-data-querydsl.git</connection>
+		<developerConnection>scm:git:git@github.com:infobip/infobip-spring-data-querydsl.git</developerConnection>
 	</scm>
+
+	<modules>
+		<module>infobip-spring-data-jpa-querydsl</module>
+		<module>infobip-spring-data-jdbc-querydsl</module>
+	</modules>
 
 	<developers>
 		<developer>
@@ -52,13 +58,15 @@
 	<properties>
 		<!-- DEPENDENCY VERSIONS -->
 		<spring-boot.version>2.2.1.RELEASE</spring-boot.version>
-		<mssqlserver.version>1.12.3</mssqlserver.version>
 		<querydsl.version>4.2.1</querydsl.version>
+		<mssqlserver.version>1.12.3</mssqlserver.version>
 
 		<!-- PLUGIN VERSIONS -->
 		<maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
 		<cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
 		<coveralls-maven-plugin.version>4.3.0</coveralls-maven-plugin.version>
+		<jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
+		<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
 
 		<!-- OTHER PROPERTIES -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -78,17 +86,6 @@
 	</dependencyManagement>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>com.querydsl</groupId>
-			<artifactId>querydsl-jpa</artifactId>
-		</dependency>
-
 		<dependency>
 			<groupId>com.querydsl</groupId>
 			<artifactId>querydsl-sql</artifactId>
@@ -162,7 +159,7 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.7.9</version>
+				<version>${jacoco-maven-plugin.version}</version>
 				<executions>
 					<execution>
 						<goals>
@@ -201,7 +198,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.6</version>
+						<version>${maven-gpg-plugin.version}</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
