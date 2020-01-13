@@ -14,7 +14,7 @@ The project is divided into 2 modules: infobip-spring-data-jdbc-querydsl and inf
 2. [JDBC module:](#JDBC)
     * [Requirements](#JDBCRequirements)
     * [Setup](#JDBCSetup)
-    * [Features and examples:](#JDBCFeaturesAndExamples)
+    * [Features and examples](#JDBCFeaturesAndExamples)
 3. [JPA module:](#JPA)
     * [Requirements](#JPARequirements)
     * [Setup](#JPASetup)
