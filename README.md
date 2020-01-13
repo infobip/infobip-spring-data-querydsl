@@ -1,8 +1,8 @@
 # Infobip Spring Data Querydsl
 
-[![Build Status](https://travis-ci.org/infobip/infobip-spring-data-jpa-querydsl.svg?branch=master)](https://travis-ci.org/infobip/infobip-spring-data-jpa-querydsl)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.infobip/infobip-spring-data-jpa-querydsl/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.infobip/infobip-spring-data-jpa-querydsl)
-[![Coverage Status](https://coveralls.io/repos/github/infobip/infobip-spring-data-jpa-querydsl/badge.svg?branch=master)](https://coveralls.io/github/infobip/infobip-spring-data-jpa-querydsl?branch=master)
+[![Build Status](https://travis-ci.org/infobip/infobip-spring-data-querydsl.svg?branch=master)](https://travis-ci.org/infobip/infobip-spring-data-querydsl)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.infobip/infobip-spring-data-querydsl/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.infobip/infobip-spring-data-querydsl)
+[![Coverage Status](https://coveralls.io/repos/github/infobip/infobip-spring-data-querydsl/badge.svg?branch=master)](https://coveralls.io/github/infobip/infobip-spring-data-querydsl?branch=master)
 
 Infobip Spring Data Querydsl provides new functionality that enables the user to leverage the full power of Querydsl API on top of Spring Data repository infrastructure.
 
