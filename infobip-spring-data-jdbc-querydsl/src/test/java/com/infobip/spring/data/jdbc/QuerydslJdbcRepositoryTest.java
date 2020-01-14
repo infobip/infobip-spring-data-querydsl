@@ -1,24 +1,22 @@
 package com.infobip.spring.data.jdbc;
 
 import com.querydsl.core.types.Projections;
+import lombok.AllArgsConstructor;
 import lombok.Value;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
+@AllArgsConstructor
 public class QuerydslJdbcRepositoryTest extends TestBase {
 
-    @Autowired
-    private PersonRepository repository;
-
-    @Autowired
-    private PersonSettingsRepository settingsRepository;
+    private final PersonRepository repository;
+    private final PersonSettingsRepository settingsRepository;
 
     @Test
-    public void shouldFindAllWithPredicate() {
+    void shouldFindAllWithPredicate() {
 
         // given
         Person johnDoe = givenSavedPerson("John", "Doe");
@@ -32,7 +30,7 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
     }
 
     @Test
-    public void shouldQuery() {
+    void shouldQuery() {
 
         // given
         Person johnDoe = givenSavedPerson("John", "Doe");
@@ -55,7 +53,7 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
     }
 
     @Test
-    public void shouldProject() {
+    void shouldProject() {
 
         // given
         Person johnDoe = givenSavedPerson("John", "Doe");
@@ -72,7 +70,7 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
     }
 
     @Test
-    public void shouldUpdate() {
+    void shouldUpdate() {
 
         // given
         givenSavedPerson("John", "Doe");
@@ -91,7 +89,7 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
     }
 
     @Test
-    public void shouldDelete() {
+    void shouldDelete() {
 
         // given
         givenSavedPerson("John", "Doe");
@@ -107,7 +105,7 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
     }
 
     @Test
-    public void shouldBeAbleToJoin() {
+    void shouldBeAbleToJoin() {
 
         // given
         Person johnDoe = givenSavedPerson("John", "Doe");

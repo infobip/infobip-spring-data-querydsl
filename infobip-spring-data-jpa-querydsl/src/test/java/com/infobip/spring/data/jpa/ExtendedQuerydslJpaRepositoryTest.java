@@ -1,10 +1,10 @@
 package com.infobip.spring.data.jpa;
 
 import com.querydsl.core.types.Projections;
+import lombok.AllArgsConstructor;
 import lombok.Value;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -12,16 +12,14 @@ import static com.infobip.spring.data.jpa.QPerson.person;
 import static com.infobip.spring.data.jpa.QPersonSettings.personSettings;
 import static org.assertj.core.api.BDDAssertions.then;
 
+@AllArgsConstructor
 public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
 
-    @Autowired
-    private PersonRepository repository;
-
-    @Autowired
-    private PersonSettingsRepository settingsRepository;
+    private final PersonRepository repository;
+    private final PersonSettingsRepository settingsRepository;
 
     @Test
-    public void shouldFindAllWithPredicate() {
+    void shouldFindAllWithPredicate() {
 
         // given
         Person johnDoe = givenSavedPerson("John", "Doe");
@@ -35,7 +33,7 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
     }
 
     @Test
-    public void shouldQuery() {
+    void shouldQuery() {
 
         // given
         Person johnDoe = givenSavedPerson("John", "Doe");
@@ -58,7 +56,7 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
     }
 
     @Test
-    public void shouldProject() {
+    void shouldProject() {
 
         // given
         Person johnDoe = givenSavedPerson("John", "Doe");
@@ -75,7 +73,7 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
     }
 
     @Test
-    public void shouldUpdate() {
+    void shouldUpdate() {
 
         // given
         givenSavedPerson("John", "Doe");
@@ -94,7 +92,7 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
     }
 
     @Test
-    public void shouldDelete() {
+    void shouldDelete() {
 
         // given
         givenSavedPerson("John", "Doe");
@@ -110,9 +108,9 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
     }
 
     // https://github.com/querydsl/querydsl/issues/1917
-    @Ignore
+    @Disabled
     @Test
-    public void shouldJpaSqlQuery() {
+    void shouldJpaSqlQuery() {
 
         // given
         Person johnDoe = givenSavedPerson("John", "Doe");
@@ -141,9 +139,9 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
     }
 
     // https://github.com/querydsl/querydsl/issues/1917
-    @Ignore
+    @Disabled
     @Test
-    public void shouldBeAbleToJoin() {
+    void shouldBeAbleToJoin() {
 
         // given
         Person johnDoe = givenSavedPerson("John", "Doe");
@@ -164,7 +162,7 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
     }
 
     @Test
-    public void shouldExecuteStoredProcedure() {
+    void shouldExecuteStoredProcedure() {
 
         // given
         Person johnDoe = givenSavedPerson("John", "Doe");
@@ -184,7 +182,7 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
     }
 
     @Test
-    public void shouldExecuteStoredProcedureWithResultClasses() {
+    void shouldExecuteStoredProcedureWithResultClasses() {
 
         // given
         Person johnDoe = givenSavedPerson("John", "Doe");

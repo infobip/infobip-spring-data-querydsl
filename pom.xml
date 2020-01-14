@@ -126,6 +126,17 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>junit</groupId>
+					<artifactId>junit</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
 			<scope>test</scope>
 		</dependency>
 
@@ -173,6 +184,15 @@
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>${jacoco-maven-plugin.version}</version>
+				<configuration>
+					<excludes>
+						<exclude>com/infobip/spring/data/jdbc/QPerson.class</exclude>
+						<exclude>com/infobip/spring/data/jdbc/QFlywaySchemaHistory.class</exclude>
+						<exclude>com/infobip/spring/data/jdbc/QPersonSettings.class</exclude>
+						<exclude>com/infobip/spring/data/jpa/QPerson.class</exclude>
+						<exclude>com/infobip/spring/data/jpa/QPersonSettings.class</exclude>
+					</excludes>
+				</configuration>
 				<executions>
 					<execution>
 						<goals>
