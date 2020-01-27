@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static com.infobip.spring.data.jdbc.QPerson.person;
+import static com.infobip.spring.data.jdbc.QPersonSettings.personSettings;
 import static org.assertj.core.api.BDDAssertions.then;
 
 @AllArgsConstructor
@@ -24,7 +26,7 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
         givenSavedPerson("Jane", "Doe");
 
         // when
-        List<Person> actual = repository.findAll(QPerson.Person.firstName.in("John", "Johny"));
+        List<Person> actual = repository.findAll(person.firstName.in("John", "Johny"));
 
         then(actual).usingFieldByFieldElementComparator().containsOnly(johnDoe, johnyRoe);
     }
@@ -42,9 +44,9 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
         // when
         List<Person> actual = repository.query(query -> query
                 .select(repository.entityProjection())
-                .from(QPerson.Person)
-                .where(QPerson.Person.firstName.in("John", "Jane"))
-                .orderBy(QPerson.Person.firstName.asc(), QPerson.Person.lastName.asc())
+                .from(person)
+                .where(person.firstName.in("John", "Jane"))
+                .orderBy(person.firstName.asc(), person.lastName.asc())
                 .limit(1)
                 .offset(1)
                 .fetch());
@@ -60,9 +62,9 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
 
         // when
         List<PersonProjection> actual = repository.query(query -> query
-                .select(Projections.constructor(PersonProjection.class, QPerson.Person.firstName,
-                                                QPerson.Person.lastName))
-                .from(QPerson.Person)
+                .select(Projections.constructor(PersonProjection.class, person.firstName,
+                                                person.lastName))
+                .from(person)
                 .fetch());
 
         // then
@@ -79,8 +81,8 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
 
         // when
         repository.update(query -> query
-                .set(QPerson.Person.firstName, "John")
-                .where(QPerson.Person.firstName.eq("Johny"))
+                .set(person.firstName, "John")
+                .where(person.firstName.eq("Johny"))
                 .execute());
 
         then(repository.findAll()).extracting(Person::getFirstName)
@@ -98,7 +100,7 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
         givenSavedPerson("John", "Roe");
 
         // when
-        long numberOfAffectedRows = repository.deleteWhere(QPerson.Person.firstName.like("John%"));
+        long numberOfAffectedRows = repository.deleteWhere(person.firstName.like("John%"));
 
         then(repository.findAll()).usingFieldByFieldElementComparator().containsExactly(janeDoe);
         then(numberOfAffectedRows).isEqualTo(3L);
@@ -116,10 +118,10 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
         // when
         List<Person> actual = repository.query(query -> query
                 .select(repository.entityProjection())
-                .from(QPerson.Person)
-                .innerJoin(QPersonSettings.PersonSettings)
-                .on(QPerson.Person.id.eq(QPersonSettings.PersonSettings.personId))
-                .where(QPersonSettings.PersonSettings.id.eq(johnDoeSettings.getId()))
+                .from(person)
+                .innerJoin(personSettings)
+                .on(person.id.eq(personSettings.personId))
+                .where(personSettings.id.eq(johnDoeSettings.getId()))
                 .fetch());
 
         then(actual).extracting(Person::getFirstName).containsExactly(johnDoe.getFirstName());

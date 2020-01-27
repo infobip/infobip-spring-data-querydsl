@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 @NoRepositoryBean
-public interface QuerydslJdbcRepository<T, QT extends RelationalPathBase<QT>, ID> extends CrudRepository<T, ID> {
+public interface QuerydslJdbcRepository<T, ID> extends CrudRepository<T, ID> {
 
     List<T> save(T... iterable);
 

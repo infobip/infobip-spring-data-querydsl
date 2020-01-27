@@ -15,6 +15,7 @@
  */
 package com.infobip.spring.data.jdbc;
 
+import com.google.common.base.CaseFormat;
 import com.querydsl.core.types.*;
 import com.querydsl.sql.*;
 import org.springframework.context.ApplicationEventPublisher;
@@ -77,7 +78,7 @@ class QuerydslJdbcRepositoryFactory extends org.springframework.data.jdbc.reposi
         Class<?> type = repositoryInformation.getDomainType();
         RelationalPath<?> relationalPathBase = getRelationalPathBase(repositoryInformation);
         ConstructorExpression<?> constructor = getConstructorExpression(type, relationalPathBase);
-        SimpleQuerydslJdbcRepository<?, ?, ?> repository = new SimpleQuerydslJdbcRepository(template,
+        SimpleQuerydslJdbcRepository<?, ?> repository = new SimpleQuerydslJdbcRepository(template,
                                                                                             context.getRequiredPersistentEntity(
                                                                                                     type),
                                                                                             sqlQueryFactory,
@@ -116,21 +117,31 @@ class QuerydslJdbcRepositoryFactory extends org.springframework.data.jdbc.reposi
 
     private RelationalPathBase<?> getRelationalPathBase(RepositoryInformation repositoryInformation) {
 
-        ResolvableType queryType = ResolvableType.forClass(repositoryInformation.getRepositoryInterface())
+        ResolvableType entityType = ResolvableType.forClass(repositoryInformation.getRepositoryInterface())
                                                  .as(QuerydslJdbcRepository.class)
-                                                 .getGeneric(1);
-        if (queryType.getRawClass() == null) {
+                                                 .getGeneric(0);
+        if (entityType.getRawClass() == null) {
             throw new IllegalArgumentException("Could not resolve query class for " + repositoryInformation);
         }
 
-        return getRelationalPathBase(queryType.getRawClass());
+        return getRelationalPathBase(getQueryClass(entityType.getRawClass()));
     }
 
-    private RelationalPathBase<?> getRelationalPathBase(Class<?> queryType) {
-        Field field = ReflectionUtils.findField(queryType, queryType.getSimpleName().substring(1));
+    private Class<?> getQueryClass(Class<?> entityType) {
+        String fullName = entityType.getPackage().getName() + ".Q" + entityType.getSimpleName();
+        try {
+            return entityType.getClassLoader().loadClass(fullName);
+        } catch (ClassNotFoundException e) {
+            throw new IllegalArgumentException("Unable to load class " + fullName);
+        }
+    }
+
+    private RelationalPathBase<?> getRelationalPathBase(Class<?> queryClass) {
+        String fieldName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, queryClass.getSimpleName().substring(1));
+        Field field = ReflectionUtils.findField(queryClass, fieldName);
 
         if (field == null) {
-            throw new IllegalArgumentException("Did not find a static field of the same type in " + queryType);
+            throw new IllegalArgumentException("Did not find a static field of the same type in " + queryClass);
         }
 
         return (RelationalPathBase<?>) ReflectionUtils.getField(field, null);

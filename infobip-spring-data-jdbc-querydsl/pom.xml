@@ -11,170 +11,17 @@
 
 	<artifactId>infobip-spring-data-jdbc-querydsl</artifactId>
 
-	<properties>
-		<!-- PLUGIN VERSIONS -->
-		<docker-maven-plugin.version>0.31.0</docker-maven-plugin.version>
-		<sql-maven-plugin.version>1.5</sql-maven-plugin.version>
-		<flyway-maven-plugin.version>5.1.4</flyway-maven-plugin.version>
-
-		<!-- OTHER PROPERTIES -->
-		<mssql.test.password>A_Str0ng_Required_Password</mssql.test.password>
-		<testDatabaseName>InfobipSpringDataJdbcQuerydslTest</testDatabaseName>
-	</properties>
-
 	<dependencies>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jdbc</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>com.infobip</groupId>
-			<artifactId>infobip-spring-data-jpa-querydsl</artifactId>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>infobip-spring-data-common</artifactId>
 			<version>${project.version}</version>
-			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.infobip</groupId>
+			<artifactId>infobip-spring-data-jdbc-annotation-processor</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>io.fabric8</groupId>
-				<artifactId>docker-maven-plugin</artifactId>
-				<version>${docker-maven-plugin.version}</version>
-				<configuration>
-					<images>
-						<image>
-							<name>mcr.microsoft.com/mssql/server:2017-CU12</name>
-							<alias>mssql</alias>
-							<run>
-								<ports>
-									<port>1433:1433</port>
-								</ports>
-								<env>
-									<ACCEPT_EULA>Y</ACCEPT_EULA>
-									<SA_PASSWORD>${mssql.test.password}</SA_PASSWORD>
-								</env>
-								<wait>
-									<log>SQL Server is now ready for client connections</log>
-									<time>20000</time>
-								</wait>
-							</run>
-						</image>
-					</images>
-				</configuration>
-				<executions>
-					<execution>
-						<id>start</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>start</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>stop</id>
-						<phase>process-sources</phase>
-						<goals>
-							<goal>stop</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>sql-maven-plugin</artifactId>
-				<version>${sql-maven-plugin.version}</version>
-				<dependencies>
-					<dependency>
-						<groupId>com.microsoft.sqlserver</groupId>
-						<artifactId>mssql-jdbc</artifactId>
-						<version>7.0.0.jre8</version>
-					</dependency>
-				</dependencies>
-				<configuration>
-					<driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</driver>
-					<url>jdbc:sqlserver://127.0.0.1:1433</url>
-					<username>sa</username>
-					<password>${mssql.test.password}</password>
-					<skip>${sql-maven-plugin.skip}</skip>
-				</configuration>
-				<executions>
-					<execution>
-						<id>create-db</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>execute</goal>
-						</goals>
-						<configuration>
-							<autocommit>true</autocommit>
-							<sqlCommand>CREATE DATABASE ${testDatabaseName}</sqlCommand>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.flywaydb</groupId>
-				<artifactId>flyway-maven-plugin</artifactId>
-				<version>${flyway-maven-plugin.version}</version>
-				<executions>
-					<execution>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>migrate</goal>
-						</goals>
-						<configuration>
-							<url>jdbc:sqlserver://127.0.0.1:1433;databaseName=${testDatabaseName}</url>
-							<user>sa</user>
-							<password>${mssql.test.password}</password>
-							<serverId>flyway-db-docker-test</serverId>
-							<locations>
-								<location>filesystem:src/test/resources/db/migration</location>
-							</locations>
-						</configuration>
-					</execution>
-				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>com.microsoft.sqlserver</groupId>
-						<artifactId>mssql-jdbc</artifactId>
-						<version>7.0.0.jre8</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-
-			<plugin>
-				<groupId>com.querydsl</groupId>
-				<artifactId>querydsl-maven-plugin</artifactId>
-				<version>${querydsl.version}</version>
-				<executions>
-					<execution>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>export</goal>
-						</goals>
-						<configuration>
-							<jdbcDriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcDriver>
-							<jdbcUrl>jdbc:sqlserver://localhost:1433;database=${testDatabaseName}</jdbcUrl>
-							<jdbcUser>sa</jdbcUser>
-							<jdbcPassword>${mssql.test.password}</jdbcPassword>
-							<schemaPattern>dbo</schemaPattern>
-							<packageName>com.infobip.spring.data.jdbc</packageName>
-							<targetFolder>${project.basedir}/target/generated-sources/java</targetFolder>
-						</configuration>
-					</execution>
-				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>com.microsoft.sqlserver</groupId>
-						<artifactId>mssql-jdbc</artifactId>
-						<version>7.0.0.jre8</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-		</plugins>
-	</build>
 </project>

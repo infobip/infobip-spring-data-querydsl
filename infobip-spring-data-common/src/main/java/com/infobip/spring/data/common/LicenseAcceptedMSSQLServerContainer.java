@@ -1,4 +1,4 @@
-package com.infobip.spring.data.jpa;
+package com.infobip.spring.data.common;
 
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.*;

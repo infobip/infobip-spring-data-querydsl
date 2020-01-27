@@ -1,6 +1,6 @@
 package com.infobip.spring.data.jdbc;
 
-import com.infobip.spring.data.jpa.LicenseAcceptedMSSQLServerContainer;
+import com.infobip.spring.data.common.LicenseAcceptedMSSQLServerContainer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;

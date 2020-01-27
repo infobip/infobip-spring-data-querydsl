@@ -1,4 +1,4 @@
-package com.infobip.spring.data.jpa;
+package com.infobip.spring.data.common;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
