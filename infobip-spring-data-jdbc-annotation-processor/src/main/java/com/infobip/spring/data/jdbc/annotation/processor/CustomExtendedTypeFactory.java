@@ -22,8 +22,7 @@ final class CustomExtendedTypeFactory extends com.querydsl.apt.ExtendedTypeFacto
             Set<Class<? extends Annotation>> annotations,
             TypeMappings typeMappings,
             QueryTypeFactory queryTypeFactory,
-            Function<EntityType,
-                    String> variableNameFunction) {
+            Function<EntityType, String> variableNameFunction) {
         super(env, annotations, typeMappings, queryTypeFactory, variableNameFunction);
         this.elements = env.getElementUtils();
     }

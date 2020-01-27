@@ -72,9 +72,9 @@ class CustomElementHandler extends TypeElementHandler {
         String name = nameWithoutPrefix(model.getPackageName(), model.getSimpleName());
         TypeElement typeElement = elements.getTypeElement(name);
         List<? extends Element> fields = typeElement.getEnclosedElements()
-                                                     .stream()
-                                                     .filter(element -> element.getKind().equals(ElementKind.FIELD))
-                                                     .collect(Collectors.toList());
+                                                    .stream()
+                                                    .filter(element -> element.getKind().equals(ElementKind.FIELD))
+                                                    .collect(Collectors.toList());
 
         Map<String, Integer> fieldNameToIndex = new HashMap<>();
 
