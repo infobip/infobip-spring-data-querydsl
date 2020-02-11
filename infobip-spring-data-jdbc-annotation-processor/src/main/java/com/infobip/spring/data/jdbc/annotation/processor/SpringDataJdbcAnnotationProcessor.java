@@ -6,7 +6,6 @@ import com.querydsl.codegen.*;
 import org.springframework.data.annotation.Id;
 
 import javax.annotation.processing.*;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import java.lang.annotation.*;
@@ -14,7 +13,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @SupportedAnnotationTypes("org.springframework.data.annotation.Id")
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
 @AutoService(Processor.class)
 public class SpringDataJdbcAnnotationProcessor extends AbstractQuerydslProcessor {
 

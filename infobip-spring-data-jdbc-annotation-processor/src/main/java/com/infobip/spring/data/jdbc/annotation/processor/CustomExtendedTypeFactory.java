@@ -13,7 +13,7 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Set;
 
-final class CustomExtendedTypeFactory extends com.querydsl.apt.ExtendedTypeFactory {
+class CustomExtendedTypeFactory extends com.querydsl.apt.ExtendedTypeFactory {
 
     private final Elements elements;
 

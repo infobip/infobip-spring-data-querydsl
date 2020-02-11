@@ -16,7 +16,7 @@ import java.util.List;
 
 import static com.querydsl.apt.VisitorConfig.FIELDS_ONLY;
 
-public class SpringDataJdbcConfiguration extends DefaultConfiguration {
+class SpringDataJdbcConfiguration extends DefaultConfiguration {
 
     private final SQLCodegenModule sqlCodegenModule;
 
