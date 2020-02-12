@@ -6,6 +6,7 @@ import lombok.Value;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.infobip.spring.data.jdbc.QPerson.person;
 import static com.infobip.spring.data.jdbc.QPersonSettings.personSettings;
@@ -16,6 +17,34 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
 
     private final PersonRepository repository;
     private final PersonSettingsRepository settingsRepository;
+
+    @Test
+    void shouldFindOneWithPredicate() {
+
+        // given
+        Person johnDoe = givenSavedPerson("John", "Doe");
+        Person johnyRoe = givenSavedPerson("Johny", "Roe");
+        givenSavedPerson("Jane", "Doe");
+
+        // when
+        Optional<Person> actual = repository.findOne(person.firstName.eq("John"));
+
+        then(actual).usingFieldByFieldValueComparator().contains(johnDoe);
+    }
+
+    @Test
+    void shouldFindAll() {
+
+        // given
+        Person johnDoe = givenSavedPerson("John", "Doe");
+        Person johnyRoe = givenSavedPerson("Johny", "Roe");
+        Person janeDoe = givenSavedPerson("Jane", "Doe");
+
+        // when
+        List<Person> actual = repository.findAll();
+
+        then(actual).usingFieldByFieldElementComparator().containsExactlyInAnyOrder(johnDoe, johnyRoe, janeDoe);
+    }
 
     @Test
     void shouldFindAllWithPredicate() {

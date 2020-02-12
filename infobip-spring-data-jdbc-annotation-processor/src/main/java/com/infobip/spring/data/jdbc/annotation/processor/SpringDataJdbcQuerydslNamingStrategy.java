@@ -6,7 +6,7 @@ import com.querydsl.sql.SchemaAndTable;
 import com.querydsl.sql.codegen.NamingStrategy;
 import com.querydsl.sql.codegen.support.ForeignKeyData;
 
-public class SpringDataJdbcQuerydslNamingStrategy implements NamingStrategy {
+class SpringDataJdbcQuerydslNamingStrategy implements NamingStrategy {
 
     @Override
     public String appendSchema(String packageName, String schema) {

@@ -7,7 +7,9 @@ import com.querydsl.sql.dml.SQLUpdateClause;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
+import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -15,6 +17,14 @@ import java.util.function.Function;
 public interface QuerydslJdbcRepository<T, ID> extends CrudRepository<T, ID> {
 
     List<T> save(T... iterable);
+
+    @Override
+    <S extends T> List<S> saveAll(Iterable<S> entities);
+
+    Optional<T> findOne(Predicate predicate);
+
+    @Override
+    List<T> findAll();
 
     List<T> findAll(Predicate predicate);
 
