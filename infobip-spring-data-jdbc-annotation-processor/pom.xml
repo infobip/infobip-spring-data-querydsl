@@ -16,15 +16,6 @@
 		<!-- DEPENDENCY VERSIONS -->
 		<auto-service.version>1.0-rc6</auto-service.version>
 		<querydsl.version>4.2.3-SNAPSHOT</querydsl.version>
-
-		<!-- PLUGIN VERSIONS -->
-		<docker-maven-plugin.version>0.31.0</docker-maven-plugin.version>
-		<sql-maven-plugin.version>1.5</sql-maven-plugin.version>
-		<flyway-maven-plugin.version>5.1.4</flyway-maven-plugin.version>
-
-		<!-- OTHER PROPERTIES -->
-		<mssql.test.password>A_Str0ng_Required_Password</mssql.test.password>
-		<testDatabaseName>InfobipSpringDataJdbcQuerydslTest</testDatabaseName>
 	</properties>
 
 	<dependencies>

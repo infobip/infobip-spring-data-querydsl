@@ -31,7 +31,7 @@ public class QPascalCaseFooBar extends com.querydsl.sql.RelationalPathBase<QPasc
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public QPascalCaseFooBar(String variable) {
-        super(QPascalCaseFooBar.class, forVariable(variable), null, "PascalCaseFooBar");
+        super(QPascalCaseFooBar.class, forVariable(variable), "dbo", "PascalCaseFooBar");
         addMetadata();
     }
 
@@ -46,12 +46,12 @@ public class QPascalCaseFooBar extends com.querydsl.sql.RelationalPathBase<QPasc
     }
 
     public QPascalCaseFooBar(Path<? extends QPascalCaseFooBar> path) {
-        super(path.getType(), path.getMetadata(), null, "PascalCaseFooBar");
+        super(path.getType(), path.getMetadata(), "dbo", "PascalCaseFooBar");
         addMetadata();
     }
 
     public QPascalCaseFooBar(PathMetadata metadata) {
-        super(QPascalCaseFooBar.class, metadata, null, "PascalCaseFooBar");
+        super(QPascalCaseFooBar.class, metadata, "dbo", "PascalCaseFooBar");
         addMetadata();
     }
 

@@ -7,6 +7,7 @@ import com.querydsl.sql.ColumnMetadata;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.*;
 import javax.lang.model.util.Elements;
 import java.util.*;
@@ -15,25 +16,44 @@ import java.util.stream.Collectors;
 class CustomElementHandler extends TypeElementHandler {
 
     private final Elements elements;
+    private final String defaultSchema;
 
     public CustomElementHandler(Configuration configuration,
                                 ExtendedTypeFactory typeFactory,
                                 TypeMappings typeMappings,
                                 QueryTypeFactory queryTypeFactory,
-                                Elements elements) {
+                                Elements elements,
+                                RoundEnvironment roundEnv) {
         super(configuration, typeFactory, typeMappings, queryTypeFactory);
         this.elements = elements;
+        this.defaultSchema = getDefaultSchema(roundEnv);
+    }
+
+    private String getDefaultSchema(RoundEnvironment roundEnv) {
+        Set<? extends Element> defaultSchemaElements = roundEnv.getElementsAnnotatedWith(DefaultSchema.class);
+
+        if(defaultSchemaElements.isEmpty()) {
+            return null;
+        }
+
+        if(defaultSchemaElements.size() > 1) {
+            throw new IllegalArgumentException("found multiple elements with DefaultSchema " + defaultSchemaElements);
+        }
+
+        return defaultSchemaElements.iterator().next().getAnnotation(DefaultSchema.class).value();
     }
 
     @Override
     public EntityType handleEntityType(TypeElement element) {
         EntityType entityType = super.handleEntityType(element);
-        updateModel(entityType);
+        updateModel(element, entityType);
         return entityType;
     }
 
-    private void updateModel(EntityType type) {
-        type.getData().put("table", getTableName(type));
+    private void updateModel(TypeElement element, EntityType type) {
+        Map<Object, Object> data = type.getData();
+        data.put("table", getTableName(type));
+        getSchema(element, data).ifPresent(schema -> data.put("schema", schema));
 
         Map<String, Integer> fieldNameToIndex = getFieldNameToIndex(type);
 
@@ -42,6 +62,16 @@ class CustomElementHandler extends TypeElementHandler {
                 property.getData().put("COLUMN", ColumnMetadata.named(getColumnName(property))
                                                                .withIndex(fieldNameToIndex.get(property.getName())));
             });
+    }
+
+    private Optional<String> getSchema(TypeElement element, Map<Object, Object> data) {
+        Schema elementSchema = element.getAnnotation(Schema.class);
+
+        if(Objects.isNull(elementSchema)) {
+            return Optional.ofNullable(defaultSchema);
+        }
+
+        return Optional.of(elementSchema.value());
     }
 
     private String getTableName(EntityType model) {

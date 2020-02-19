@@ -31,7 +31,7 @@ public class QCamelCaseFooBar extends com.querydsl.sql.RelationalPathBase<QCamel
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public QCamelCaseFooBar(String variable) {
-        super(QCamelCaseFooBar.class, forVariable(variable), null, "camelCaseFooBar");
+        super(QCamelCaseFooBar.class, forVariable(variable), "dbo", "camelCaseFooBar");
         addMetadata();
     }
 
@@ -46,12 +46,12 @@ public class QCamelCaseFooBar extends com.querydsl.sql.RelationalPathBase<QCamel
     }
 
     public QCamelCaseFooBar(Path<? extends QCamelCaseFooBar> path) {
-        super(path.getType(), path.getMetadata(), null, "camelCaseFooBar");
+        super(path.getType(), path.getMetadata(), "dbo", "camelCaseFooBar");
         addMetadata();
     }
 
     public QCamelCaseFooBar(PathMetadata metadata) {
-        super(QCamelCaseFooBar.class, metadata, null, "camelCaseFooBar");
+        super(QCamelCaseFooBar.class, metadata, "dbo", "camelCaseFooBar");
         addMetadata();
     }
 
