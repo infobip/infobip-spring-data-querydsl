@@ -51,9 +51,9 @@ public class SimpleQuerydslJdbcRepository<T, ID> implements QuerydslJdbcReposito
         this.repository = new SimpleJdbcRepository<>(entityOperations, entity);
     }
 
-    @SafeVarargs
     @Override
-    public final List<T> save(T... iterable) {
+    @Transactional
+    public List<T> save(T... iterable) {
         return Stream.of(iterable)
                      .map(this::save)
                      .collect(Collectors.toList());
@@ -133,11 +133,13 @@ public class SimpleQuerydslJdbcRepository<T, ID> implements QuerydslJdbcReposito
     }
 
     @Override
+    @Transactional
     public void update(Consumer<SQLUpdateClause> update) {
         update.accept(sqlQueryFactory.update(path));
     }
 
     @Override
+    @Transactional
     public long deleteWhere(Predicate predicate) {
         return sqlQueryFactory.delete(path).where(predicate).execute();
     }
