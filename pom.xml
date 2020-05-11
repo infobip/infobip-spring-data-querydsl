@@ -269,8 +269,8 @@
 	<repositories>
 		<repository>
 			<id>spring-repo</id>
-			<name>Spring Repository</name>
-			<url>https://repo.spring.io/release</url>
+			<name>Spring Milestones Repository</name>
+			<url>https://repo.spring.io/milestone</url>
 		</repository>
 	</repositories>
 </project>
