@@ -3,7 +3,6 @@ package com.infobip.spring.data.jpa;
 import com.querydsl.core.types.Projections;
 import lombok.AllArgsConstructor;
 import lombok.Value;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -107,8 +106,6 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
         then(numberOfAffectedRows).isEqualTo(3L);
     }
 
-    // https://github.com/querydsl/querydsl/issues/1917
-    @Disabled
     @Test
     void shouldJpaSqlQuery() {
 
@@ -138,8 +135,6 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
         then(actual).usingFieldByFieldElementComparator().containsExactly(janeDoe, janieDoe, johnDoe, johnRoe);
     }
 
-    // https://github.com/querydsl/querydsl/issues/1917
-    @Disabled
     @Test
     void shouldBeAbleToJoin() {
 
