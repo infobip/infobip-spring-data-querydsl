@@ -26,6 +26,7 @@ import org.springframework.data.jdbc.core.convert.JdbcConverter;
 import org.springframework.data.mapping.PreferredConstructor;
 import org.springframework.data.mapping.callback.EntityCallbacks;
 import org.springframework.data.mapping.model.PreferredConstructorDiscoverer;
+import org.springframework.data.relational.core.dialect.Dialect;
 import org.springframework.data.relational.core.mapping.RelationalMappingContext;
 import org.springframework.data.repository.core.RepositoryInformation;
 import org.springframework.data.repository.core.RepositoryMetadata;
@@ -49,10 +50,10 @@ class QuerydslJdbcRepositoryFactory extends org.springframework.data.jdbc.reposi
     public QuerydslJdbcRepositoryFactory(DataAccessStrategy dataAccessStrategy,
                                          RelationalMappingContext context,
                                          JdbcConverter converter,
-                                         ApplicationEventPublisher publisher,
+                                         Dialect dialect, ApplicationEventPublisher publisher,
                                          NamedParameterJdbcOperations operations,
                                          SQLQueryFactory sqlQueryFactory) {
-        super(dataAccessStrategy, context, converter, publisher, operations);
+        super(dataAccessStrategy, context, converter, dialect, publisher, operations);
         this.publisher = publisher;
         this.context = context;
         this.converter = converter;

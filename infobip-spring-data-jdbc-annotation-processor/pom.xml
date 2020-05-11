@@ -15,7 +15,6 @@
 	<properties>
 		<!-- DEPENDENCY VERSIONS -->
 		<auto-service.version>1.0-rc6</auto-service.version>
-		<querydsl.version>4.2.3-SNAPSHOT</querydsl.version>
 	</properties>
 
 	<dependencies>
@@ -38,11 +37,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jdbc</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>
