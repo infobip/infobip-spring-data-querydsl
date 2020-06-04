@@ -23,6 +23,7 @@ import org.springframework.data.jdbc.core.convert.*;
 import org.springframework.data.jdbc.repository.QueryMappingConfiguration;
 import org.springframework.data.jdbc.repository.support.JdbcRepositoryFactoryBean;
 import org.springframework.data.mapping.callback.EntityCallbacks;
+import org.springframework.data.relational.core.dialect.Dialect;
 import org.springframework.data.relational.core.mapping.RelationalMappingContext;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
@@ -43,6 +44,7 @@ class QuerydslJdbcRepositoryFactoryBean<T extends Repository<S, ID>, S, ID exten
     private NamedParameterJdbcOperations operations;
     private EntityCallbacks entityCallbacks;
     private SQLQueryFactory sqlQueryFactory;
+    private Dialect dialect;
 
     protected QuerydslJdbcRepositoryFactoryBean(Class<? extends T> repositoryInterface) {
         super(repositoryInterface);
@@ -60,9 +62,12 @@ class QuerydslJdbcRepositoryFactoryBean<T extends Repository<S, ID>, S, ID exten
 
         QuerydslJdbcRepositoryFactory jdbcRepositoryFactory = new QuerydslJdbcRepositoryFactory(dataAccessStrategy,
                                                                                                 mappingContext,
-                                                                                                converter, publisher,
+                                                                                                converter,
+                                                                                                dialect,
+                                                                                                publisher,
                                                                                                 operations,
-                                                                                                sqlQueryFactory);
+                                                                                                sqlQueryFactory
+        );
         jdbcRepositoryFactory.setQueryMappingConfiguration(queryMappingConfiguration);
         jdbcRepositoryFactory.setEntityCallbacks(entityCallbacks);
 
@@ -74,6 +79,11 @@ class QuerydslJdbcRepositoryFactoryBean<T extends Repository<S, ID>, S, ID exten
 
         super.setMappingContext(mappingContext);
         this.mappingContext = mappingContext;
+    }
+
+    @Autowired
+    protected void setDialect(Dialect dialect) {
+        this.dialect = dialect;
     }
 
     public void setDataAccessStrategy(DataAccessStrategy dataAccessStrategy) {
@@ -131,9 +141,10 @@ class QuerydslJdbcRepositoryFactoryBean<T extends Repository<S, ID>, S, ID exten
 
             this.dataAccessStrategy = this.beanFactory.getBeanProvider(DataAccessStrategy.class) //
                                                       .getIfAvailable(() -> {
-
                                                           SqlGeneratorSource sqlGeneratorSource = new SqlGeneratorSource(
-                                                                  this.mappingContext);
+                                                                  this.mappingContext,
+                                                                  this.converter,
+                                                                  this.dialect);
                                                           return new DefaultDataAccessStrategy(sqlGeneratorSource,
                                                                                                this.mappingContext,
                                                                                                this.converter,
