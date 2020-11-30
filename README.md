@@ -65,7 +65,7 @@ The project is divided into 2 modules: infobip-spring-data-jdbc-querydsl and inf
 </dependency>
 ```
 
-3. Add @EnableQuerydslJdbcRepositories to your Main class:
+3. Add `@EnableQuerydslJdbcRepositories` to your Main class:
 
 ```java
 @EnableQuerydslJdbcRepositories // replaces @EnableJdbcRepositories
@@ -81,7 +81,7 @@ public class Main {
 3. Refactor repository interfaces to use `QuerydslJdbcRepository` instead of `CrudRepository`:
 
 ```java
-interface FooRepository extends QuerydslJdbcRepository<Foo, QFoo, ID> {
+interface FooRepository extends QuerydslJdbcRepository<Foo, ID> {
 }
 ```
 
