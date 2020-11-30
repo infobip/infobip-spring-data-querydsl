@@ -150,7 +150,7 @@ If you need other features from `@EnableJpaRepositories` you can use:
 
 ### <a name="JPAFeaturesAndExamples"></a> Features and examples:
 
-All examples have corresponding tests in the project and can be found [here](https://github.com/infobip/infobip-spring-data-querydsl/blob/master/infobip-spring-data-jpa-querydsl/src/test/java/com/infobip/spring/data/jpa/ExtendedQuerydslJpaRepositoryTest.java).
+All examples have corresponding tests in the project and can be found [here](infobip-spring-data-jpa-querydsl/src/test/java/com/infobip/spring/data/jpa/ExtendedQuerydslJpaRepositoryTest.java).
 
 #### <a name="JPANativeQueriesWithQuerydsl"></a> Native queries with Querydsl:
 
