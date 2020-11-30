@@ -15,6 +15,12 @@ The project is divided into 2 modules: infobip-spring-data-jdbc-querydsl and inf
     * [Requirements](#JDBCRequirements)
     * [Setup](#JDBCSetup)
     * [Features and examples](#JDBCFeaturesAndExamples)
+        * [Inner Join](#InnerJoin)
+        * [Projections](#Projections)
+        * [Query](#Query)
+        * [Update](#Update)
+        * [Delete](#Delete)
+        * [Transactional support](#TransactionalSupport)
 3. [JPA module:](#JPA)
     * [Requirements](#JPARequirements)
     * [Setup](#JPASetup)
@@ -93,7 +99,74 @@ interface FooRepository extends QuerydslJdbcRepository<Foo, ID> {
 
 All examples have corresponding tests in the project and can be found [here](infobip-spring-data-jdbc-querydsl/src/test/java/com/infobip/spring/data/jdbc/QuerydslJdbcRepositoryTest.java).
 
-Feature set is similar to the JPA module with the exception of Stored Procedure support (neither Spring Data JDBC nor Querydsl has support for it).
+#### <a name="InnerJoin"></a> Inner Join:
+
+Inner join example:
+
+```
+List<Person> actual = repository.query(query -> query
+        .select(repository.entityProjection())
+        .from(person)
+        .innerJoin(personSettings)
+        .on(person.id.eq(personSettings.personId))
+        .where(personSettings.id.eq(johnDoeSettings.getId()))
+        .fetch());
+);
+```
+
+#### <a name="Projections"></a> Projections
+
+For examples how to construct projections refer to the official documentation - [section result handling](http://www.querydsl.com/static/querydsl/latest/reference/html_single/#result_handling).
+
+Here is an example that uses constructor:
+
+```$xslt
+@Value
+public static class PersonProjection {
+    private final String firstName;
+    private final String lastName;
+}
+...
+
+List<PersonProjection> actual = repository.query(query -> query
+        .select(Projections.constructor(PersonProjection.class, person.firstName,
+                                        person.lastName))
+        .from(person)
+        .fetch());
+```
+
+#### <a name="Query"></a> Query
+
+```
+List<Person> actual = repository.query(query -> query
+        .select(repository.entityProjection())
+        .from(person)
+        .where(person.firstName.in("John", "Jane"))
+        .orderBy(person.firstName.asc(), person.lastName.asc())
+        .limit(1)
+        .offset(1)
+        .fetch());
+```
+
+#### <a name="Update"></a> Update
+
+```
+repository.update(query -> query
+        .set(person.firstName, "John")
+        .where(person.firstName.eq("Johny"))
+        .execute());
+```
+
+#### <a name="Delete"></a> Delete
+
+```
+long numberOfAffectedRows = repository.deleteWhere(person.firstName.like("John%"));
+```
+
+#### <a name="TransactionalSupport"></a> Transactional support
+
+Queries execution is always done inside the repository implementation (loan pattern) in a transaction so transactions don't have to be 
+handled manually (like they do if you are manually managing SQLQuery and other Querydsl constructs).
 
 ## <a name="JPA"></a> JPA module:
 
