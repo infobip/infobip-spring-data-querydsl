@@ -15,6 +15,7 @@ The project is divided into 2 modules: infobip-spring-data-jdbc-querydsl and inf
     * [Requirements](#JDBCRequirements)
     * [Setup](#JDBCSetup)
     * [Features and examples](#JDBCFeaturesAndExamples)
+        * [Annotation Processor](#AnnotationProcessor)
         * [Inner Join](#InnerJoin)
         * [Projections](#Projections)
         * [Query](#Query)
@@ -98,6 +99,14 @@ interface FooRepository extends QuerydslJdbcRepository<Foo, ID> {
 ### <a name="JDBCFeaturesAndExamples"></a> Features and examples:
 
 All examples have corresponding tests in the project and can be found [here](infobip-spring-data-jdbc-querydsl/src/test/java/com/infobip/spring/data/jdbc/QuerydslJdbcRepositoryTest.java).
+
+#### <a name="AnnotationProcessor"></a> Annotation Processor:
+
+`infobip-spring-data-jdbc-annotation-processor` provides an annotation processor that automatically generates Q classes without connecting to the database.
+
+`infobip-spring-data-jdbc-querydsl` depends on `infobip-spring-data-jdbc-annotation-processor` so you don't need to add explicit dependency.
+
+In case you want to manually generate Q classes you can still exclude `infobip-spring-data-jdbc-annotation-processor` and do the process manually (e.g. like [this](https://github.com/infobip/infobip-spring-data-querydsl/commit/9b41403bdea38672caa5a4c57427cdcc2ef8c2a7#diff-ca2587b532ca6c66340cb5032feded4e6b090942f295556d27b480a81d417ba2)). 
 
 #### <a name="InnerJoin"></a> Inner Join:
 
