@@ -9,3 +9,4 @@
 **/*.class
 /bin
 **./.DS_Store
+.java-version
