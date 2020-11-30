@@ -57,10 +57,7 @@ The project is divided into 2 modules: infobip-spring-data-jdbc-querydsl and inf
 
 ### <a name="JDBCSetup"></a> Setup:
 
-1. Generate [querydsl Q (query) classes](http://www.querydsl.com/static/querydsl/4.1.3/reference/html_single/#d0e725).
-   As an example how to do this check out infobip-spring-data-jdbc-querydsl pom.xml and test code.
-
-2. Dependency:
+1. Dependency:
 
 ```xml
 <dependency>
@@ -70,7 +67,7 @@ The project is divided into 2 modules: infobip-spring-data-jdbc-querydsl and inf
 </dependency>
 ```
 
-3. Add `@EnableQuerydslJdbcRepositories` to your Main class:
+2. Add `@EnableQuerydslJdbcRepositories` to your Main class:
 
 ```java
 @EnableQuerydslJdbcRepositories // replaces @EnableJdbcRepositories
