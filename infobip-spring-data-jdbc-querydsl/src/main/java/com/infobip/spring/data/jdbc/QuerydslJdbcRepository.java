@@ -1,13 +1,12 @@
 package com.infobip.spring.data.jdbc;
 
-import com.querydsl.core.types.*;
-import com.querydsl.sql.RelationalPathBase;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.sql.SQLQuery;
 import com.querydsl.sql.dml.SQLUpdateClause;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;

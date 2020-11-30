@@ -4,7 +4,7 @@
 
 	<groupId>com.infobip</groupId>
 	<artifactId>infobip-spring-data-querydsl</artifactId>
-	<version>3.1.0-SNAPSHOT</version>
+	<version>4.0.0</version>
 	<packaging>pom</packaging>
 
 	<name>Infobip Spring Data Querydsl</name>
@@ -61,7 +61,7 @@
 		<!-- DEPENDENCY VERSIONS -->
 		<spring-boot.version>2.4.0</spring-boot.version>
 		<joda-time.version>2.10.6</joda-time.version>
-		<querydsl.version>4.3.1</querydsl.version>
+		<querydsl.version>4.4.0</querydsl.version>
 
 		<!-- PLUGIN VERSIONS -->
 		<maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
@@ -133,16 +133,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>junit</groupId>
-					<artifactId>junit</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.junit.vintage</groupId>
-					<artifactId>junit-vintage-engine</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>
