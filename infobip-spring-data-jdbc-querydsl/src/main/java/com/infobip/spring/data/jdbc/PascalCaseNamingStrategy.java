@@ -2,9 +2,7 @@ package com.infobip.spring.data.jdbc;
 
 import org.springframework.data.relational.core.mapping.NamingStrategy;
 import org.springframework.data.relational.core.mapping.RelationalPersistentProperty;
-import org.springframework.stereotype.Component;
 
-@Component
 public class PascalCaseNamingStrategy implements NamingStrategy {
 
     @Override
