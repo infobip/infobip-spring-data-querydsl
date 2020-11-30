@@ -91,7 +91,7 @@ interface FooRepository extends QuerydslJdbcRepository<Foo, ID> {
 
 ### <a name="JDBCFeaturesAndExamples"></a> Features and examples:
 
-All examples have corresponding tests in the project and can be found [here](https://github.com/infobip/infobip-spring-data-querydsl/blob/master/infobip-spring-data-jdbc-querydsl/src/test/java/com/infobip/spring/data/jdbc/QuerydslJdbcRepositoryTest.java).
+All examples have corresponding tests in the project and can be found [here](infobip-spring-data-jdbc-querydsl/src/test/java/com/infobip/spring/data/jdbc/QuerydslJdbcRepositoryTest.java).
 
 Feature set is similar to the JPA module with the exception of Stored Procedure support (neither Spring Data JDBC nor Querydsl has support for it).
 
