@@ -1,6 +1,6 @@
 # Infobip Spring Data Querydsl
 
-[![Build Status](https://travis-ci.org/infobip/infobip-spring-data-querydsl.svg?branch=master)](https://travis-ci.org/infobip/infobip-spring-data-querydsl)
+![](https://github.com/infobip/infobip-spring-data-querydsl/workflows/maven/badge.svg)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.infobip/infobip-spring-data-querydsl/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.infobip/infobip-spring-data-querydsl)
 [![Coverage Status](https://coveralls.io/repos/github/infobip/infobip-spring-data-querydsl/badge.svg?branch=master)](https://coveralls.io/github/infobip/infobip-spring-data-querydsl?branch=master)
 
