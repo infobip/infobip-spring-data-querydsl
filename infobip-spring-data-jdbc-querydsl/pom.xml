@@ -3,6 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
+
 	<parent>
 		<groupId>com.infobip</groupId>
 		<artifactId>infobip-spring-data-querydsl</artifactId>
@@ -17,10 +18,11 @@
 			<artifactId>querydsl-apt</artifactId>
 			<version>${querydsl.version}</version>
 		</dependency>
+
 		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>infobip-spring-data-common</artifactId>
-			<version>${project.version}</version>
+			<groupId>com.infobip</groupId>
+			<artifactId>infobip-mssql-testcontainers-spring-boot-starter</artifactId>
+			<version>${infobip-mssql-testcontainers.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

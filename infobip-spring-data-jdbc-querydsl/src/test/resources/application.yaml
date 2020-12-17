@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:sqlserver://localhost:<port>;database=InfobipSpringDataJdbcQuerydslTest
+    url: jdbc:sqlserver://<host>:<port>;database=InfobipSpringDataJdbcQuerydslTest
     username: SA
     password: A_Str0ng_Required_Password
     hikari:

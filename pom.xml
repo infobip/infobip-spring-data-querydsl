@@ -39,7 +39,6 @@
 		<module>infobip-spring-data-jpa-querydsl</module>
 		<module>infobip-spring-data-jdbc-querydsl</module>
 		<module>infobip-spring-data-jdbc-annotation-processor</module>
-		<module>infobip-spring-data-common</module>
 	</modules>
 
 	<developers>
@@ -62,6 +61,8 @@
 		<spring-boot.version>2.4.1</spring-boot.version>
 		<joda-time.version>2.10.6</joda-time.version>
 		<querydsl.version>4.4.0</querydsl.version>
+
+		<infobip-mssql-testcontainers.version>3.0.0</infobip-mssql-testcontainers.version>
 
 		<!-- PLUGIN VERSIONS -->
 		<maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
