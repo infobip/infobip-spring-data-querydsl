@@ -22,3 +22,11 @@ jobs:
         java-version: 1.8
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+    - name: Coveralls Maven plugin
+      env:
+        CI_NAME: Github
+        CI_BUILD_NUMBER: ${{ github.run_id }}
+        CI_BUILD_URL: https://github.com/${{ github.repository }}/commit/${{ github.event.after }}/checks
+        CI_BRANCH: ${{ steps.refs.outputs.branch_name }}
+        CI_PULL_REQUEST: ${{ steps.refs.outputs.pr_number }}
+      run: mvn coveralls:report
