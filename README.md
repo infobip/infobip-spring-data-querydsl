@@ -42,6 +42,10 @@ The project is divided into 2 modules: infobip-spring-data-jdbc-querydsl and inf
 
 ## <a name="News"></a> News
 
+### 4.1.0
+
+   * `QuerydslJdbcRepository` now extends `PagingAndSortingRepository`
+
 ### 4.0.0
 
 * Breaking change:

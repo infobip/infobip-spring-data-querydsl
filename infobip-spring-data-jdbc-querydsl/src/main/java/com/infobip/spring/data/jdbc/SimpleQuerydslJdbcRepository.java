@@ -20,6 +20,7 @@ import com.querydsl.core.types.*;
 import com.querydsl.sql.*;
 import com.querydsl.sql.dml.SQLUpdateClause;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.data.domain.*;
 import org.springframework.data.jdbc.core.JdbcAggregateOperations;
 import org.springframework.data.jdbc.repository.support.SimpleJdbcRepository;
 import org.springframework.data.mapping.PersistentEntity;
@@ -163,5 +164,15 @@ public class SimpleQuerydslJdbcRepository<T, ID> implements QuerydslJdbcReposito
     @Override
     public boolean existsById(ID id) {
         return repository.existsById(id);
+    }
+
+    @Override
+    public Iterable<T> findAll(Sort sort) {
+        return repository.findAll(sort);
+    }
+
+    @Override
+    public Page<T> findAll(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 }

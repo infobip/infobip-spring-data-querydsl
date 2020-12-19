@@ -4,6 +4,8 @@ import com.querydsl.core.types.Projections;
 import lombok.AllArgsConstructor;
 import lombok.Value;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -154,6 +156,21 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
                 .fetch());
 
         then(actual).extracting(Person::getFirstName).containsExactly(johnDoe.getFirstName());
+    }
+
+    @Test
+    void shouldFindAllByPage() {
+        // given
+        givenSavedPerson("John", "Doe");
+        givenSavedPerson("Johny", "Roe");
+        givenSavedPerson("Jane", "Doe");
+
+        // when
+        Page<Person> actual = repository.findAll(PageRequest.of(0, 2));
+
+        then(actual.getSize()).isEqualTo(2);
+        then(actual.getTotalPages()).isEqualTo(2);
+        then(actual.getTotalElements()).isEqualTo(3);
     }
 
     @Value

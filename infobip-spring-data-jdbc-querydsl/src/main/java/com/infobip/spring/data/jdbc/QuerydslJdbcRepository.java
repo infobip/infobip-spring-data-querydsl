@@ -4,8 +4,7 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.sql.SQLQuery;
 import com.querydsl.sql.dml.SQLUpdateClause;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.NoRepositoryBean;
+import org.springframework.data.repository.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +12,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 @NoRepositoryBean
-public interface QuerydslJdbcRepository<T, ID> extends CrudRepository<T, ID> {
+public interface QuerydslJdbcRepository<T, ID> extends PagingAndSortingRepository<T, ID> {
 
     List<T> save(T... iterable);
 
