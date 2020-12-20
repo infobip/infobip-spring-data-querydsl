@@ -44,6 +44,8 @@ The project is divided into 2 modules: infobip-spring-data-jdbc-querydsl and inf
 
 ### 4.1.0
 
+   * `infobip-spring-data-jpa-querydsl` is no longer coupled to Hibernate ORM
+   * `SQLTemplates` for `infobip-spring-data-jpa-querydsl` can now be overidden - simply provide a bean of type SQLTemplates in your context.
    * `QuerydslJdbcRepository` now extends `PagingAndSortingRepository`
 
 ### 4.0.0
@@ -186,7 +188,6 @@ handled manually (like they do if you are manually managing SQLQuery and other Q
 ## <a name="JPARequirements"></a> Requirements:
 
 - Java 8
-- Hibernate (if you need support for other JPA implementors please open an issue)
 - Spring Data JPA
 - Querydsl
 

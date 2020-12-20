@@ -1,22 +1,18 @@
-package com.infobip.spring.data.jdbc;
+package com.infobip.spring.data.jpa;
 
+import com.querydsl.jpa.sql.JPASQLQuery;
 import com.querydsl.sql.*;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.relational.core.mapping.NamingStrategy;
 
+import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.function.Supplier;
 
 @Configuration
-public class QuerydslJdbcConfiguration {
-
-    @ConditionalOnMissingBean
-    @Bean
-    public NamingStrategy pascalCaseNamingStrategy() {
-        return new PascalCaseNamingStrategy();
-    }
+public class ExtendedQuerydslJpaConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
@@ -38,14 +34,7 @@ public class QuerydslJdbcConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    public com.querydsl.sql.Configuration querydslSqlConfiguration(SQLTemplates sqlTemplates) {
-        return new com.querydsl.sql.Configuration(sqlTemplates);
-    }
-
-    @ConditionalOnMissingBean
-    @Bean
-    public SQLQueryFactory sqlQueryFactory(com.querydsl.sql.Configuration querydslSqlConfiguration,
-                                           DataSource dataSource) {
-        return new SQLQueryFactory(querydslSqlConfiguration, dataSource);
+    public Supplier<JPASQLQuery<?>> jpaSqlFactory(EntityManager entityManager, SQLTemplates sqlTemplates) {
+        return () -> new JPASQLQuery<>(entityManager, sqlTemplates);
     }
 }
