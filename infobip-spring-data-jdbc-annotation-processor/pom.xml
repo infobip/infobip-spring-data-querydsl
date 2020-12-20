@@ -15,6 +15,7 @@
 	<properties>
 		<!-- DEPENDENCY VERSIONS -->
 		<auto-service.version>1.0-rc6</auto-service.version>
+		<compile-testing.version>0.19</compile-testing.version>
 	</properties>
 
 	<dependencies>
@@ -37,6 +38,12 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jdbc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.testing.compile</groupId>
+			<artifactId>compile-testing</artifactId>
+			<version>${compile-testing.version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>
