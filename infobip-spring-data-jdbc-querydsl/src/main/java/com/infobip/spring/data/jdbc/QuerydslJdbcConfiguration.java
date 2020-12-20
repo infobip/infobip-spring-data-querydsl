@@ -1,14 +1,15 @@
 package com.infobip.spring.data.jdbc;
 
-import com.querydsl.sql.*;
+import com.infobip.spring.data.common.InfobipSpringDataCommonConfiguration;
+import com.querydsl.sql.SQLQueryFactory;
+import com.querydsl.sql.SQLTemplates;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.*;
 import org.springframework.data.relational.core.mapping.NamingStrategy;
 
 import javax.sql.DataSource;
-import java.sql.*;
 
+@Import(InfobipSpringDataCommonConfiguration.class)
 @Configuration
 public class QuerydslJdbcConfiguration {
 
@@ -16,24 +17,6 @@ public class QuerydslJdbcConfiguration {
     @Bean
     public NamingStrategy pascalCaseNamingStrategy() {
         return new PascalCaseNamingStrategy();
-    }
-
-    @ConditionalOnMissingBean
-    @Bean
-    public SQLTemplates sqlTemplates(DataSource dataSource) throws SQLException {
-        SQLTemplatesRegistry sqlTemplatesRegistry = new SQLTemplatesRegistry();
-        DatabaseMetaData metaData;
-        try (Connection connection = dataSource.getConnection()) {
-            metaData = connection.getMetaData();
-        }
-
-        SQLTemplates templates = sqlTemplatesRegistry.getTemplates(metaData);
-
-        if (templates instanceof SQLServerTemplates || metaData.getDatabaseMajorVersion() > 11) {
-            return new SQLServer2012Templates();
-        }
-
-        return templates;
     }
 
     @ConditionalOnMissingBean

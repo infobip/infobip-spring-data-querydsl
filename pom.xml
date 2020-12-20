@@ -36,10 +36,10 @@
 	</scm>
 
 	<modules>
+		<module>infobip-spring-data-common</module>
 		<module>infobip-spring-data-jpa-querydsl</module>
 		<module>infobip-spring-data-jdbc-querydsl</module>
 		<module>infobip-spring-data-jdbc-annotation-processor</module>
-		<module>infobip-spring-data-common</module>
 	</modules>
 
 	<developers>

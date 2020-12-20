@@ -17,6 +17,12 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>infobip-spring-data-common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
 			<groupId>com.infobip</groupId>
 			<artifactId>infobip-mssql-testcontainers-spring-boot-starter</artifactId>
 			<version>${infobip-mssql-testcontainers.version}</version>

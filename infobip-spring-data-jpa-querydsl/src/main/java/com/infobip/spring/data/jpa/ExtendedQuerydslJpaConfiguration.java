@@ -1,36 +1,17 @@
 package com.infobip.spring.data.jpa;
 
+import com.infobip.spring.data.common.InfobipSpringDataCommonConfiguration;
 import com.querydsl.jpa.sql.JPASQLQuery;
-import com.querydsl.sql.*;
+import com.querydsl.sql.SQLTemplates;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.*;
 
 import javax.persistence.EntityManager;
-import javax.sql.DataSource;
-import java.sql.*;
 import java.util.function.Supplier;
 
+@Import(InfobipSpringDataCommonConfiguration.class)
 @Configuration
 public class ExtendedQuerydslJpaConfiguration {
-
-    @ConditionalOnMissingBean
-    @Bean
-    public SQLTemplates sqlTemplates(DataSource dataSource) throws SQLException {
-        SQLTemplatesRegistry sqlTemplatesRegistry = new SQLTemplatesRegistry();
-        DatabaseMetaData metaData;
-        try (Connection connection = dataSource.getConnection()) {
-            metaData = connection.getMetaData();
-        }
-
-        SQLTemplates templates = sqlTemplatesRegistry.getTemplates(metaData);
-
-        if (templates instanceof SQLServerTemplates || metaData.getDatabaseMajorVersion() > 11) {
-            return new SQLServer2012Templates();
-        }
-
-        return templates;
-    }
 
     @ConditionalOnMissingBean
     @Bean
