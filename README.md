@@ -42,6 +42,10 @@ The project is divided into 2 modules: infobip-spring-data-jdbc-querydsl and inf
 
 ## <a name="News"></a> News
 
+### 4.1.1
+
+   * support for multiple constructors in JDBC module
+
 ### 4.1.0
 
    * `infobip-spring-data-jpa-querydsl` is no longer coupled to Hibernate ORM
@@ -67,6 +71,8 @@ The project is divided into 2 modules: infobip-spring-data-jdbc-querydsl and inf
 - Java 8 with [parameter names preserved in byte code](https://stackoverflow.com/a/20594685/607767) (used to map columns to constructor parameters)
 - Spring Data JDBC
 - Querydsl
+- entities must have an all argument constructor (`@AllArgsConstructor`), can have others as well
+- entity class and all argument constructor must be public (limitation of Querydsl)
 
 ### <a name="JDBCSetup"></a> Setup:
 
