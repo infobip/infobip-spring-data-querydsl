@@ -23,9 +23,7 @@ import org.springframework.core.ResolvableType;
 import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
 import org.springframework.data.jdbc.core.convert.DataAccessStrategy;
 import org.springframework.data.jdbc.core.convert.JdbcConverter;
-import org.springframework.data.mapping.PreferredConstructor;
 import org.springframework.data.mapping.callback.EntityCallbacks;
-import org.springframework.data.mapping.model.PreferredConstructorDiscoverer;
 import org.springframework.data.relational.core.dialect.Dialect;
 import org.springframework.data.relational.core.mapping.RelationalMappingContext;
 import org.springframework.data.repository.core.RepositoryInformation;
@@ -33,10 +31,11 @@ import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.Field;
-import java.util.Map;
+import java.lang.reflect.*;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 class QuerydslJdbcRepositoryFactory extends org.springframework.data.jdbc.repository.support.JdbcRepositoryFactory {
 
@@ -80,11 +79,11 @@ class QuerydslJdbcRepositoryFactory extends org.springframework.data.jdbc.reposi
         RelationalPath<?> relationalPathBase = getRelationalPathBase(repositoryInformation);
         ConstructorExpression<?> constructor = getConstructorExpression(type, relationalPathBase);
         SimpleQuerydslJdbcRepository<?, ?> repository = new SimpleQuerydslJdbcRepository(template,
-                                                                                            context.getRequiredPersistentEntity(
-                                                                                                    type),
-                                                                                            sqlQueryFactory,
-                                                                                            constructor,
-                                                                                            relationalPathBase);
+                                                                                         context.getRequiredPersistentEntity(
+                                                                                                 type),
+                                                                                         sqlQueryFactory,
+                                                                                         constructor,
+                                                                                         relationalPathBase);
 
         if (entityCallbacks != null) {
             template.setEntityCallbacks(entityCallbacks);
@@ -94,7 +93,9 @@ class QuerydslJdbcRepositoryFactory extends org.springframework.data.jdbc.reposi
     }
 
     private ConstructorExpression<?> getConstructorExpression(Class<?> type, RelationalPath<?> pathBase) {
-        PreferredConstructor<?, ?> constructor = PreferredConstructorDiscoverer.discover(type);
+        Constructor<?> constructor = Arrays.stream(type.getDeclaredConstructors())
+                                           .max(Comparator.comparingInt(Constructor::getParameterCount))
+                                           .orElse(null);
 
         if (constructor == null) {
             throw new IllegalArgumentException(
@@ -107,11 +108,10 @@ class QuerydslJdbcRepositoryFactory extends org.springframework.data.jdbc.reposi
                                                                   column -> column.getMetadata().getName(),
                                                                   Function.identity()));
 
-        Path<?>[] paths = constructor.getParameters()
-                                     .stream()
-                                     .map(PreferredConstructor.Parameter::getName)
-                                     .map(columnNameToColumn::get)
-                                     .toArray(Path[]::new);
+        Path<?>[] paths = Stream.of(constructor.getParameters())
+                                .map(Parameter::getName)
+                                .map(columnNameToColumn::get)
+                                .toArray(Path[]::new);
 
         return Projections.constructor(type, paths);
     }
@@ -119,8 +119,8 @@ class QuerydslJdbcRepositoryFactory extends org.springframework.data.jdbc.reposi
     private RelationalPathBase<?> getRelationalPathBase(RepositoryInformation repositoryInformation) {
 
         ResolvableType entityType = ResolvableType.forClass(repositoryInformation.getRepositoryInterface())
-                                                 .as(QuerydslJdbcRepository.class)
-                                                 .getGeneric(0);
+                                                  .as(QuerydslJdbcRepository.class)
+                                                  .getGeneric(0);
         if (entityType.getRawClass() == null) {
             throw new IllegalArgumentException("Could not resolve query class for " + repositoryInformation);
         }

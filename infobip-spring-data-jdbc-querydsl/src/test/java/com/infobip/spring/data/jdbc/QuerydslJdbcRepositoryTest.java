@@ -19,6 +19,7 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
 
     private final PersonRepository repository;
     private final PersonSettingsRepository settingsRepository;
+    private final NoArgsRepository noArgsRepository;
 
     @Test
     void shouldFindOneWithPredicate() {
@@ -173,14 +174,34 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
         then(actual.getTotalElements()).isEqualTo(3);
     }
 
+    @Test
+    void shouldSupportMultipleConstructors() {
+        // given
+        NoArgsEntity givenNoArgsEntity = giveNoArgsEntity();
+
+        // when
+        List<NoArgsEntity> actual = noArgsRepository.query(query -> query
+                .select(noArgsRepository.entityProjection())
+                .from(QNoArgsEntity.noArgsEntity)
+                .limit(1)
+                .fetch());
+
+        then(actual).containsExactly(givenNoArgsEntity);
+    }
+
     @Value
     public static class PersonProjection {
+
         private final String firstName;
         private final String lastName;
     }
 
     private Person givenSavedPerson(String john, String doe) {
         return repository.save(new Person(null, john, doe));
+    }
+
+    private NoArgsEntity giveNoArgsEntity() {
+        return noArgsRepository.save(new NoArgsEntity());
     }
 
     private PersonSettings givenSavedPersonSettings(Person person) {
