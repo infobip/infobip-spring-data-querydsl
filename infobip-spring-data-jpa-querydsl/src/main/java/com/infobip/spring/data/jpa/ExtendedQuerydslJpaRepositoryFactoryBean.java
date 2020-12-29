@@ -32,7 +32,7 @@ import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.util.function.Supplier;
 
-class ExtendedQuerydslJpaRepositoryFactoryBean<T extends Repository<S, ID>, S, ID extends Serializable>
+public class ExtendedQuerydslJpaRepositoryFactoryBean<T extends Repository<S, ID>, S, ID extends Serializable>
         extends JpaRepositoryFactoryBean<T, S, ID> {
 
     private EntityManager entityManager;

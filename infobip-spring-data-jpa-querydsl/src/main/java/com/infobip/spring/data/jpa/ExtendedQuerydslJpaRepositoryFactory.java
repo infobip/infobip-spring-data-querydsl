@@ -9,7 +9,7 @@ import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.function.Supplier;
 
-class ExtendedQuerydslJpaRepositoryFactory extends JpaRepositoryFactory {
+public class ExtendedQuerydslJpaRepositoryFactory extends JpaRepositoryFactory {
 
     private final Supplier<JPASQLQuery<?>> jpaSqlFactory;
 
