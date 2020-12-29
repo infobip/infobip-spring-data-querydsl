@@ -32,7 +32,7 @@ import org.springframework.util.Assert;
 
 import java.io.Serializable;
 
-class QuerydslJdbcRepositoryFactoryBean<T extends Repository<S, ID>, S, ID extends Serializable>
+public class QuerydslJdbcRepositoryFactoryBean<T extends Repository<S, ID>, S, ID extends Serializable>
         extends JdbcRepositoryFactoryBean<T, S, ID> {
 
     private ApplicationEventPublisher publisher;
