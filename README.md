@@ -11,6 +11,7 @@ The project is divided into 2 modules: infobip-spring-data-jdbc-querydsl and inf
 ## Contents
 
 1. [News](#News)
+2. [Note on general usage](#NoteOnGeneralUsage)
 2. [JDBC module:](#JDBC)
     * [Requirements](#JDBCRequirements)
     * [Setup](#JDBCSetup)
@@ -62,6 +63,13 @@ The project is divided into 2 modules: infobip-spring-data-jdbc-querydsl and inf
     * renamed `@EnableExtendedRepositories` to `@EnableExtendedJpaRepositories`
     * renamed `ExtendedQueryDslJpaRepository` to `ExtendedQuerydslJpaRepository`
 * Added new module - infobip-spring-data-jdbc-querydsl.
+
+## <a name="NoteOnGeneralUsage"></a> Note on general usage
+
+For the sake of brevity, all examples use repository methods directly.
+
+In production code persistence layer (SQL) shouldn't leak to service layer.
+See [this answer](https://stackoverflow.com/a/26563841/607767) by Oliver Drotbohm (Spring Data Project Lead @ Pivotal) on how to approach encapsulating persistence logic.
 
 ## <a name="JDBC"></a> JDBC module:
 
