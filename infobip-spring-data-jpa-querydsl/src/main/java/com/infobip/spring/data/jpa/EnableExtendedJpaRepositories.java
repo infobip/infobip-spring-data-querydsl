@@ -11,8 +11,7 @@ import java.lang.annotation.*;
  * @see EnableJpaRepositories
  */
 @Import(ExtendedQuerydslJpaConfiguration.class)
-@EnableJpaRepositories(repositoryFactoryBeanClass = ExtendedQuerydslJpaRepositoryFactoryBean.class,
-        repositoryBaseClass = SimpleExtendedQuerydslJpaRepository.class)
+@EnableJpaRepositories(repositoryFactoryBeanClass = ExtendedQuerydslJpaRepositoryFactoryBean.class)
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface EnableExtendedJpaRepositories {

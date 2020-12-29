@@ -80,6 +80,7 @@ class ExtendedQuerydslJpaRepositoryFactoryBean<T extends Repository<S, ID>, S, I
         if (this.queryMethodFactory != null) {
             factory.setQueryMethodFactory(this.queryMethodFactory);
         }
+        factory.setRepositoryBaseClass(SimpleExtendedQuerydslJpaRepository.class);
 
         return factory;
     }
