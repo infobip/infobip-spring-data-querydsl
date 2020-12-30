@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>com.infobip</groupId>
 		<artifactId>infobip-spring-data-querydsl</artifactId>
-		<version>4.1.2-SNAPSHOT</version>
+		<version>4.1.2</version>
 	</parent>
 
 	<artifactId>infobip-spring-data-jdbc-querydsl</artifactId>
