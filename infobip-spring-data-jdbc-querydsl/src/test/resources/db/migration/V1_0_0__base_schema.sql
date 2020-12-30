@@ -17,3 +17,8 @@ CREATE TABLE NoArgsEntity (
     Value NVARCHAR(20),
     CONSTRAINT PK_NoArgsEntity PRIMARY KEY (Id),
 );
+
+CREATE TABLE FooBar (
+    Id        BIGINT IDENTITY,
+    CONSTRAINT PK_FooBar PRIMARY KEY (Id)
+);

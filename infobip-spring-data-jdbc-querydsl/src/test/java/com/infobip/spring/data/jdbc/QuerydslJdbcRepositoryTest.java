@@ -1,5 +1,6 @@
 package com.infobip.spring.data.jdbc;
 
+import com.infobip.spring.data.jdbc.extension.CustomQuerydslJdbcRepository;
 import com.querydsl.core.types.Projections;
 import lombok.AllArgsConstructor;
 import lombok.Value;
@@ -187,6 +188,13 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
                 .fetch());
 
         then(actual).containsExactly(givenNoArgsEntity);
+    }
+
+    @Test
+    void shouldExtendSimpleQuerydslJdbcRepository() {
+        // then
+        then(repository).isInstanceOf(QuerydslJdbcRepository.class)
+                        .isNotInstanceOf(CustomQuerydslJdbcRepository.class);
     }
 
     @Value

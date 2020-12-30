@@ -44,13 +44,16 @@ public class QuerydslJdbcRepositoryFactory extends org.springframework.data.jdbc
     private final ApplicationEventPublisher publisher;
     private final DataAccessStrategy accessStrategy;
     private final SQLQueryFactory sqlQueryFactory;
+    private final Class<?> repositoryBaseClass;
     private EntityCallbacks entityCallbacks;
 
     public QuerydslJdbcRepositoryFactory(DataAccessStrategy dataAccessStrategy,
                                          RelationalMappingContext context,
                                          JdbcConverter converter,
-                                         Dialect dialect, ApplicationEventPublisher publisher,
+                                         Dialect dialect,
+                                         ApplicationEventPublisher publisher,
                                          NamedParameterJdbcOperations operations,
+                                         Class<?> repositoryBaseClass,
                                          SQLQueryFactory sqlQueryFactory) {
         super(dataAccessStrategy, context, converter, dialect, publisher, operations);
         this.publisher = publisher;
@@ -58,6 +61,7 @@ public class QuerydslJdbcRepositoryFactory extends org.springframework.data.jdbc
         this.converter = converter;
         this.accessStrategy = dataAccessStrategy;
         this.sqlQueryFactory = sqlQueryFactory;
+        this.repositoryBaseClass = repositoryBaseClass;
     }
 
     public void setEntityCallbacks(EntityCallbacks entityCallbacks) {
@@ -67,7 +71,7 @@ public class QuerydslJdbcRepositoryFactory extends org.springframework.data.jdbc
 
     @Override
     protected Class<?> getRepositoryBaseClass(RepositoryMetadata repositoryMetadata) {
-        return SimpleQuerydslJdbcRepository.class;
+        return repositoryBaseClass;
     }
 
     @Override
@@ -118,14 +122,15 @@ public class QuerydslJdbcRepositoryFactory extends org.springframework.data.jdbc
 
     private RelationalPathBase<?> getRelationalPathBase(RepositoryInformation repositoryInformation) {
 
-        ResolvableType entityType = ResolvableType.forClass(repositoryInformation.getRepositoryInterface())
+        Class<?> entityType = ResolvableType.forClass(repositoryInformation.getRepositoryInterface())
                                                   .as(QuerydslJdbcRepository.class)
-                                                  .getGeneric(0);
-        if (entityType.getRawClass() == null) {
+                                                  .getGeneric(0)
+                                                  .resolve();
+        if (entityType == null) {
             throw new IllegalArgumentException("Could not resolve query class for " + repositoryInformation);
         }
 
-        return getRelationalPathBase(getQueryClass(entityType.getRawClass()));
+        return getRelationalPathBase(getQueryClass(entityType));
     }
 
     private Class<?> getQueryClass(Class<?> entityType) {

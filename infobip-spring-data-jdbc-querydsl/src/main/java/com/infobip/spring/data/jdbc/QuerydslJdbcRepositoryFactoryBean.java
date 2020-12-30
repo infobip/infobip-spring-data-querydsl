@@ -66,8 +66,8 @@ public class QuerydslJdbcRepositoryFactoryBean<T extends Repository<S, ID>, S, I
                                                                                                 dialect,
                                                                                                 publisher,
                                                                                                 operations,
-                                                                                                sqlQueryFactory
-        );
+                                                                                                SimpleQuerydslJdbcRepository.class,
+                                                                                                sqlQueryFactory);
         jdbcRepositoryFactory.setQueryMappingConfiguration(queryMappingConfiguration);
         jdbcRepositoryFactory.setEntityCallbacks(entityCallbacks);
 
