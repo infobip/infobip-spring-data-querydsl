@@ -23,6 +23,7 @@ The project is divided into 2 modules: infobip-spring-data-jdbc-querydsl and inf
         * [Update](#Update)
         * [Delete](#Delete)
         * [Transactional support](#TransactionalSupport)
+    * [Extension](#JDBCExtension)
 3. [JPA module:](#JPA)
     * [Requirements](#JPARequirements)
     * [Setup](#JPASetup)
@@ -35,6 +36,7 @@ The project is divided into 2 modules: infobip-spring-data-jdbc-querydsl and inf
         * [List instead of Iterable return type](#JPAListInsteadOfIterableReturnType)
         * [Transactional support](#JPATransactionalSupport)
         * [Stored procedure builder](#JPAStoredProcedureBuilder)
+    * [Extension](#JPAExtension)
 5. [Further reading](#FurtherReading)
 6. [Running tests](#RunningTests)
 7. [Contributing](#Contributing)
@@ -73,7 +75,7 @@ See [this answer](https://stackoverflow.com/a/26563841/607767) by Oliver Drotboh
 
 ## <a name="JDBC"></a> JDBC module:
 
-## <a name="JDBCRequirements"></a> Requirements:
+### <a name="JDBCRequirements"></a> Requirements:
 
 - Java 8 with [parameter names preserved in byte code](https://stackoverflow.com/a/20594685/607767) (used to map columns to constructor parameters)
 - Spring Data JDBC
@@ -196,9 +198,18 @@ long numberOfAffectedRows = repository.deleteWhere(person.firstName.like("John%"
 Queries execution is always done inside the repository implementation (loan pattern) in a transaction so transactions don't have to be 
 handled manually (like they do if you are manually managing SQLQuery and other Querydsl constructs).
 
+### <a name="JDBCExtension"></a> Extension:
+
+To create a custom base repository interface you'll need to create:
+*  custom base interface
+*  custom annotation for enabling
+*  custom factory bean class and potentially factory class depending on requirements
+
+Take a look at [extension package in tests](infobip-spring-data-jdbc-querydsl/src/test/java/com/infobip/spring/data/jdbc/extension) as an example on how this can be achieved.
+
 ## <a name="JPA"></a> JPA module:
 
-## <a name="JPARequirements"></a> Requirements:
+### <a name="JPARequirements"></a> Requirements:
 
 - Java 8
 - Spring Data JPA
@@ -368,6 +379,15 @@ public List<Person> delete(Person personToDelete) {
                               .getResultList());
 }
 ```
+
+### <a name="JPAExtension"></a> Extension:
+
+To create a custom base repository interface you'll need to create:
+*  custom base interface
+*  custom annotation for enabling
+*  custom factory bean class and potentially factory class depending on requirements
+
+Take a look at [extension package in tests](infobip-spring-data-jpa-querydsl/src/test/java/com/infobip/spring/data/jpa/extension) as an example on how this can be achieved.
 
 ## <a name="FurtherReading"></a> Further reading
 
