@@ -44,6 +44,10 @@ The project is divided into 2 modules: infobip-spring-data-jdbc-querydsl and inf
 
 ## <a name="News"></a> News
 
+### 4.1.2
+
+   * JPA and JDBC module extension support
+
 ### 4.1.1
 
    * support for multiple constructors in JDBC module
