@@ -395,7 +395,6 @@ Take a look at [extension package in tests](infobip-spring-data-jpa-querydsl/src
 
 To run tests you need to have docker installed.
 Containers are automatically started using [testcontainers](https://github.com/infobip/infobip-testcontainers-spring-boot-starter).
-```
 
 ## <a name="Contributing"></a> Contributing
 
