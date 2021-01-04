@@ -63,13 +63,6 @@ The project is divided into 2 modules: infobip-spring-data-jdbc-querydsl and inf
 * Breaking change:
     * removed second generic parameter from QuerydslJdbcRepository
 
-### 3.0.0
-
-* Breaking changes: 
-    * renamed `@EnableExtendedRepositories` to `@EnableExtendedJpaRepositories`
-    * renamed `ExtendedQueryDslJpaRepository` to `ExtendedQuerydslJpaRepository`
-* Added new module - infobip-spring-data-jdbc-querydsl.
-
 ## <a name="NoteOnGeneralUsage"></a> Note on general usage
 
 For the sake of brevity, all examples use repository methods directly.
@@ -83,7 +76,6 @@ See [this answer](https://stackoverflow.com/a/26563841/607767) by Oliver Drotboh
 
 - Java 8 with [parameter names preserved in byte code](https://stackoverflow.com/a/20594685/607767) (used to map columns to constructor parameters)
 - Spring Data JDBC
-- Querydsl
 - entities must have an all argument constructor (`@AllArgsConstructor`), can have others as well
 - entity class and all argument constructor must be public (limitation of Querydsl)
 
@@ -217,7 +209,6 @@ Take a look at [extension package in tests](infobip-spring-data-jdbc-querydsl/sr
 
 - Java 8
 - Spring Data JPA
-- Querydsl
 
 ### <a name="JPASetup"></a> Setup:
 
@@ -402,12 +393,8 @@ Take a look at [extension package in tests](infobip-spring-data-jpa-querydsl/src
 
 ## <a name="RunningTests"></a> Running tests
 
-Tests require SQL Server DB.
-
-Easies way to set it up on your machine is to use docker:
-
-```
-docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=<YourStrong!Passw0rd>' -p 1433:1433 -d microsoft/mssql-server-linux:2017-latest
+To run tests you need to have docker installed.
+Containers are automatically started using [testcontainers](https://github.com/infobip/infobip-testcontainers-spring-boot-starter).
 ```
 
 ## <a name="Contributing"></a> Contributing
