@@ -54,8 +54,8 @@ public class SimpleQuerydslJdbcRepository<T, ID> implements QuerydslJdbcReposito
 
     @Override
     @Transactional
-    public List<T> save(T... iterable) {
-        return Stream.of(iterable)
+    public List<T> save(T... entities) {
+        return Stream.of(entities)
                      .map(this::save)
                      .collect(Collectors.toList());
     }

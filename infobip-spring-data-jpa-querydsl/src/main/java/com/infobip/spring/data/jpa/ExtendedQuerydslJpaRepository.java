@@ -17,7 +17,7 @@ import java.util.function.Function;
 @NoRepositoryBean
 public interface ExtendedQuerydslJpaRepository<T, ID> extends JpaRepository<T, ID>, QuerydslPredicateExecutor<T> {
 
-    List<T> save(T... iterable);
+    List<T> save(T... entities);
 
     @Override
     List<T> findAll(Predicate predicate);

@@ -38,8 +38,8 @@ public class SimpleExtendedQuerydslJpaRepository<T, ID extends Serializable> ext
 
     @SafeVarargs
     @Override
-    public final List<T> save(T... iterable) {
-        return saveAll(Arrays.asList(iterable));
+    public final List<T> save(T... entities) {
+        return saveAll(Arrays.asList(entities));
     }
 
     @Override
