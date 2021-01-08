@@ -1,9 +1,5 @@
 spring:
   r2dbc:
     url: r2dbc:pool:mssql://<host>:<port>/InfobipSpringDataJdbcQuerydslTest
-    username: SA
-    password: A_Str0ng_Required_Password
   datasource:
     url: jdbc:sqlserver://<host>:<port>;database=InfobipSpringDataJdbcQuerydslTest
-    username: SA
-    password: A_Str0ng_Required_Password
