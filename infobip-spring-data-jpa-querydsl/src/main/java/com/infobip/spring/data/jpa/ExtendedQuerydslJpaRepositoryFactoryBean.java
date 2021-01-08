@@ -40,9 +40,15 @@ public class ExtendedQuerydslJpaRepositoryFactoryBean<T extends Repository<S, ID
     private EscapeCharacter escapeCharacter;
     private JpaQueryMethodFactory queryMethodFactory;
     private Supplier<JPASQLQuery<?>> jpaSqlFactory;
+    private final Class<?> repositoryBaseClass;
 
     public ExtendedQuerydslJpaRepositoryFactoryBean(Class<? extends T> repositoryInterface) {
+        this(repositoryInterface, SimpleExtendedQuerydslJpaRepository.class);
+    }
+
+    public ExtendedQuerydslJpaRepositoryFactoryBean(Class<? extends T> repositoryInterface, Class<?> repositoryBaseClass) {
         super(repositoryInterface);
+        this.repositoryBaseClass = repositoryBaseClass;
     }
 
     @PersistenceContext
@@ -80,7 +86,7 @@ public class ExtendedQuerydslJpaRepositoryFactoryBean<T extends Repository<S, ID
         if (this.queryMethodFactory != null) {
             factory.setQueryMethodFactory(this.queryMethodFactory);
         }
-        factory.setRepositoryBaseClass(SimpleExtendedQuerydslJpaRepository.class);
+        factory.setRepositoryBaseClass(repositoryBaseClass);
 
         return factory;
     }

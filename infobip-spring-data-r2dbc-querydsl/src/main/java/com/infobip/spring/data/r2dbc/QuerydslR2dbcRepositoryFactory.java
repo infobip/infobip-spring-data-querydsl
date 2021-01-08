@@ -39,17 +39,19 @@ public class QuerydslR2dbcRepositoryFactory extends R2dbcRepositoryFactory {
 
     private final R2dbcEntityOperations operations;
     private final SQLQueryFactory sqlQueryFactory;
+    private final Class<?> repositoryBaseClass;
 
     public QuerydslR2dbcRepositoryFactory(R2dbcEntityOperations operations,
-                                          SQLQueryFactory sqlQueryFactory) {
+                                          SQLQueryFactory sqlQueryFactory, Class<?> repositoryBaseClass) {
         super(operations);
         this.operations = operations;
         this.sqlQueryFactory = sqlQueryFactory;
+        this.repositoryBaseClass = repositoryBaseClass;
     }
 
     @Override
-    protected Class<?> getRepositoryBaseClass(RepositoryMetadata metadata) {
-        return SimpleQuerydslR2dbcRepository.class;
+    protected Class<?> getRepositoryBaseClass(RepositoryMetadata repositoryMetadata) {
+        return repositoryBaseClass;
     }
 
     @Override

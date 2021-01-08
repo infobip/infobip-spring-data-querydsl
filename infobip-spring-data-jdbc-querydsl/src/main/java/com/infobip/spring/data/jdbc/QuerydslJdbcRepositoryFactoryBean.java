@@ -45,9 +45,15 @@ public class QuerydslJdbcRepositoryFactoryBean<T extends Repository<S, ID>, S, I
     private EntityCallbacks entityCallbacks;
     private SQLQueryFactory sqlQueryFactory;
     private Dialect dialect;
+    private final Class<?> repositoryBaseClass;
 
     protected QuerydslJdbcRepositoryFactoryBean(Class<? extends T> repositoryInterface) {
+        this(repositoryInterface, SimpleQuerydslJdbcRepository.class);
+    }
+
+    protected QuerydslJdbcRepositoryFactoryBean(Class<? extends T> repositoryInterface, Class<?> repositoryBaseClass) {
         super(repositoryInterface);
+        this.repositoryBaseClass = repositoryBaseClass;
     }
 
     @Override
@@ -66,7 +72,7 @@ public class QuerydslJdbcRepositoryFactoryBean<T extends Repository<S, ID>, S, I
                                                                                                 dialect,
                                                                                                 publisher,
                                                                                                 operations,
-                                                                                                SimpleQuerydslJdbcRepository.class,
+                                                                                                repositoryBaseClass,
                                                                                                 sqlQueryFactory);
         jdbcRepositoryFactory.setQueryMappingConfiguration(queryMappingConfiguration);
         jdbcRepositoryFactory.setEntityCallbacks(entityCallbacks);

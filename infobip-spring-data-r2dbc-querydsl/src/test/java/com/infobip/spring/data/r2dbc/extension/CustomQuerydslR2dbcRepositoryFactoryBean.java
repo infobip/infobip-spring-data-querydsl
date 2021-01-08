@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.infobip.spring.data.jpa.extension;
+package com.infobip.spring.data.r2dbc.extension;
 
-import com.infobip.spring.data.jpa.ExtendedQuerydslJpaRepositoryFactoryBean;
+import com.infobip.spring.data.r2dbc.QuerydslR2dbcRepositoryFactoryBean;
 import org.springframework.data.repository.Repository;
 
 import java.io.Serializable;
 
-public class CustomExtendedQuerydslJpaRepositoryFactoryBean<T extends Repository<S, ID>, S, ID extends Serializable>
-        extends ExtendedQuerydslJpaRepositoryFactoryBean<T, S, ID> {
+public class CustomQuerydslR2dbcRepositoryFactoryBean<T extends Repository<S, ID>, S, ID extends Serializable>
+        extends QuerydslR2dbcRepositoryFactoryBean<T, S, ID> {
 
-    public CustomExtendedQuerydslJpaRepositoryFactoryBean(Class<? extends T> repositoryInterface) {
-        super(repositoryInterface, SimpleCustomExtendedQuerydslJpaRepository.class);
+    protected CustomQuerydslR2dbcRepositoryFactoryBean(Class<? extends T> repositoryInterface) {
+        super(repositoryInterface, CustomQuerydslR2dbcRepository.class);
     }
 }

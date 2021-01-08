@@ -82,12 +82,11 @@ public class QuerydslJdbcRepositoryFactory extends org.springframework.data.jdbc
         Class<?> type = repositoryInformation.getDomainType();
         RelationalPath<?> relationalPathBase = getRelationalPathBase(repositoryInformation);
         ConstructorExpression<?> constructor = getConstructorExpression(type, relationalPathBase);
-        SimpleQuerydslJdbcRepository<?, ?> repository = new SimpleQuerydslJdbcRepository(template,
-                                                                                         context.getRequiredPersistentEntity(
-                                                                                                 type),
-                                                                                         sqlQueryFactory,
-                                                                                         constructor,
-                                                                                         relationalPathBase);
+        Object repository = getTargetRepositoryViaReflection(repositoryInformation, template,
+                                                             context.getRequiredPersistentEntity(type),
+                                                             sqlQueryFactory,
+                                                             constructor,
+                                                             relationalPathBase);
 
         if (entityCallbacks != null) {
             template.setEntityCallbacks(entityCallbacks);

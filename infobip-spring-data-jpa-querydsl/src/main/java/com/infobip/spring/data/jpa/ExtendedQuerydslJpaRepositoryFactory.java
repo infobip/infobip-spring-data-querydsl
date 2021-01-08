@@ -28,6 +28,6 @@ public class ExtendedQuerydslJpaRepositoryFactory extends JpaRepositoryFactory {
 
         Assert.isInstanceOf(JpaRepositoryImplementation.class, repository);
 
-        return (SimpleExtendedQuerydslJpaRepository<?, ?>) repository;
+        return (JpaRepositoryImplementation<?, ?>) repository;
     }
 }

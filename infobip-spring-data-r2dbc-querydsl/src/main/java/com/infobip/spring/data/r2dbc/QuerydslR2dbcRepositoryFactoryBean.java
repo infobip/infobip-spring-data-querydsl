@@ -28,14 +28,20 @@ public class QuerydslR2dbcRepositoryFactoryBean<T extends Repository<S, ID>, S, 
         extends R2dbcRepositoryFactoryBean<T, S, ID> {
 
     private SQLQueryFactory sqlQueryFactory;
+    private final Class<?> repositoryBaseClass;
 
     protected QuerydslR2dbcRepositoryFactoryBean(Class<? extends T> repositoryInterface) {
+        this(repositoryInterface, SimpleQuerydslR2dbcRepository.class);
+    }
+
+    protected QuerydslR2dbcRepositoryFactoryBean(Class<? extends T> repositoryInterface, Class<?> repositoryBaseClass) {
         super(repositoryInterface);
+        this.repositoryBaseClass = repositoryBaseClass;
     }
 
     @Override
     protected RepositoryFactorySupport getFactoryInstance(R2dbcEntityOperations operations) {
-        return new QuerydslR2dbcRepositoryFactory(operations, sqlQueryFactory);
+        return new QuerydslR2dbcRepositoryFactory(operations, sqlQueryFactory, repositoryBaseClass);
     }
 
     @Autowired
