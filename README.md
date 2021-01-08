@@ -390,6 +390,7 @@ Take a look at [extension package in tests](infobip-spring-data-jpa-querydsl/src
 - [Atlassian Querydsl examples](https://bitbucket.org/atlassian/querydsl-examples)
 - [Querydsl google group](https://groups.google.com/forum/#!forum/querydsl)
 - [Spring Data JPA documentation](http://docs.spring.io/spring-data/jpa/docs/current/reference/html/)
+- [QueryDSL-EntityQL](https://github.com/eXsio/querydsl-entityql)
 
 ## <a name="RunningTests"></a> Running tests
 
