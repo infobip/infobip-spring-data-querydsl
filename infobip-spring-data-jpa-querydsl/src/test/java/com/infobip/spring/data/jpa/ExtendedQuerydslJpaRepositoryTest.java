@@ -80,11 +80,12 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
         givenSavedPerson("Jane", "Doe");
 
         // when
-        repository.update(query -> query
+        Long actual = repository.update(query -> query
                 .set(person.firstName, "John")
                 .where(person.firstName.eq("Johny"))
                 .execute());
 
+        then(actual).isEqualTo(1);
         then(repository.findAll()).extracting(Person::getFirstName)
                                   .containsExactlyInAnyOrder("John", "John", "Jane")
                                   .hasSize(3);

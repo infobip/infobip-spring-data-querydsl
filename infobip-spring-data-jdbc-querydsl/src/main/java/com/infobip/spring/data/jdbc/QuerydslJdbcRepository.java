@@ -9,7 +9,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 @NoRepositoryBean
@@ -29,7 +28,10 @@ public interface QuerydslJdbcRepository<T, ID> extends PagingAndSortingRepositor
 
     <O> O query(Function<SQLQuery<?>, O> query);
 
-    void update(Consumer<SQLUpdateClause> update);
+    /**
+     * @return amount of affected rows
+     */
+    long update(Function<SQLUpdateClause, Long> update);
 
     /**
      * Deletes all entities matching the given {@link Predicate}.

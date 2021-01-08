@@ -11,7 +11,6 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.NoRepositoryBean;
 
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 @NoRepositoryBean
@@ -39,7 +38,7 @@ public interface ExtendedQuerydslJpaRepository<T, ID> extends JpaRepository<T, I
     /**
      * @see JPQLQueryFactory#update(EntityPath)
      */
-    void update(Consumer<JPAUpdateClause> update);
+    long update(Function<JPAUpdateClause, Long> update);
 
     /**
      * Deletes all entities matching the given {@link Predicate}.

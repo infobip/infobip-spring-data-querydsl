@@ -28,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.*;
 
@@ -135,8 +134,8 @@ public class SimpleQuerydslJdbcRepository<T, ID> implements QuerydslJdbcReposito
 
     @Override
     @Transactional
-    public void update(Consumer<SQLUpdateClause> update) {
-        update.accept(sqlQueryFactory.update(path));
+    public long update(Function<SQLUpdateClause, Long> update) {
+        return update.apply(sqlQueryFactory.update(path));
     }
 
     @Override

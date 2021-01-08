@@ -1,6 +1,5 @@
 package com.infobip.spring.data.jpa;
 
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.*;
 import com.querydsl.jpa.HQLTemplates;
 import com.querydsl.jpa.JPQLQuery;
@@ -15,7 +14,8 @@ import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.*;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 @Transactional(readOnly = true)
 public class SimpleExtendedQuerydslJpaRepository<T, ID extends Serializable> extends QuerydslJpaRepository<T, ID>
@@ -49,9 +49,9 @@ public class SimpleExtendedQuerydslJpaRepository<T, ID extends Serializable> ext
 
     @Transactional
     @Override
-    public void update(Consumer<JPAUpdateClause> update) {
+    public long update(Function<JPAUpdateClause, Long> update) {
 
-        update.accept(jpaQueryFactory.update(path));
+        return update.apply(jpaQueryFactory.update(path));
     }
 
     @Transactional
