@@ -40,6 +40,7 @@
 		<module>infobip-spring-data-jpa-querydsl</module>
 		<module>infobip-spring-data-jdbc-querydsl</module>
 		<module>infobip-spring-data-jdbc-annotation-processor</module>
+		<module>infobip-spring-data-r2dbc-querydsl</module>
 	</modules>
 
 	<developers>
@@ -63,7 +64,7 @@
 		<joda-time.version>2.10.6</joda-time.version>
 		<querydsl.version>4.4.0</querydsl.version>
 
-		<infobip-mssql-testcontainers.version>3.0.0</infobip-mssql-testcontainers.version>
+		<infobip-mssql-testcontainers.version>3.0.1-SNAPSHOT</infobip-mssql-testcontainers.version>
 
 		<!-- PLUGIN VERSIONS -->
 		<maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
@@ -105,6 +106,7 @@
 			<classifier>jpa</classifier>
 		</dependency>
 
+		<!--TEST-->
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
@@ -182,15 +184,6 @@
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>${jacoco-maven-plugin.version}</version>
-				<configuration>
-					<excludes>
-						<exclude>com/infobip/spring/data/jdbc/QPerson.class</exclude>
-						<exclude>com/infobip/spring/data/jdbc/QFlywaySchemaHistory.class</exclude>
-						<exclude>com/infobip/spring/data/jdbc/QPersonSettings.class</exclude>
-						<exclude>com/infobip/spring/data/jpa/QPerson.class</exclude>
-						<exclude>com/infobip/spring/data/jpa/QPersonSettings.class</exclude>
-					</excludes>
-				</configuration>
 				<executions>
 					<execution>
 						<goals>

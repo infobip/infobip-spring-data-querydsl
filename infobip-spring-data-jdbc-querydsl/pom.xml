@@ -36,5 +36,9 @@
 			<artifactId>infobip-spring-data-jdbc-annotation-processor</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jdbc</artifactId>
+		</dependency>
 	</dependencies>
 </project>

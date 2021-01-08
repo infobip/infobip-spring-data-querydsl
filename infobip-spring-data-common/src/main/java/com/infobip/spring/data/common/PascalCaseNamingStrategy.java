@@ -1,4 +1,4 @@
-package com.infobip.spring.data.jdbc;
+package com.infobip.spring.data.common;
 
 import org.springframework.data.relational.core.mapping.NamingStrategy;
 import org.springframework.data.relational.core.mapping.RelationalPersistentProperty;

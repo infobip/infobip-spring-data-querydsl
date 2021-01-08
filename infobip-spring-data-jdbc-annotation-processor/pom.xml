@@ -36,8 +36,8 @@
 			<version>${querydsl.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jdbc</artifactId>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-relational</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.google.testing.compile</groupId>

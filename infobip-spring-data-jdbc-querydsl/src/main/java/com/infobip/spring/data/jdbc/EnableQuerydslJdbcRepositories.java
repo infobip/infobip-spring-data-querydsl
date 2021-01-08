@@ -1,5 +1,6 @@
 package com.infobip.spring.data.jdbc;
 
+import com.infobip.spring.data.common.QuerydslSqlQueryConfiguration;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
 
@@ -10,7 +11,7 @@ import java.lang.annotation.*;
  *
  * @see EnableJdbcRepositories
  */
-@Import(QuerydslJdbcConfiguration.class)
+@Import(QuerydslSqlQueryConfiguration.class)
 @EnableJdbcRepositories(repositoryFactoryBeanClass = QuerydslJdbcRepositoryFactoryBean.class)
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

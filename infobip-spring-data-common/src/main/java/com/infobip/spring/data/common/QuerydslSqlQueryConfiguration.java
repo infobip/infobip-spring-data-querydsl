@@ -1,6 +1,5 @@
-package com.infobip.spring.data.jdbc;
+package com.infobip.spring.data.common;
 
-import com.infobip.spring.data.common.InfobipSpringDataCommonConfiguration;
 import com.querydsl.sql.SQLQueryFactory;
 import com.querydsl.sql.SQLTemplates;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -11,7 +10,7 @@ import javax.sql.DataSource;
 
 @Import(InfobipSpringDataCommonConfiguration.class)
 @Configuration
-public class QuerydslJdbcConfiguration {
+public class QuerydslSqlQueryConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
