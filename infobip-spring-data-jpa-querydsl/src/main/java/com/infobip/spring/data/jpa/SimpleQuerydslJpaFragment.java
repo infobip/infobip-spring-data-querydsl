@@ -9,14 +9,14 @@ import javax.persistence.EntityManager;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class SimpleJPAQuerydslFragment<T> implements JPAQuerydslFragment<T> {
+public class SimpleQuerydslJpaFragment<T> implements QuerydslJpaFragment<T> {
 
     private final EntityPath<T> path;
     private final JPAQueryFactory jpaQueryFactory;
     private final Supplier<JPASQLQuery<T>> jpaSqlFactory;
     private final EntityManager entityManager;
 
-    public SimpleJPAQuerydslFragment(EntityPath<T> path,
+    public SimpleQuerydslJpaFragment(EntityPath<T> path,
                                      JPAQueryFactory jpaQueryFactory,
                                      Supplier<JPASQLQuery<T>> jpaSqlFactory,
                                      EntityManager entityManager) {

@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import java.lang.annotation.*;
 
 /**
- * Annotation to enable {@link ExtendedQuerydslJpaRepository} support.
+ * Annotation to enable {@link ExtendedQuerydslRepositoryJpa} support.
  *
  * @see EnableJpaRepositories
  */

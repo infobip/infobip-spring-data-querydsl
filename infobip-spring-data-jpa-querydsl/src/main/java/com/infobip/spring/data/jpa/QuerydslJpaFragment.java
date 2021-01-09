@@ -8,7 +8,7 @@ import com.querydsl.jpa.sql.JPASQLQuery;
 
 import java.util.function.Function;
 
-public interface JPAQuerydslFragment<T> {
+public interface QuerydslJpaFragment<T> {
 
     /**
      * @see JPQLQueryFactory#query()

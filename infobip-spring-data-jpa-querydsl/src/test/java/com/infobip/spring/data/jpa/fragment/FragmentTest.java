@@ -17,7 +17,7 @@ public class FragmentTest extends TestBase{
     void shouldInjectFragmentIntoContext() {
 
         // when
-        String[] actual = context.getBeanNamesForType(CustomFragmentPersonRepository.class);
+        String[] actual = context.getBeanNamesForType(CustomJpaFragmentPersonRepository.class);
 
         // then
         then(actual).isNotEmpty();
@@ -27,7 +27,7 @@ public class FragmentTest extends TestBase{
     void shouldInjectRepositoryIntoContext() {
 
         // when
-        String[] actual = context.getBeanNamesForType(ResolvableType.forClassWithGenerics(JPAQuerydslFragment.class, Person.class));
+        String[] actual = context.getBeanNamesForType(ResolvableType.forClassWithGenerics(QuerydslJpaFragment.class, Person.class));
 
         // then
         then(actual).isNotEmpty();

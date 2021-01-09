@@ -38,7 +38,7 @@ public class ExtendedQuerydslJpaRepositoryFactory extends JpaRepositoryFactory {
         JpaEntityInformation<?, Serializable> entityInformation = getEntityInformation(metadata.getDomainType());
         RepositoryComposition.RepositoryFragments fragments = super.getRepositoryFragments(metadata);
         EntityPath<?> path = entityPathResolver.createPath(entityInformation.getJavaType());
-        Object simpleJPAQuerydslFragment = getTargetRepositoryViaReflection(SimpleJPAQuerydslFragment.class,
+        Object simpleJPAQuerydslFragment = getTargetRepositoryViaReflection(SimpleQuerydslJpaFragment.class,
                                                                             path,
                                                                             jpaQueryFactory,
                                                                             jpaSqlFactory,
