@@ -1,6 +1,8 @@
 package com.infobip.spring.data.jpa;
 
 import com.infobip.spring.data.common.InfobipSpringDataCommonConfiguration;
+import com.querydsl.jpa.impl.JPAProvider;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.querydsl.jpa.sql.JPASQLQuery;
 import com.querydsl.sql.SQLTemplates;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -17,5 +19,11 @@ public class ExtendedQuerydslJpaConfiguration {
     @Bean
     public Supplier<JPASQLQuery<?>> jpaSqlFactory(EntityManager entityManager, SQLTemplates sqlTemplates) {
         return () -> new JPASQLQuery<>(entityManager, sqlTemplates);
+    }
+
+    @ConditionalOnMissingBean
+    @Bean
+    public JPAQueryFactory jpaQueryFactory(EntityManager entityManager) {
+        return new JPAQueryFactory(JPAProvider.getTemplates(entityManager), entityManager);
     }
 }

@@ -24,6 +24,6 @@ public class CustomExtendedQuerydslJpaRepositoryFactoryBean<T extends Repository
         extends ExtendedQuerydslJpaRepositoryFactoryBean<T, S, ID> {
 
     public CustomExtendedQuerydslJpaRepositoryFactoryBean(Class<? extends T> repositoryInterface) {
-        super(repositoryInterface, SimpleCustomExtendedQuerydslJpaRepository.class);
+        super(repositoryInterface);
     }
 }

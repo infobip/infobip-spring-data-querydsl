@@ -12,11 +12,6 @@ CREATE TABLE PersonSettings (
   CONSTRAINT FK_PersonSettings_PersonId FOREIGN KEY (PersonId) REFERENCES Person (Id) ON DELETE CASCADE
 );
 
-CREATE TABLE FooBar (
-    Id        BIGINT IDENTITY,
-    CONSTRAINT PK_FooBar PRIMARY KEY (Id)
-);
-
 GO
 
 CREATE PROCEDURE Person_DeleteAndGetFirstNames
