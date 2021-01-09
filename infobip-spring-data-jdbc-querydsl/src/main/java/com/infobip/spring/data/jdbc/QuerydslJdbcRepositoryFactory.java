@@ -17,17 +17,18 @@ package com.infobip.spring.data.jdbc;
 
 import com.google.common.base.CaseFormat;
 import com.querydsl.core.types.*;
+import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.sql.*;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.ResolvableType;
-import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
 import org.springframework.data.jdbc.core.convert.DataAccessStrategy;
 import org.springframework.data.jdbc.core.convert.JdbcConverter;
-import org.springframework.data.mapping.callback.EntityCallbacks;
+import org.springframework.data.jdbc.repository.support.JdbcRepositoryFactory;
 import org.springframework.data.relational.core.dialect.Dialect;
 import org.springframework.data.relational.core.mapping.RelationalMappingContext;
-import org.springframework.data.repository.core.RepositoryInformation;
 import org.springframework.data.repository.core.RepositoryMetadata;
+import org.springframework.data.repository.core.support.RepositoryComposition;
+import org.springframework.data.repository.core.support.RepositoryFragment;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.util.ReflectionUtils;
 
@@ -37,15 +38,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class QuerydslJdbcRepositoryFactory extends org.springframework.data.jdbc.repository.support.JdbcRepositoryFactory {
+public class QuerydslJdbcRepositoryFactory extends JdbcRepositoryFactory {
 
-    private final RelationalMappingContext context;
-    private final JdbcConverter converter;
-    private final ApplicationEventPublisher publisher;
-    private final DataAccessStrategy accessStrategy;
     private final SQLQueryFactory sqlQueryFactory;
-    private final Class<?> repositoryBaseClass;
-    private EntityCallbacks entityCallbacks;
 
     public QuerydslJdbcRepositoryFactory(DataAccessStrategy dataAccessStrategy,
                                          RelationalMappingContext context,
@@ -53,46 +48,42 @@ public class QuerydslJdbcRepositoryFactory extends org.springframework.data.jdbc
                                          Dialect dialect,
                                          ApplicationEventPublisher publisher,
                                          NamedParameterJdbcOperations operations,
-                                         Class<?> repositoryBaseClass,
                                          SQLQueryFactory sqlQueryFactory) {
         super(dataAccessStrategy, context, converter, dialect, publisher, operations);
-        this.publisher = publisher;
-        this.context = context;
-        this.converter = converter;
-        this.accessStrategy = dataAccessStrategy;
         this.sqlQueryFactory = sqlQueryFactory;
-        this.repositoryBaseClass = repositoryBaseClass;
-    }
-
-    public void setEntityCallbacks(EntityCallbacks entityCallbacks) {
-        super.setEntityCallbacks(entityCallbacks);
-        this.entityCallbacks = entityCallbacks;
     }
 
     @Override
-    protected Class<?> getRepositoryBaseClass(RepositoryMetadata repositoryMetadata) {
-        return repositoryBaseClass;
+    protected RepositoryComposition.RepositoryFragments getRepositoryFragments(RepositoryMetadata metadata) {
+
+        RepositoryComposition.RepositoryFragments fragments = super.getRepositoryFragments(metadata);
+        RelationalPathBase<?> path = getRelationalPathBaseFromQueryRepositoryClass(metadata.getRepositoryInterface());
+        Class<?> type = metadata.getDomainType();
+        ConstructorExpression<?> constructorExpression = getConstructorExpression(type, path);
+        RepositoryFragment<Object> simpleQuerydslJdbcFragment = createSimpleQuerydslJdbcFragment(path,
+                                                                                                 constructorExpression);
+        RepositoryFragment<Object> querydslJdbcPredicateExecutor = createQuerydslJdbcPredicateExecutor(
+                constructorExpression, path);
+        return fragments.append(simpleQuerydslJdbcFragment).append(querydslJdbcPredicateExecutor);
     }
 
-    @Override
-    protected Object getTargetRepository(RepositoryInformation repositoryInformation) {
+    private RepositoryFragment<Object> createSimpleQuerydslJdbcFragment(RelationalPath<?> path,
+                                                                        ConstructorExpression<?> constructor) {
+        Object simpleJPAQuerydslFragment = getTargetRepositoryViaReflection(SimpleQuerydslJdbcFragment.class,
+                                                                            sqlQueryFactory,
+                                                                            constructor,
+                                                                            path);
+        return RepositoryFragment.implemented(simpleJPAQuerydslFragment);
+    }
 
-        JdbcAggregateTemplate template = new JdbcAggregateTemplate(publisher, context, converter, accessStrategy);
-
-        Class<?> type = repositoryInformation.getDomainType();
-        RelationalPath<?> relationalPathBase = getRelationalPathBase(repositoryInformation);
-        ConstructorExpression<?> constructor = getConstructorExpression(type, relationalPathBase);
-        Object repository = getTargetRepositoryViaReflection(repositoryInformation, template,
-                                                             context.getRequiredPersistentEntity(type),
-                                                             sqlQueryFactory,
-                                                             constructor,
-                                                             relationalPathBase);
-
-        if (entityCallbacks != null) {
-            template.setEntityCallbacks(entityCallbacks);
-        }
-
-        return repository;
+    private RepositoryFragment<Object> createQuerydslJdbcPredicateExecutor(ConstructorExpression<?> constructorExpression,
+                                                                           RelationalPathBase<?> path) {
+        Querydsl querydsl = new Querydsl(sqlQueryFactory, new PathBuilder<>(path.getType(), path.getMetadata()));
+        Object querydslJdbcPredicateExecutor = getTargetRepositoryViaReflection(QuerydslJdbcPredicateExecutor.class,
+                                                                                constructorExpression,
+                                                                                path,
+                                                                                querydsl);
+        return RepositoryFragment.implemented(querydslJdbcPredicateExecutor);
     }
 
     private ConstructorExpression<?> getConstructorExpression(Class<?> type, RelationalPath<?> pathBase) {
@@ -119,17 +110,17 @@ public class QuerydslJdbcRepositoryFactory extends org.springframework.data.jdbc
         return Projections.constructor(type, paths);
     }
 
-    private RelationalPathBase<?> getRelationalPathBase(RepositoryInformation repositoryInformation) {
+    private RelationalPathBase<?> getRelationalPathBaseFromQueryRepositoryClass(Class<?> repositoryInterface) {
 
-        Class<?> entityType = ResolvableType.forClass(repositoryInformation.getRepositoryInterface())
-                                                  .as(QuerydslJdbcRepository.class)
-                                                  .getGeneric(0)
-                                                  .resolve();
+        Class<?> entityType = ResolvableType.forClass(repositoryInterface)
+                                            .as(QuerydslJdbcFragment.class)
+                                            .getGeneric(0)
+                                            .resolve();
         if (entityType == null) {
-            throw new IllegalArgumentException("Could not resolve query class for " + repositoryInformation);
+            throw new IllegalArgumentException("Could not resolve query class for " + repositoryInterface);
         }
 
-        return getRelationalPathBase(getQueryClass(entityType));
+        return getRelationalPathBaseFromQueryClass(getQueryClass(entityType));
     }
 
     private Class<?> getQueryClass(Class<?> entityType) {
@@ -141,7 +132,7 @@ public class QuerydslJdbcRepositoryFactory extends org.springframework.data.jdbc
         }
     }
 
-    private RelationalPathBase<?> getRelationalPathBase(Class<?> queryClass) {
+    private RelationalPathBase<?> getRelationalPathBaseFromQueryClass(Class<?> queryClass) {
         String fieldName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, queryClass.getSimpleName().substring(1));
         Field field = ReflectionUtils.findField(queryClass, fieldName);
 

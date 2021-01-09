@@ -45,15 +45,9 @@ public class QuerydslJdbcRepositoryFactoryBean<T extends Repository<S, ID>, S, I
     private EntityCallbacks entityCallbacks;
     private SQLQueryFactory sqlQueryFactory;
     private Dialect dialect;
-    private final Class<?> repositoryBaseClass;
 
     protected QuerydslJdbcRepositoryFactoryBean(Class<? extends T> repositoryInterface) {
-        this(repositoryInterface, SimpleQuerydslJdbcRepository.class);
-    }
-
-    protected QuerydslJdbcRepositoryFactoryBean(Class<? extends T> repositoryInterface, Class<?> repositoryBaseClass) {
         super(repositoryInterface);
-        this.repositoryBaseClass = repositoryBaseClass;
     }
 
     @Override
@@ -72,7 +66,6 @@ public class QuerydslJdbcRepositoryFactoryBean<T extends Repository<S, ID>, S, I
                                                                                                 dialect,
                                                                                                 publisher,
                                                                                                 operations,
-                                                                                                repositoryBaseClass,
                                                                                                 sqlQueryFactory);
         jdbcRepositoryFactory.setQueryMappingConfiguration(queryMappingConfiguration);
         jdbcRepositoryFactory.setEntityCallbacks(entityCallbacks);
@@ -147,13 +140,12 @@ public class QuerydslJdbcRepositoryFactoryBean<T extends Repository<S, ID>, S, I
 
             this.dataAccessStrategy = this.beanFactory.getBeanProvider(DataAccessStrategy.class) //
                                                       .getIfAvailable(() -> {
-                                                          SqlGeneratorSource sqlGeneratorSource = new SqlGeneratorSource(
-                                                                  this.mappingContext,
-                                                                  this.converter,
-                                                                  this.dialect);
-                                                          return new DefaultDataAccessStrategy(sqlGeneratorSource,
-                                                                                               this.mappingContext,
-                                                                                               this.converter,
+
+                                                          Assert.state(this.dialect != null, "Dialect is required and must not be null!");
+
+                                                          SqlGeneratorSource sqlGeneratorSource = new SqlGeneratorSource(this.mappingContext, this.converter,
+                                                                                                                         this.dialect);
+                                                          return new DefaultDataAccessStrategy(sqlGeneratorSource, this.mappingContext, this.converter,
                                                                                                this.operations);
                                                       });
         }

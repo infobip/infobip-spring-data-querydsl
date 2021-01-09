@@ -1,6 +1,6 @@
-package com.infobip.spring.data.jpa.fragment;
+package com.infobip.spring.data.jdbc.fragment;
 
-import com.infobip.spring.data.jpa.*;
+import com.infobip.spring.data.jdbc.*;
 import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
@@ -28,7 +28,7 @@ public class FragmentTest extends TestBase {
 
         // when
         String[] actual = context.getBeanNamesForType(
-                ResolvableType.forClassWithGenerics(QuerydslJpaFragment.class, Person.class));
+                ResolvableType.forClassWithGenerics(QuerydslJdbcFragment.class, Person.class));
 
         // then
         then(actual).isNotEmpty();

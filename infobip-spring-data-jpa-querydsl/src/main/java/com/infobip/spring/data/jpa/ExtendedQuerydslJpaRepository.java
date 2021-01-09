@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @NoRepositoryBean
-public interface ExtendedQuerydslRepositoryJpa<T, ID>
+public interface ExtendedQuerydslJpaRepository<T, ID>
         extends JpaRepository<T, ID>, QuerydslPredicateExecutor<T>, QuerydslJpaFragment<T> {
 
     default List<T> save(T... entities) {

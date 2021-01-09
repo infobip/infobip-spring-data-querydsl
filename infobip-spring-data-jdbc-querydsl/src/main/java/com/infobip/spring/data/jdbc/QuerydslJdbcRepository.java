@@ -1,50 +1,37 @@
 package com.infobip.spring.data.jdbc;
 
-import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
-import com.querydsl.sql.SQLQuery;
-import com.querydsl.sql.dml.SQLUpdateClause;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
 
 @NoRepositoryBean
-public interface QuerydslJdbcRepository<T, ID> extends PagingAndSortingRepository<T, ID> {
+public interface QuerydslJdbcRepository<T, ID>
+        extends PagingAndSortingRepository<T, ID>, QuerydslPredicateExecutor<T>, QuerydslJdbcFragment<T> {
 
-    List<T> save(T... entities);
+    default List<T> save(T... entities) {
+        return this.saveAll(Arrays.asList(entities));
+    }
 
     @Override
     <S extends T> List<S> saveAll(Iterable<S> entities);
-
-    Optional<T> findOne(Predicate predicate);
 
     @Override
     List<T> findAll();
 
     List<T> findAll(Predicate predicate);
 
-    <O> O query(Function<SQLQuery<?>, O> query);
+    @Override
+    List<T> findAll(Predicate predicate, Sort sort);
 
-    /**
-     * @return amount of affected rows
-     */
-    long update(Function<SQLUpdateClause, Long> update);
+    @Override
+    List<T> findAll(Predicate predicate, OrderSpecifier<?>... orderSpecifiers);
 
-    /**
-     * Deletes all entities matching the given {@link Predicate}.
-     *
-     * @param predicate to match
-     * @return amount of affected rows
-     */
-    long deleteWhere(Predicate predicate);
-
-    /**
-     * Returns entity projection used for mapping {@code QT} to {@code T}.
-     *
-     * @return entity projection
-     */
-    Expression<T> entityProjection();
+    @Override
+    List<T> findAll(OrderSpecifier<?>... orderSpecifiers);
 }

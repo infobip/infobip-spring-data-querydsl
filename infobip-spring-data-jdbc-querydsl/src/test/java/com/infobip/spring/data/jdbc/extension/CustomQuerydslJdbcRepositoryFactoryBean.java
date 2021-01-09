@@ -17,7 +17,6 @@ package com.infobip.spring.data.jdbc.extension;
 
 import com.infobip.spring.data.jdbc.QuerydslJdbcRepositoryFactoryBean;
 import org.springframework.data.repository.Repository;
-import org.springframework.data.repository.core.support.RepositoryFactorySupport;
 
 import java.io.Serializable;
 
@@ -26,13 +25,5 @@ public class CustomQuerydslJdbcRepositoryFactoryBean<T extends Repository<S, ID>
 
     protected CustomQuerydslJdbcRepositoryFactoryBean(Class<? extends T> repositoryInterface) {
         super(repositoryInterface);
-    }
-
-    @Override
-    protected RepositoryFactorySupport doCreateRepositoryFactory() {
-
-        RepositoryFactorySupport repositoryFactorySupport = super.doCreateRepositoryFactory();
-        repositoryFactorySupport.setRepositoryBaseClass(SimpleCustomQuerydslJdbcRepository.class);
-        return repositoryFactorySupport;
     }
 }
