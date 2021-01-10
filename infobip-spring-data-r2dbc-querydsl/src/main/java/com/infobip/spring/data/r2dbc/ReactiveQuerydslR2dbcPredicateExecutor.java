@@ -79,9 +79,9 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
     public Mono<Long> count(Predicate predicate) {
         NumberExpression<Long> count = ((SimpleExpression<?>) constructorExpression.getArgs().get(0)).count();
         SQLQuery<Long> sqlQuery = sqlQueryFactory.query()
-                                              .select(count)
-                                              .where(predicate)
-                                              .from(path);
+                                                 .select(count)
+                                                 .where(predicate)
+                                                 .from(path);
         return new QueryBuilder<>(entityOperations, sqlQuery).query().one();
     }
 
