@@ -5,11 +5,8 @@ import lombok.Value;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
 
-import java.time.Duration;
-import java.util.List;
-import java.util.Objects;
+import javax.annotation.Nullable;
 
 import static com.infobip.spring.data.r2dbc.QPerson.person;
 import static com.infobip.spring.data.r2dbc.QPersonSettings.personSettings;
@@ -31,11 +28,11 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
         Person johnyRoe = new Person(null, "Johny", "Roe");
 
         // when
-        List<Person> actual = repository.save(johnDoe, johnyRoe).collectList().block(Duration.ofSeconds(10));
+        Flux<Person> actual = repository.save(johnDoe, johnyRoe);
 
         // then
-        then(actual).usingElementComparatorIgnoringFields("id")
-                    .containsExactly(johnDoe, johnyRoe);
+        then(block(actual)).usingElementComparatorIgnoringFields("id")
+                           .containsExactly(johnDoe, johnyRoe);
     }
 
     @Test
@@ -58,9 +55,8 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
                                         .all();
 
         // then
-        StepVerifier.create(actual)
-                    .expectNext(johnDoe)
-                    .verifyComplete();
+        then(block(actual)).usingFieldByFieldElementComparator()
+                           .containsOnly(johnDoe);
     }
 
     @Test
@@ -76,9 +72,7 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
                                                   .all();
 
         // then
-        StepVerifier.create(actual)
-                    .expectNext(new PersonProjection(johnDoe.getFirstName(), johnDoe.getLastName()))
-                    .verifyComplete();
+        then(block(actual)).containsExactly(new PersonProjection(johnDoe.getFirstName(), johnDoe.getLastName()));
     }
 
     @Test
@@ -94,12 +88,10 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
                                                                .where(person.firstName.eq("Johny")));
 
         // then
-        StepVerifier.create(actual)
-                    .expectNext(1)
-                    .verifyComplete();
-        StepVerifier.create(repository.findAll().map(Person::getFirstName))
-                    .expectNext("John", "John", "Jane")
-                    .verifyComplete();
+        then(block(actual)).isEqualTo(1);
+        then(block(repository.findAll())).extracting(Person::getFirstName)
+                                         .containsExactlyInAnyOrder("John", "John", "Jane")
+                                         .hasSize(3);
     }
 
     @Test
@@ -115,12 +107,8 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
         Mono<Integer> actual = repository.deleteWhere(person.firstName.like("John%"));
 
         // then
-        StepVerifier.create(actual)
-                    .expectNext(3)
-                    .verifyComplete();
-        StepVerifier.create(repository.findAll())
-                    .expectNext(janeDoe)
-                    .verifyComplete();
+        then(block(actual)).isEqualTo(3L);
+        then(block(repository.findAll())).containsExactly(janeDoe);
     }
 
     @Test
@@ -141,9 +129,7 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
                                         .all();
 
         // then
-        StepVerifier.create(actual)
-                    .expectNext(johnDoe)
-                    .verifyComplete();
+        then(block(actual)).extracting(Person::getFirstName).containsExactly(johnDoe.getFirstName());
     }
 
     @Test
@@ -158,9 +144,7 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
                                                     .all();
 
         // then
-        StepVerifier.create(actual)
-                    .expectNext(givenNoArgsEntity)
-                    .verifyComplete();
+        then(block(actual)).containsExactly(givenNoArgsEntity);
     }
 
     @Test
@@ -176,16 +160,18 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
         private final String lastName;
     }
 
+    @Nullable
     private Person givenSavedPerson(String john, String doe) {
-        return Objects.requireNonNull(repository.save(new Person(null, john, doe)).block(Duration.ofSeconds(10)));
+        return block(repository.save(new Person(null, john, doe)));
     }
 
+    @Nullable
     private NoArgsEntity giveNoArgsEntity(String value) {
-        return Objects.requireNonNull(noArgsRepository.save(new NoArgsEntity(value)).block(Duration.ofSeconds(10)));
+        return block(noArgsRepository.save(new NoArgsEntity(value)));
     }
 
+    @Nullable
     private PersonSettings givenSavedPersonSettings(Person person) {
-        return Objects.requireNonNull(
-                settingsRepository.save(new PersonSettings(null, person.getId())).block(Duration.ofSeconds(10)));
+        return block(settingsRepository.save(new PersonSettings(null, person.getId())));
     }
 }

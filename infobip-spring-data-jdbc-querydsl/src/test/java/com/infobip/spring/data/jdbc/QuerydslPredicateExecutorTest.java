@@ -29,7 +29,7 @@ public class QuerydslPredicateExecutorTest extends TestBase {
         // when
         Optional<Person> actual = executor.findOne(person.firstName.eq("John"));
 
-        then(actual).usingFieldByFieldValueComparator().contains(johnDoe);
+        then(actual).contains(johnDoe);
     }
 
     @Test

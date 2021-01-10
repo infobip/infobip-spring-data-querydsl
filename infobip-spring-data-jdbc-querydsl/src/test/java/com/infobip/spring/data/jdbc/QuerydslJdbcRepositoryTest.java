@@ -117,10 +117,10 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
         givenSavedPerson("John", "Roe");
 
         // when
-        long numberOfAffectedRows = repository.deleteWhere(person.firstName.like("John%"));
+        long actual = repository.deleteWhere(person.firstName.like("John%"));
 
         then(repository.findAll()).usingFieldByFieldElementComparator().containsExactly(janeDoe);
-        then(numberOfAffectedRows).isEqualTo(3L);
+        then(actual).isEqualTo(3L);
     }
 
     @Test

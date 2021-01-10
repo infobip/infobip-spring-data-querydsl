@@ -5,12 +5,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.querydsl.ReactiveQuerydslPredicateExecutor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
 
-import java.time.Duration;
-import java.util.Objects;
+import javax.annotation.Nullable;
 
 import static com.infobip.spring.data.r2dbc.QPerson.person;
+import static org.assertj.core.api.BDDAssertions.then;
 
 public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
 
@@ -33,9 +32,7 @@ public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
         Mono<Person> actual = executor.findOne(person.firstName.eq("John"));
 
         // then
-        StepVerifier.create(actual)
-                    .expectNext(johnDoe)
-                    .verifyComplete();
+        then(block(actual)).isEqualTo(johnDoe);
     }
 
     @Test
@@ -49,9 +46,7 @@ public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
         Flux<Person> actual = executor.findAll(person.lastName.eq("Doe"));
 
         // then
-        StepVerifier.create(actual)
-                    .expectNext(johnDoe, janeDoe)
-                    .verifyComplete();
+        then(block(actual)).containsExactlyInAnyOrder(johnDoe, janeDoe);
     }
 
     @Test
@@ -65,9 +60,7 @@ public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
         Flux<Person> actual = executor.findAll(person.lastName.eq("Doe"), Sort.by(Sort.Order.asc("firstName")));
 
         // then
-        StepVerifier.create(actual)
-                    .expectNext(janeDoe, johnDoe)
-                    .verifyComplete();
+        then(block(actual)).usingFieldByFieldElementComparator().containsExactlyInAnyOrder(janeDoe, johnDoe);
     }
 
     @Test
@@ -81,9 +74,7 @@ public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
         Flux<Person> actual = executor.findAll(person.lastName.eq("Doe"), person.firstName.asc());
 
         // then
-        StepVerifier.create(actual)
-                    .expectNext(janeDoe, johnDoe)
-                    .verifyComplete();
+        then(block(actual)).usingFieldByFieldElementComparator().containsExactlyInAnyOrder(janeDoe, johnDoe);
     }
 
     @Test
@@ -97,9 +88,7 @@ public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
         Flux<Person> actual = executor.findAll(person.firstName.asc());
 
         // then
-        StepVerifier.create(actual)
-                    .expectNext(janeDoe, johnDoe, johnyRoe)
-                    .verifyComplete();
+        then(block(actual)).usingFieldByFieldElementComparator().containsExactlyInAnyOrder(janeDoe, johnDoe, johnyRoe);
     }
 
     @Test
@@ -113,9 +102,7 @@ public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
         Mono<Long> actual = executor.count(person.lastName.eq("Doe"));
 
         // then
-        StepVerifier.create(actual)
-                    .expectNext(2L)
-                    .verifyComplete();
+        then(block(actual)).isEqualTo(2);
     }
 
     @Test
@@ -129,12 +116,11 @@ public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
         Mono<Boolean> actual = executor.exists(person.lastName.eq("Roe"));
 
         // then
-        StepVerifier.create(actual)
-                    .expectNext(true)
-                    .verifyComplete();
+        then(block(actual)).isTrue();
     }
 
+    @Nullable
     private Person givenSavedPerson(String john, String doe) {
-        return Objects.requireNonNull(repository.save(new Person(null, john, doe)).block(Duration.ofSeconds(10)));
+        return block(repository.save(new Person(null, john, doe)));
     }
 }
