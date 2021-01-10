@@ -10,7 +10,7 @@ public class StoredProcedureQueryBuilder {
     private final String name;
     private final List<Parameter> inParameters;
     private final EntityManager entityManager;
-    private Class[] resultClasses;
+    private Class<?>[] resultClasses;
 
     StoredProcedureQueryBuilder(String name,
                                 EntityManager entityManager) {
@@ -43,7 +43,7 @@ public class StoredProcedureQueryBuilder {
     }
 
     public <T> StoredProcedureQueryBuilder addInParameter(Path<T> parameter, T value) {
-        Class type = parameter.getType();
+        Class<?> type = parameter.getType();
         inParameters.add(new Parameter(type, parameter.getMetadata().getName(), value));
         return this;
     }
@@ -53,17 +53,17 @@ public class StoredProcedureQueryBuilder {
         return this;
     }
 
-    public StoredProcedureQueryBuilder setResultClasses(Class... resultClasses) {
+    public StoredProcedureQueryBuilder setResultClasses(Class<?>... resultClasses) {
         this.resultClasses = resultClasses;
         return this;
     }
 
     private static final class Parameter {
-        private final Class type;
+        private final Class<?> type;
         private final String name;
         private final Object value;
 
-        private Parameter(Class type, String name, Object value) {
+        private Parameter(Class<?> type, String name, Object value) {
             this.type = type;
             this.name = name;
             this.value = value;

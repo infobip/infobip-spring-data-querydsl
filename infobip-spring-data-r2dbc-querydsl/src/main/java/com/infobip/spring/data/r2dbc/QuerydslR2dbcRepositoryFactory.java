@@ -29,7 +29,8 @@ import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.lang.Nullable;
 import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Parameter;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -61,18 +62,23 @@ public class QuerydslR2dbcRepositoryFactory extends R2dbcRepositoryFactory {
         RelationalPath<?> relationalPathBase = getRelationalPathBase(repositoryInformation);
         ConstructorExpression<?> constructor = getConstructorExpression(type, relationalPathBase);
 
-        RelationalEntityInformation<?, ?> entityInformation = getEntityInformation(repositoryInformation.getDomainType(),
-                                                                                   repositoryInformation);
+        RelationalEntityInformation<?, ?> entityInformation = getEntityInformation(
+                repositoryInformation.getDomainType(),
+                repositoryInformation);
 
-        return new SimpleQuerydslR2dbcRepository(sqlQueryFactory, constructor, relationalPathBase, operations, entityInformation, operations.getConverter());
+        return new SimpleQuerydslR2dbcRepository(sqlQueryFactory, constructor, relationalPathBase, operations,
+                                                 entityInformation, operations.getConverter());
     }
 
     private <T, ID> RelationalEntityInformation<T, ID> getEntityInformation(Class<T> domainClass,
                                                                             @Nullable RepositoryInformation information) {
 
-        RelationalPersistentEntity<?> entity = this.operations.getConverter().getMappingContext().getRequiredPersistentEntity(domainClass);
+        RelationalPersistentEntity<T> entity = (RelationalPersistentEntity<T>) this.operations.getConverter()
+                                                                                              .getMappingContext()
+                                                                                              .getRequiredPersistentEntity(
+                                                                                                      domainClass);
 
-        return new MappingRelationalEntityInformation<>((RelationalPersistentEntity<T>) entity);
+        return new MappingRelationalEntityInformation<>(entity);
     }
 
     private ConstructorExpression<?> getConstructorExpression(Class<?> type, RelationalPath<?> pathBase) {
@@ -123,12 +129,11 @@ public class QuerydslR2dbcRepositoryFactory extends R2dbcRepositoryFactory {
 
     private RelationalPathBase<?> getRelationalPathBase(Class<?> queryClass) {
         String fieldName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, queryClass.getSimpleName().substring(1));
-        Field field = ReflectionUtils.findField(queryClass, fieldName);
-
-        if (field == null) {
-            throw new IllegalArgumentException("Did not find a static field of the same type in " + queryClass);
-        }
-
-        return (RelationalPathBase<?>) ReflectionUtils.getField(field, null);
+        return Optional.ofNullable(ReflectionUtils.findField(queryClass, fieldName))
+                       .map(field -> ReflectionUtils.getField(field, null))
+                       .filter(field -> field instanceof RelationalPathBase)
+                       .map(field -> (RelationalPathBase<?>) field)
+                       .orElseThrow(() -> new IllegalArgumentException(
+                               "Did not find a static field of the same type in " + queryClass));
     }
 }

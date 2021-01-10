@@ -41,7 +41,6 @@ public class SimpleQuerydslR2dbcRepository<T, ID> implements QuerydslR2dbcReposi
     private final RelationalPath<T> path;
     private final SimpleR2dbcRepository<T, ID> repository;
     private final R2dbcEntityOperations entityOperations;
-    private final RelationalEntityInformation<T, ID> entity;
 
     @SuppressWarnings("unchecked")
     public SimpleQuerydslR2dbcRepository(SQLQueryFactory sqlQueryFactory,
@@ -54,7 +53,6 @@ public class SimpleQuerydslR2dbcRepository<T, ID> implements QuerydslR2dbcReposi
         this.constructorExpression = constructorExpression;
         this.path = (RelationalPath<T>) path;
         this.entityOperations = entityOperations;
-        this.entity = entity;
         this.repository = new SimpleR2dbcRepository<>(entity, entityOperations, converter);
     }
 
