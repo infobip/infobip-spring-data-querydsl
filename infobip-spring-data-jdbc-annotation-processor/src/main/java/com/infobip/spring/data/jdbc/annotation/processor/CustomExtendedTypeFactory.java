@@ -1,7 +1,7 @@
 package com.infobip.spring.data.jdbc.annotation.processor;
 
-import com.google.common.base.Function;
 import com.mysema.codegen.model.*;
+import com.querydsl.apt.ExtendedTypeFactory;
 import com.querydsl.codegen.*;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -12,8 +12,9 @@ import javax.lang.model.util.Elements;
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 
-class CustomExtendedTypeFactory extends com.querydsl.apt.ExtendedTypeFactory {
+class CustomExtendedTypeFactory extends ExtendedTypeFactory {
 
     private final Elements elements;
 
@@ -23,7 +24,7 @@ class CustomExtendedTypeFactory extends com.querydsl.apt.ExtendedTypeFactory {
             TypeMappings typeMappings,
             QueryTypeFactory queryTypeFactory,
             Function<EntityType, String> variableNameFunction) {
-        super(env, annotations, typeMappings, queryTypeFactory, variableNameFunction);
+        super(env, annotations, typeMappings, queryTypeFactory, variableNameFunction::apply);
         this.elements = env.getElementUtils();
     }
 

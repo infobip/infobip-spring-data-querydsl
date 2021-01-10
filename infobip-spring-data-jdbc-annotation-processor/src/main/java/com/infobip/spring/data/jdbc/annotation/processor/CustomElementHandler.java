@@ -32,11 +32,11 @@ class CustomElementHandler extends TypeElementHandler {
     private String getDefaultSchema(RoundEnvironment roundEnv) {
         Set<? extends Element> defaultSchemaElements = roundEnv.getElementsAnnotatedWith(DefaultSchema.class);
 
-        if(defaultSchemaElements.isEmpty()) {
+        if (defaultSchemaElements.isEmpty()) {
             return null;
         }
 
-        if(defaultSchemaElements.size() > 1) {
+        if (defaultSchemaElements.size() > 1) {
             throw new IllegalArgumentException("found multiple elements with DefaultSchema " + defaultSchemaElements);
         }
 
@@ -53,21 +53,20 @@ class CustomElementHandler extends TypeElementHandler {
     private void updateModel(TypeElement element, EntityType type) {
         Map<Object, Object> data = type.getData();
         data.put("table", getTableName(type));
-        getSchema(element, data).ifPresent(schema -> data.put("schema", schema));
+        getSchema(element).ifPresent(schema -> data.put("schema", schema));
 
         Map<String, Integer> fieldNameToIndex = getFieldNameToIndex(type);
 
         type.getProperties()
-            .forEach(property -> {
-                property.getData().put("COLUMN", ColumnMetadata.named(getColumnName(property))
-                                                               .withIndex(fieldNameToIndex.get(property.getName())));
-            });
+            .forEach(property -> property.getData().put("COLUMN", ColumnMetadata.named(getColumnName(property))
+                                                                                .withIndex(fieldNameToIndex.get(
+                                                                                        property.getName()))));
     }
 
-    private Optional<String> getSchema(TypeElement element, Map<Object, Object> data) {
+    private Optional<String> getSchema(TypeElement element) {
         Schema elementSchema = element.getAnnotation(Schema.class);
 
-        if(Objects.isNull(elementSchema)) {
+        if (Objects.isNull(elementSchema)) {
             return Optional.ofNullable(defaultSchema);
         }
 
