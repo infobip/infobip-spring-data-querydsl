@@ -38,57 +38,6 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
     }
 
     @Test
-    void shouldFindOneWithPredicate() {
-
-        // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
-        Person johnyRoe = givenSavedPerson("Johny", "Roe");
-        givenSavedPerson("Jane", "Doe");
-
-        // when
-        Mono<Person> actual = repository.findOne(person.firstName.eq("John"));
-
-        // then
-        StepVerifier.create(actual)
-                    .expectNext(johnDoe)
-                    .verifyComplete();
-    }
-
-    @Test
-    void shouldFindAll() {
-
-        // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
-        Person johnyRoe = givenSavedPerson("Johny", "Roe");
-        Person janeDoe = givenSavedPerson("Jane", "Doe");
-
-        // when
-        Flux<Person> actual = repository.findAll();
-
-        // then
-        StepVerifier.create(actual)
-                    .expectNext(johnDoe, johnyRoe, janeDoe)
-                    .verifyComplete();
-    }
-
-    @Test
-    void shouldFindAllWithPredicate() {
-
-        // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
-        Person johnyRoe = givenSavedPerson("Johny", "Roe");
-        givenSavedPerson("Jane", "Doe");
-
-        // when
-        Flux<Person> actual = repository.findAll(person.firstName.in("John", "Johny"));
-
-        // then
-        StepVerifier.create(actual)
-                    .expectNext(johnDoe, johnyRoe)
-                    .verifyComplete();
-    }
-
-    @Test
     void shouldQuery() {
 
         // given
