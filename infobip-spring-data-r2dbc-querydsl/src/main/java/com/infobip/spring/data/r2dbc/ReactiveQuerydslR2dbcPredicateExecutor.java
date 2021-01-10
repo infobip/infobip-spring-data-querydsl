@@ -8,6 +8,7 @@ import com.querydsl.sql.*;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.querydsl.QSort;
 import org.springframework.data.querydsl.ReactiveQuerydslPredicateExecutor;
+import org.springframework.data.r2dbc.convert.EntityRowMapper;
 import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
 import org.springframework.lang.Nullable;
 import org.springframework.r2dbc.core.RowsFetchSpec;
@@ -121,8 +122,9 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
     private <O> RowsFetchSpec<O> query(SQLQuery<O> query) {
         query.setUseLiterals(true);
         String sql = query.getSQL().getSQL();
+        EntityRowMapper<O> mapper = new EntityRowMapper<>(query.getType(), entityOperations.getConverter());
         return entityOperations.getDatabaseClient()
                                .sql(sql)
-                               .map(entityOperations.getDataAccessStrategy().getRowMapper(query.getType()));
+                               .map(mapper);
     }
 }

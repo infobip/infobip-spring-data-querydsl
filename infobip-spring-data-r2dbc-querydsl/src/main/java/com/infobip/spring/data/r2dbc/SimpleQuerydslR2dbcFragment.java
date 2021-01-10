@@ -19,6 +19,7 @@ import com.querydsl.core.types.*;
 import com.querydsl.sql.*;
 import com.querydsl.sql.dml.SQLDeleteClause;
 import com.querydsl.sql.dml.SQLUpdateClause;
+import org.springframework.data.r2dbc.convert.EntityRowMapper;
 import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
 import org.springframework.r2dbc.core.RowsFetchSpec;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,8 +92,9 @@ public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> 
         SQLQuery<O> result = query.apply(sqlQueryFactory.query());
         result.setUseLiterals(true);
         String sql = result.getSQL().getSQL();
+        EntityRowMapper<O> mapper = new EntityRowMapper<>(result.getType(), entityOperations.getConverter());
         return entityOperations.getDatabaseClient()
                                .sql(sql)
-                               .map(entityOperations.getDataAccessStrategy().getRowMapper(result.getType()));
+                               .map(mapper);
     }
 }
