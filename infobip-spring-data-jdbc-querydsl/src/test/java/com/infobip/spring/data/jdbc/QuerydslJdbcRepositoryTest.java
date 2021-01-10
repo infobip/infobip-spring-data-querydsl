@@ -30,7 +30,7 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
         // when
         List<Person> actual = repository.findAll();
 
-        then(actual).usingFieldByFieldElementComparator().containsExactlyInAnyOrder(johnDoe, johnyRoe, janeDoe);
+        then(actual).containsExactlyInAnyOrder(johnDoe, johnyRoe, janeDoe);
     }
 
     @Test
@@ -44,7 +44,7 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
         // when
         List<Person> actual = repository.findAll(person.firstName.in("John", "Johny"));
 
-        then(actual).usingFieldByFieldElementComparator().containsOnly(johnDoe, johnyRoe);
+        then(actual).containsOnly(johnDoe, johnyRoe);
     }
 
     @Test
@@ -67,7 +67,7 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
                 .offset(1)
                 .fetch());
 
-        then(actual).usingFieldByFieldElementComparator().containsOnly(johnDoe);
+        then(actual).containsOnly(johnDoe);
     }
 
     @Test
@@ -119,7 +119,7 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
         // when
         long actual = repository.deleteWhere(person.firstName.like("John%"));
 
-        then(repository.findAll()).usingFieldByFieldElementComparator().containsExactly(janeDoe);
+        then(repository.findAll()).containsExactly(janeDoe);
         then(actual).isEqualTo(3L);
     }
 

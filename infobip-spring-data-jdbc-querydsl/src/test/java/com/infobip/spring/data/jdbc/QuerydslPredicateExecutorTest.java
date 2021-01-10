@@ -42,7 +42,7 @@ public class QuerydslPredicateExecutorTest extends TestBase {
         // when
         Iterable<Person> actual = executor.findAll(person.lastName.eq("Doe"));
 
-        then(actual).usingFieldByFieldElementComparator().containsExactlyInAnyOrder(johnDoe, janeDoe);
+        then(actual).containsExactlyInAnyOrder(johnDoe, janeDoe);
     }
 
     @Test
@@ -55,7 +55,7 @@ public class QuerydslPredicateExecutorTest extends TestBase {
         // when
         Iterable<Person> actual = executor.findAll(person.lastName.eq("Doe"), Sort.by(Sort.Order.asc("firstName")));
 
-        then(actual).usingFieldByFieldElementComparator().containsExactlyInAnyOrder(janeDoe, johnDoe);
+        then(actual).containsExactlyInAnyOrder(janeDoe, johnDoe);
     }
 
     @Test
@@ -68,7 +68,7 @@ public class QuerydslPredicateExecutorTest extends TestBase {
         // when
         Iterable<Person> actual = executor.findAll(person.lastName.eq("Doe"), person.firstName.asc());
 
-        then(actual).usingFieldByFieldElementComparator().containsExactlyInAnyOrder(janeDoe, johnDoe);
+        then(actual).containsExactlyInAnyOrder(janeDoe, johnDoe);
     }
 
     @Test
@@ -81,7 +81,7 @@ public class QuerydslPredicateExecutorTest extends TestBase {
         // when
         Iterable<Person> actual = executor.findAll(person.firstName.asc());
 
-        then(actual).usingFieldByFieldElementComparator().containsExactlyInAnyOrder(janeDoe, johnDoe, johnyRoe);
+        then(actual).containsExactlyInAnyOrder(janeDoe, johnDoe, johnyRoe);
     }
 
     @Test
@@ -98,7 +98,7 @@ public class QuerydslPredicateExecutorTest extends TestBase {
         then(actual.getSize()).isOne();
         then(actual.getTotalElements()).isEqualTo(2);
         then(actual.getTotalPages()).isEqualTo(2);
-        then(actual).usingFieldByFieldElementComparator().containsExactlyInAnyOrder(janeDoe);
+        then(actual).containsExactlyInAnyOrder(janeDoe);
     }
 
     @Test

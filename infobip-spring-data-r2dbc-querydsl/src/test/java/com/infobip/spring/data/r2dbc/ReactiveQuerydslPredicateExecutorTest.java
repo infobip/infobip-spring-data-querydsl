@@ -60,7 +60,7 @@ public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
         Flux<Person> actual = executor.findAll(person.lastName.eq("Doe"), Sort.by(Sort.Order.asc("firstName")));
 
         // then
-        then(block(actual)).usingFieldByFieldElementComparator().containsExactlyInAnyOrder(janeDoe, johnDoe);
+        then(block(actual)).containsExactlyInAnyOrder(janeDoe, johnDoe);
     }
 
     @Test
@@ -74,7 +74,7 @@ public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
         Flux<Person> actual = executor.findAll(person.lastName.eq("Doe"), person.firstName.asc());
 
         // then
-        then(block(actual)).usingFieldByFieldElementComparator().containsExactlyInAnyOrder(janeDoe, johnDoe);
+        then(block(actual)).containsExactlyInAnyOrder(janeDoe, johnDoe);
     }
 
     @Test
@@ -88,7 +88,7 @@ public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
         Flux<Person> actual = executor.findAll(person.firstName.asc());
 
         // then
-        then(block(actual)).usingFieldByFieldElementComparator().containsExactlyInAnyOrder(janeDoe, johnDoe, johnyRoe);
+        then(block(actual)).containsExactlyInAnyOrder(janeDoe, johnDoe, johnyRoe);
     }
 
     @Test

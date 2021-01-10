@@ -55,7 +55,7 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
                                         .all();
 
         // then
-        then(block(actual)).usingFieldByFieldElementComparator()
+        then(block(actual))
                            .containsOnly(johnDoe);
     }
 
