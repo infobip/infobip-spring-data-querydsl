@@ -2,6 +2,8 @@ package com.infobip.spring.data.r2dbc;
 
 import com.infobip.spring.data.common.Querydsl;
 import com.querydsl.core.types.*;
+import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.sql.*;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.querydsl.QSort;
@@ -35,7 +37,7 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
     @Override
     public Mono<T> findOne(Predicate predicate) {
         SQLQuery<T> sqlQuery = sqlQueryFactory.query()
-                                              .select(entityProjection())
+                                              .select(constructorExpression)
                                               .where(predicate)
                                               .from(path);
         return new QueryBuilder<>(entityOperations, sqlQuery).query().one();
@@ -43,7 +45,7 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
 
     @Override
     public Flux<T> findAll(Predicate predicate) {
-        SQLQuery<T> query = sqlQueryFactory.query().select(entityProjection()).from(path).where(predicate);
+        SQLQuery<T> query = sqlQueryFactory.query().select(constructorExpression).from(path).where(predicate);
         return new QueryBuilder<>(entityOperations, query).query().all();
     }
 
@@ -75,12 +77,12 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
 
     @Override
     public Mono<Long> count(Predicate predicate) {
-        throw new UnsupportedOperationException();
-//        SQLQuery<T> sqlQuery = sqlQueryFactory.query()
-//                                              .select(entityProjection())
-//                                              .where(predicate)
-//                                              .from(path);
-//        return new QueryBuilder<>(entityOperations, createQuery(predicate)).query().all().count();
+        NumberExpression<Long> count = ((SimpleExpression<?>) constructorExpression.getArgs().get(0)).count();
+        SQLQuery<Long> sqlQuery = sqlQueryFactory.query()
+                                              .select(count)
+                                              .where(predicate)
+                                              .from(path);
+        return new QueryBuilder<>(entityOperations, sqlQuery).query().one();
     }
 
     @Override
@@ -117,9 +119,5 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
     private Flux<T> executeSorted(SQLQuery<T> query, Sort sort) {
         SQLQuery<T> sqlQuery = querydsl.applySorting(sort, query);
         return new QueryBuilder<>(entityOperations, sqlQuery).query().all();
-    }
-
-    private Expression<T> entityProjection() {
-        return constructorExpression;
     }
 }
