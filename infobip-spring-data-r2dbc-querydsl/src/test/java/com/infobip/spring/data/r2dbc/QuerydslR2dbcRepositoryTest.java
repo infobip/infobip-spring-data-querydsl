@@ -1,6 +1,5 @@
 package com.infobip.spring.data.r2dbc;
 
-import com.querydsl.core.types.Projections;
 import lombok.AllArgsConstructor;
 import lombok.Value;
 import org.junit.jupiter.api.Test;
@@ -10,9 +9,11 @@ import reactor.test.StepVerifier;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Objects;
 
 import static com.infobip.spring.data.r2dbc.QPerson.person;
 import static com.infobip.spring.data.r2dbc.QPersonSettings.personSettings;
+import static com.querydsl.core.types.Projections.constructor;
 import static org.assertj.core.api.BDDAssertions.then;
 
 @AllArgsConstructor
@@ -48,15 +49,13 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
         givenSavedPerson("Janie", "Doe");
 
         // when
-        Flux<Person> actual = repository.query(builder -> builder.query(
-                query -> query.select(repository.entityProjection())
-                              .from(person)
-                              .where(person.firstName.in("John",
-                                                         "Jane"))
-                              .orderBy(person.firstName.asc(),
-                                       person.lastName.asc())
-                              .limit(1)
-                              .offset(1)).all());
+        Flux<Person> actual = repository.query(query -> query.select(repository.entityProjection())
+                                                             .from(person)
+                                                             .where(person.firstName.in("John", "Jane"))
+                                                             .orderBy(person.firstName.asc(), person.lastName.asc())
+                                                             .limit(1)
+                                                             .offset(1))
+                                        .all();
 
         // then
         StepVerifier.create(actual)
@@ -71,10 +70,10 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
         Person johnDoe = givenSavedPerson("John", "Doe");
 
         // when
-        Flux<PersonProjection> actual = repository.query(builder -> builder.query(
-                query -> query.select(Projections.constructor(PersonProjection.class, person.firstName,
-                                                              person.lastName))
-                              .from(person)).all());
+        Flux<PersonProjection> actual = repository.query(
+                query -> query.select(constructor(PersonProjection.class, person.firstName, person.lastName))
+                              .from(person))
+                                                  .all();
 
         // then
         StepVerifier.create(actual)
@@ -91,12 +90,11 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
         givenSavedPerson("Jane", "Doe");
 
         // when
-        Mono<Integer> numberOfAffectedRows = repository.update(query -> query
-                .set(person.firstName, "John")
-                .where(person.firstName.eq("Johny")));
+        Mono<Integer> actual = repository.update(query -> query.set(person.firstName, "John")
+                                                               .where(person.firstName.eq("Johny")));
 
         // then
-        StepVerifier.create(numberOfAffectedRows)
+        StepVerifier.create(actual)
                     .expectNext(1)
                     .verifyComplete();
         StepVerifier.create(repository.findAll().map(Person::getFirstName))
@@ -114,10 +112,10 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
         givenSavedPerson("John", "Roe");
 
         // when
-        Mono<Integer> numberOfAffectedRows = repository.deleteWhere(person.firstName.like("John%"));
+        Mono<Integer> actual = repository.deleteWhere(person.firstName.like("John%"));
 
         // then
-        StepVerifier.create(numberOfAffectedRows)
+        StepVerifier.create(actual)
                     .expectNext(3)
                     .verifyComplete();
         StepVerifier.create(repository.findAll())
@@ -135,13 +133,12 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
         givenSavedPersonSettings(johnyRoe);
 
         // when
-        Flux<Person> actual = repository.query(
-                builder -> builder.query(
-                        query -> query.select(repository.entityProjection())
-                                      .from(person)
-                                      .innerJoin(personSettings)
-                                      .on(person.id.eq(personSettings.personId))
-                                      .where(personSettings.id.eq(johnDoeSettings.getId()))).all());
+        Flux<Person> actual = repository.query(query -> query.select(repository.entityProjection())
+                                                             .from(person)
+                                                             .innerJoin(personSettings)
+                                                             .on(person.id.eq(personSettings.personId))
+                                                             .where(personSettings.id.eq(johnDoeSettings.getId())))
+                                        .all();
 
         // then
         StepVerifier.create(actual)
@@ -155,10 +152,10 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
         NoArgsEntity givenNoArgsEntity = giveNoArgsEntity("value");
 
         // when
-        Flux<NoArgsEntity> actual = noArgsRepository.query(builder -> builder.query(
-                query -> query.select(noArgsRepository.entityProjection())
-                              .from(QNoArgsEntity.noArgsEntity)
-                              .limit(1)).all());
+        Flux<NoArgsEntity> actual = noArgsRepository.query(query -> query.select(noArgsRepository.entityProjection())
+                                                                         .from(QNoArgsEntity.noArgsEntity)
+                                                                         .limit(1))
+                                                    .all();
 
         // then
         StepVerifier.create(actual)
@@ -180,14 +177,15 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
     }
 
     private Person givenSavedPerson(String john, String doe) {
-        return repository.save(new Person(null, john, doe)).block(Duration.ofSeconds(10));
+        return Objects.requireNonNull(repository.save(new Person(null, john, doe)).block(Duration.ofSeconds(10)));
     }
 
     private NoArgsEntity giveNoArgsEntity(String value) {
-        return noArgsRepository.save(new NoArgsEntity(value)).block(Duration.ofSeconds(10));
+        return Objects.requireNonNull(noArgsRepository.save(new NoArgsEntity(value)).block(Duration.ofSeconds(10)));
     }
 
     private PersonSettings givenSavedPersonSettings(Person person) {
-        return settingsRepository.save(new PersonSettings(null, person.getId())).block(Duration.ofSeconds(10));
+        return Objects.requireNonNull(
+                settingsRepository.save(new PersonSettings(null, person.getId())).block(Duration.ofSeconds(10)));
     }
 }

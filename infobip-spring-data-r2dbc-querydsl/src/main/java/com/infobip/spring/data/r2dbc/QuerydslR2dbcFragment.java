@@ -2,14 +2,16 @@ package com.infobip.spring.data.r2dbc;
 
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.sql.SQLQuery;
 import com.querydsl.sql.dml.SQLUpdateClause;
+import org.springframework.r2dbc.core.RowsFetchSpec;
 import reactor.core.publisher.Mono;
 
 import java.util.function.Function;
 
 public interface QuerydslR2dbcFragment<T> {
 
-    <O> O query(Function<QueryBuilder<?>, O> builder);
+    <O> RowsFetchSpec<O> query(Function<SQLQuery<?>, SQLQuery<O>> builder);
 
     Mono<Integer> update(Function<SQLUpdateClause, SQLUpdateClause> update);
 

@@ -20,6 +20,7 @@ import com.querydsl.sql.*;
 import com.querydsl.sql.dml.SQLDeleteClause;
 import com.querydsl.sql.dml.SQLUpdateClause;
 import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
+import org.springframework.r2dbc.core.RowsFetchSpec;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 
@@ -46,9 +47,8 @@ public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> 
     }
 
     @Override
-    public <O> O query(Function<QueryBuilder<?>, O> builder) {
-        return builder.apply(
-                new QueryBuilder<>(entityOperations, sqlQueryFactory.query()));
+    public <O> RowsFetchSpec<O> query(Function<SQLQuery<?>, SQLQuery<O>> query) {
+        return createQuery(query);
     }
 
     @Override
@@ -85,5 +85,14 @@ public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> 
     @Override
     public Expression<T> entityProjection() {
         return constructorExpression;
+    }
+
+    private <O> RowsFetchSpec<O> createQuery(Function<SQLQuery<?>, SQLQuery<O>> query) {
+        SQLQuery<O> result = query.apply(sqlQueryFactory.query());
+        result.setUseLiterals(true);
+        String sql = result.getSQL().getSQL();
+        return entityOperations.getDatabaseClient()
+                               .sql(sql)
+                               .map(entityOperations.getDataAccessStrategy().getRowMapper(result.getType()));
     }
 }

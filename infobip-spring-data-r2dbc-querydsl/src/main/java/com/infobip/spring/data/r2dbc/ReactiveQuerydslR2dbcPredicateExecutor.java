@@ -10,6 +10,7 @@ import org.springframework.data.querydsl.QSort;
 import org.springframework.data.querydsl.ReactiveQuerydslPredicateExecutor;
 import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
 import org.springframework.lang.Nullable;
+import org.springframework.r2dbc.core.RowsFetchSpec;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -40,13 +41,13 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
                                               .select(constructorExpression)
                                               .where(predicate)
                                               .from(path);
-        return new QueryBuilder<>(entityOperations, sqlQuery).query().one();
+        return query(sqlQuery).one();
     }
 
     @Override
     public Flux<T> findAll(Predicate predicate) {
         SQLQuery<T> query = sqlQueryFactory.query().select(constructorExpression).from(path).where(predicate);
-        return new QueryBuilder<>(entityOperations, query).query().all();
+        return query(query).all();
     }
 
     @Override
@@ -82,7 +83,7 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
                                                  .select(count)
                                                  .where(predicate)
                                                  .from(path);
-        return new QueryBuilder<>(entityOperations, sqlQuery).query().one();
+        return query(sqlQuery).one();
     }
 
     @Override
@@ -94,10 +95,6 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
 
         Assert.notNull(predicate, "Predicate must not be null!");
 
-        return doCreateQuery(predicate);
-    }
-
-    protected SQLQuery<?> createCountQuery(@Nullable Predicate... predicate) {
         return doCreateQuery(predicate);
     }
 
@@ -118,6 +115,14 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
 
     private Flux<T> executeSorted(SQLQuery<T> query, Sort sort) {
         SQLQuery<T> sqlQuery = querydsl.applySorting(sort, query);
-        return new QueryBuilder<>(entityOperations, sqlQuery).query().all();
+        return query(sqlQuery).all();
+    }
+
+    private <O> RowsFetchSpec<O> query(SQLQuery<O> query) {
+        query.setUseLiterals(true);
+        String sql = query.getSQL().getSQL();
+        return entityOperations.getDatabaseClient()
+                               .sql(sql)
+                               .map(entityOperations.getDataAccessStrategy().getRowMapper(query.getType()));
     }
 }
