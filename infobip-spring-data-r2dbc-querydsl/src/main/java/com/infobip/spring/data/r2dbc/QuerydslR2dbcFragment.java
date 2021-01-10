@@ -11,7 +11,7 @@ import java.util.function.Function;
 
 public interface QuerydslR2dbcFragment<T> {
 
-    <O> RowsFetchSpec<O> query(Function<SQLQuery<?>, SQLQuery<O>> builder);
+    <V, O> O query(Function<SQLQuery<?>, SQLQuery<V>> query, Function<RowsFetchSpec<V>, O> specMapper);
 
     Mono<Integer> update(Function<SQLUpdateClause, SQLUpdateClause> update);
 

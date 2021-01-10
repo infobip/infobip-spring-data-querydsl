@@ -48,8 +48,8 @@ public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> 
     }
 
     @Override
-    public <O> RowsFetchSpec<O> query(Function<SQLQuery<?>, SQLQuery<O>> query) {
-        return createQuery(query);
+    public <V, O> O query(Function<SQLQuery<?>, SQLQuery<V>> query, Function<RowsFetchSpec<V>, O> specMapper) {
+        return specMapper.apply(createQuery(query));
     }
 
     @Override

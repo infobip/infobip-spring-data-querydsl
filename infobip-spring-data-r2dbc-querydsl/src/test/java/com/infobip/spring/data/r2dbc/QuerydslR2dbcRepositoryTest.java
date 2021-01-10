@@ -3,6 +3,7 @@ package com.infobip.spring.data.r2dbc;
 import lombok.AllArgsConstructor;
 import lombok.Value;
 import org.junit.jupiter.api.Test;
+import org.springframework.r2dbc.core.RowsFetchSpec;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -51,12 +52,12 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
                                                              .where(person.firstName.in("John", "Jane"))
                                                              .orderBy(person.firstName.asc(), person.lastName.asc())
                                                              .limit(1)
-                                                             .offset(1))
-                                        .all();
+                                                             .offset(1),
+                                               RowsFetchSpec::all);
 
         // then
         then(block(actual))
-                           .containsOnly(johnDoe);
+                .containsOnly(johnDoe);
     }
 
     @Test
@@ -68,8 +69,8 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
         // when
         Flux<PersonProjection> actual = repository.query(
                 query -> query.select(constructor(PersonProjection.class, person.firstName, person.lastName))
-                              .from(person))
-                                                  .all();
+                              .from(person),
+                RowsFetchSpec::all);
 
         // then
         then(block(actual)).containsExactly(new PersonProjection(johnDoe.getFirstName(), johnDoe.getLastName()));
@@ -125,8 +126,8 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
                                                              .from(person)
                                                              .innerJoin(personSettings)
                                                              .on(person.id.eq(personSettings.personId))
-                                                             .where(personSettings.id.eq(johnDoeSettings.getId())))
-                                        .all();
+                                                             .where(personSettings.id.eq(johnDoeSettings.getId())),
+                                               RowsFetchSpec::all);
 
         // then
         then(block(actual)).extracting(Person::getFirstName).containsExactly(johnDoe.getFirstName());
@@ -140,8 +141,8 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
         // when
         Flux<NoArgsEntity> actual = noArgsRepository.query(query -> query.select(noArgsRepository.entityProjection())
                                                                          .from(QNoArgsEntity.noArgsEntity)
-                                                                         .limit(1))
-                                                    .all();
+                                                                         .limit(1),
+                                                           RowsFetchSpec::all);
 
         // then
         then(block(actual)).containsExactly(givenNoArgsEntity);
