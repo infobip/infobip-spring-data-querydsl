@@ -1,3 +1,5 @@
 spring:
   datasource:
     url: jdbc:sqlserver://<host>:<port>;database=InfobipSpringDataJdbcQuerydslTest
+
+logging.level.com.querydsl.sql: DEBUG
