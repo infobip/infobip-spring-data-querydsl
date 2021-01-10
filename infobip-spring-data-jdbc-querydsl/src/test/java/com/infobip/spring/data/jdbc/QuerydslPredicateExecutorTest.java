@@ -9,13 +9,13 @@ import java.util.Optional;
 import static com.infobip.spring.data.jdbc.QPerson.person;
 import static org.assertj.core.api.BDDAssertions.then;
 
-public class QuerydslJdbcPredicateExecutorTest extends TestBase {
+public class QuerydslPredicateExecutorTest extends TestBase {
 
     private final PersonRepository repository;
     private final QuerydslPredicateExecutor<Person> executor;
 
-    public QuerydslJdbcPredicateExecutorTest(PersonRepository repository,
-                                             QuerydslPredicateExecutor<Person> personRepository) {
+    public QuerydslPredicateExecutorTest(PersonRepository repository,
+                                         QuerydslPredicateExecutor<Person> personRepository) {
         this.repository = repository;
         this.executor = personRepository;
     }
