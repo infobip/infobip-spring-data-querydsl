@@ -1,5 +1,6 @@
 package com.infobip.spring.data.jdbc.annotation.processor;
 
+import com.google.common.base.Function;
 import com.mysema.codegen.model.*;
 import com.querydsl.apt.ExtendedTypeFactory;
 import com.querydsl.codegen.*;
@@ -12,7 +13,6 @@ import javax.lang.model.util.Elements;
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Function;
 
 class CustomExtendedTypeFactory extends ExtendedTypeFactory {
 
@@ -24,7 +24,7 @@ class CustomExtendedTypeFactory extends ExtendedTypeFactory {
             TypeMappings typeMappings,
             QueryTypeFactory queryTypeFactory,
             Function<EntityType, String> variableNameFunction) {
-        super(env, annotations, typeMappings, queryTypeFactory, variableNameFunction::apply);
+        super(env, annotations, typeMappings, queryTypeFactory, variableNameFunction);
         this.elements = env.getElementUtils();
     }
 

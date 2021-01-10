@@ -24,6 +24,6 @@ public class CustomQuerydslR2dbcRepositoryFactoryBean<T extends Repository<S, ID
         extends QuerydslR2dbcRepositoryFactoryBean<T, S, ID> {
 
     protected CustomQuerydslR2dbcRepositoryFactoryBean(Class<? extends T> repositoryInterface) {
-        super(repositoryInterface, CustomQuerydslR2dbcRepository.class);
+        super(repositoryInterface);
     }
 }

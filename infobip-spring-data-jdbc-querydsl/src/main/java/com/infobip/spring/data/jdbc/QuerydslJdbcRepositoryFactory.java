@@ -16,6 +16,7 @@
 package com.infobip.spring.data.jdbc;
 
 import com.google.common.base.CaseFormat;
+import com.infobip.spring.data.common.Querydsl;
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.sql.*;

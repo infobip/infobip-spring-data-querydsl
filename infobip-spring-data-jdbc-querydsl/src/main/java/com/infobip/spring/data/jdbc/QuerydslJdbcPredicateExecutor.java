@@ -1,5 +1,6 @@
 package com.infobip.spring.data.jdbc;
 
+import com.infobip.spring.data.common.Querydsl;
 import com.querydsl.core.NonUniqueResultException;
 import com.querydsl.core.types.*;
 import com.querydsl.sql.RelationalPath;

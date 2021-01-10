@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.infobip.spring.data.jdbc;
+package com.infobip.spring.data.common;
 
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.OrderSpecifier.NullHandling;
@@ -33,12 +33,12 @@ import java.util.List;
 /**
  * @see org.springframework.data.jpa.repository.support.Querydsl
  */
-class Querydsl {
+public class Querydsl {
 
 	private final SQLQueryFactory sqlQueryFactory;
 	private final PathBuilder<?> builder;
 
-	Querydsl(SQLQueryFactory sqlQueryFactory, PathBuilder<?> builder) {
+	public Querydsl(SQLQueryFactory sqlQueryFactory, PathBuilder<?> builder) {
 		this.sqlQueryFactory = sqlQueryFactory;
 		this.builder = builder;
 	}

@@ -16,21 +16,19 @@
 package com.infobip.spring.data.r2dbc;
 
 import com.google.common.base.CaseFormat;
+import com.infobip.spring.data.common.Querydsl;
 import com.querydsl.core.types.*;
+import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.sql.*;
 import org.springframework.core.ResolvableType;
 import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
 import org.springframework.data.r2dbc.repository.support.R2dbcRepositoryFactory;
-import org.springframework.data.relational.core.mapping.RelationalPersistentEntity;
-import org.springframework.data.relational.repository.query.RelationalEntityInformation;
-import org.springframework.data.relational.repository.support.MappingRelationalEntityInformation;
-import org.springframework.data.repository.core.RepositoryInformation;
 import org.springframework.data.repository.core.RepositoryMetadata;
-import org.springframework.lang.Nullable;
+import org.springframework.data.repository.core.support.RepositoryComposition;
+import org.springframework.data.repository.core.support.RepositoryFragment;
 import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Parameter;
+import java.lang.reflect.*;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -40,45 +38,49 @@ public class QuerydslR2dbcRepositoryFactory extends R2dbcRepositoryFactory {
 
     private final R2dbcEntityOperations operations;
     private final SQLQueryFactory sqlQueryFactory;
-    private final Class<?> repositoryBaseClass;
 
     public QuerydslR2dbcRepositoryFactory(R2dbcEntityOperations operations,
-                                          SQLQueryFactory sqlQueryFactory, Class<?> repositoryBaseClass) {
+                                          SQLQueryFactory sqlQueryFactory) {
         super(operations);
         this.operations = operations;
         this.sqlQueryFactory = sqlQueryFactory;
-        this.repositoryBaseClass = repositoryBaseClass;
     }
 
     @Override
-    protected Class<?> getRepositoryBaseClass(RepositoryMetadata repositoryMetadata) {
-        return repositoryBaseClass;
+    protected RepositoryComposition.RepositoryFragments getRepositoryFragments(RepositoryMetadata metadata) {
+
+        RepositoryComposition.RepositoryFragments fragments = super.getRepositoryFragments(metadata);
+        RelationalPathBase<?> path = getRelationalPathBaseFromQueryRepositoryClass(metadata.getRepositoryInterface());
+        Class<?> type = metadata.getDomainType();
+        ConstructorExpression<?> constructorExpression = getConstructorExpression(type, path);
+        RepositoryFragment<Object> simpleQuerydslJdbcFragment = createSimpleQuerydslR2dbcFragment(path,
+                                                                                                  constructorExpression);
+        RepositoryFragment<Object> querydslJdbcPredicateExecutor = createQuerydslJdbcPredicateExecutor(
+                constructorExpression, path);
+        return fragments.append(simpleQuerydslJdbcFragment).append(querydslJdbcPredicateExecutor);
     }
 
-    @Override
-    protected Object getTargetRepository(RepositoryInformation repositoryInformation) {
-
-        Class<?> type = repositoryInformation.getDomainType();
-        RelationalPath<?> relationalPathBase = getRelationalPathBase(repositoryInformation);
-        ConstructorExpression<?> constructor = getConstructorExpression(type, relationalPathBase);
-
-        RelationalEntityInformation<?, ?> entityInformation = getEntityInformation(
-                repositoryInformation.getDomainType(),
-                repositoryInformation);
-
-        return new SimpleQuerydslR2dbcRepository(sqlQueryFactory, constructor, relationalPathBase, operations,
-                                                 entityInformation, operations.getConverter());
+    private RepositoryFragment<Object> createSimpleQuerydslR2dbcFragment(RelationalPath<?> path,
+                                                                         ConstructorExpression<?> constructor) {
+        Object simpleJPAQuerydslFragment = getTargetRepositoryViaReflection(SimpleQuerydslR2dbcFragment.class,
+                                                                            sqlQueryFactory,
+                                                                            constructor,
+                                                                            path,
+                                                                            operations);
+        return RepositoryFragment.implemented(simpleJPAQuerydslFragment);
     }
 
-    private <T, ID> RelationalEntityInformation<T, ID> getEntityInformation(Class<T> domainClass,
-                                                                            @Nullable RepositoryInformation information) {
-
-        RelationalPersistentEntity<T> entity = (RelationalPersistentEntity<T>) this.operations.getConverter()
-                                                                                              .getMappingContext()
-                                                                                              .getRequiredPersistentEntity(
-                                                                                                      domainClass);
-
-        return new MappingRelationalEntityInformation<>(entity);
+    private RepositoryFragment<Object> createQuerydslJdbcPredicateExecutor(ConstructorExpression<?> constructorExpression,
+                                                                           RelationalPathBase<?> path) {
+        Querydsl querydsl = new Querydsl(sqlQueryFactory, new PathBuilder<>(path.getType(), path.getMetadata()));
+        Object querydslJdbcPredicateExecutor = getTargetRepositoryViaReflection(
+                ReactiveQuerydslR2dbcPredicateExecutor.class,
+                constructorExpression,
+                path,
+                sqlQueryFactory,
+                operations,
+                querydsl);
+        return RepositoryFragment.implemented(querydslJdbcPredicateExecutor);
     }
 
     private ConstructorExpression<?> getConstructorExpression(Class<?> type, RelationalPath<?> pathBase) {
@@ -105,17 +107,17 @@ public class QuerydslR2dbcRepositoryFactory extends R2dbcRepositoryFactory {
         return Projections.constructor(type, paths);
     }
 
-    private RelationalPathBase<?> getRelationalPathBase(RepositoryInformation repositoryInformation) {
+    private RelationalPathBase<?> getRelationalPathBaseFromQueryRepositoryClass(Class<?> repositoryInterface) {
 
-        Class<?> entityType = ResolvableType.forClass(repositoryInformation.getRepositoryInterface())
-                                            .as(QuerydslR2dbcRepository.class)
+        Class<?> entityType = ResolvableType.forClass(repositoryInterface)
+                                            .as(QuerydslR2dbcFragment.class)
                                             .getGeneric(0)
                                             .resolve();
         if (entityType == null) {
-            throw new IllegalArgumentException("Could not resolve query class for " + repositoryInformation);
+            throw new IllegalArgumentException("Could not resolve query class for " + repositoryInterface);
         }
 
-        return getRelationalPathBase(getQueryClass(entityType));
+        return getRelationalPathBaseFromQueryClass(getQueryClass(entityType));
     }
 
     private Class<?> getQueryClass(Class<?> entityType) {
@@ -127,13 +129,14 @@ public class QuerydslR2dbcRepositoryFactory extends R2dbcRepositoryFactory {
         }
     }
 
-    private RelationalPathBase<?> getRelationalPathBase(Class<?> queryClass) {
+    private RelationalPathBase<?> getRelationalPathBaseFromQueryClass(Class<?> queryClass) {
         String fieldName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, queryClass.getSimpleName().substring(1));
-        return Optional.ofNullable(ReflectionUtils.findField(queryClass, fieldName))
-                       .map(field -> ReflectionUtils.getField(field, null))
-                       .filter(field -> field instanceof RelationalPathBase)
-                       .map(field -> (RelationalPathBase<?>) field)
-                       .orElseThrow(() -> new IllegalArgumentException(
-                               "Did not find a static field of the same type in " + queryClass));
+        Field field = ReflectionUtils.findField(queryClass, fieldName);
+
+        if (field == null) {
+            throw new IllegalArgumentException("Did not find a static field of the same type in " + queryClass);
+        }
+
+        return (RelationalPathBase<?>) ReflectionUtils.getField(field, null);
     }
 }
