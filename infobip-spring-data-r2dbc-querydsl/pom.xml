@@ -40,11 +40,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-r2dbc</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.infobip</groupId>
-            <artifactId>infobip-spring-data-jdbc-annotation-processor</artifactId>
-            <version>${project.version}</version>
-        </dependency>
 
         <!--TEST-->
         <dependency>
