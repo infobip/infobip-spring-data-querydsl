@@ -38,9 +38,9 @@ public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> 
 
     @SuppressWarnings("unchecked")
     public SimpleQuerydslR2dbcFragment(SQLQueryFactory sqlQueryFactory,
-                                         ConstructorExpression<T> constructorExpression,
-                                         RelationalPath<?> path,
-                                         R2dbcEntityOperations entityOperations) {
+                                       ConstructorExpression<T> constructorExpression,
+                                       RelationalPath<?> path,
+                                       R2dbcEntityOperations entityOperations) {
         this.sqlQueryFactory = sqlQueryFactory;
         this.constructorExpression = constructorExpression;
         this.path = (RelationalPath<T>) path;
@@ -57,12 +57,12 @@ public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> 
     public Mono<Integer> update(Function<SQLUpdateClause, SQLUpdateClause> update) {
         SQLUpdateClause clause = sqlQueryFactory.update(path);
         clause.setUseLiterals(true);
-        String sql = update.apply(clause).getSQL()
-                           .stream()
-                           .map(SQLBindings::getSQL)
-                           .collect(Collectors.joining("\n"));
         return entityOperations.getDatabaseClient()
-                               .sql(sql)
+                               .sql(() -> update.apply(clause)
+                                                .getSQL()
+                                                .stream()
+                                                .map(SQLBindings::getSQL)
+                                                .collect(Collectors.joining("\n")))
                                .fetch()
                                .rowsUpdated();
     }
@@ -73,12 +73,11 @@ public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> 
         SQLDeleteClause clause = sqlQueryFactory.delete(path)
                                                 .where(predicate);
         clause.setUseLiterals(true);
-        String sql = clause.getSQL()
-                           .stream()
-                           .map(SQLBindings::getSQL)
-                           .collect(Collectors.joining("\n"));
         return entityOperations.getDatabaseClient()
-                               .sql(sql)
+                               .sql(() -> clause.getSQL()
+                                                .stream()
+                                                .map(SQLBindings::getSQL)
+                                                .collect(Collectors.joining("\n")))
                                .fetch()
                                .rowsUpdated();
     }
@@ -91,10 +90,9 @@ public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> 
     private <O> RowsFetchSpec<O> createQuery(Function<SQLQuery<?>, SQLQuery<O>> query) {
         SQLQuery<O> result = query.apply(sqlQueryFactory.query());
         result.setUseLiterals(true);
-        String sql = result.getSQL().getSQL();
         EntityRowMapper<O> mapper = new EntityRowMapper<>(result.getType(), entityOperations.getConverter());
         return entityOperations.getDatabaseClient()
-                               .sql(sql)
+                               .sql(() -> result.getSQL().getSQL())
                                .map(mapper);
     }
 }
