@@ -26,7 +26,8 @@ public abstract class TestBase {
 
     @AfterEach
     public void clearRepositories() {
-        block(Mono.when(repositories.stream().map(ReactiveCrudRepository::deleteAll).collect(Collectors.toList())));
+        block(Flux.concat(repositories.stream().map(ReactiveCrudRepository::deleteAll).collect(Collectors.toList()))
+                  .collectList());
     }
 
     @Nullable
