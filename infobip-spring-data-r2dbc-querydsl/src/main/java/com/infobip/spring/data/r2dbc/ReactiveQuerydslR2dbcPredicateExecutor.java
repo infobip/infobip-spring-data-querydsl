@@ -12,10 +12,12 @@ import org.springframework.data.r2dbc.convert.EntityRowMapper;
 import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
 import org.springframework.lang.Nullable;
 import org.springframework.r2dbc.core.RowsFetchSpec;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+@Transactional(readOnly = true)
 public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQuerydslPredicateExecutor<T> {
 
     private final ConstructorExpression<T> constructorExpression;
