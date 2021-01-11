@@ -121,9 +121,10 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
 
     private <O> RowsFetchSpec<O> query(SQLQuery<O> query) {
         query.setUseLiterals(true);
+        String sql = query.getSQL().getSQL();
         EntityRowMapper<O> mapper = new EntityRowMapper<>(query.getType(), entityOperations.getConverter());
         return entityOperations.getDatabaseClient()
-                               .sql(() -> query.getSQL().getSQL())
+                               .sql(sql)
                                .map(mapper);
     }
 }
