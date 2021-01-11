@@ -28,7 +28,6 @@ import reactor.core.publisher.Mono;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@Transactional(readOnly = true)
 public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> {
 
     private final SQLQueryFactory sqlQueryFactory;
