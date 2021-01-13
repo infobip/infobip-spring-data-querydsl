@@ -1,7 +1,7 @@
 spring:
   r2dbc:
     url: r2dbc:pool:mssql://<host>:<port>/InfobipSpringDataJdbcQuerydslTest
-  datasource:
+  flyway:
     url: jdbc:sqlserver://<host>:<port>;database=InfobipSpringDataJdbcQuerydslTest
 
 #logging.level.org.springframework.r2dbc: DEBUG
