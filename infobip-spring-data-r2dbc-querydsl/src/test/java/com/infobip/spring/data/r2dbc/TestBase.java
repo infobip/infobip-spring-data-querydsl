@@ -1,6 +1,7 @@
 package com.infobip.spring.data.r2dbc;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
@@ -15,7 +16,6 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
-@Disabled
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @TestInstance(PER_CLASS)
 @SpringBootTest(classes = Main.class)
