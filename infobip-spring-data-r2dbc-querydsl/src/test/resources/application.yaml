@@ -4,5 +4,5 @@ spring:
   datasource:
     url: jdbc:sqlserver://<host>:<port>;database=InfobipSpringDataJdbcQuerydslTest
 
-logging.level.org.springframework.r2dbc: DEBUG
+#logging.level.org.springframework.r2dbc: DEBUG
 #logging.level.io.r2dbc.mssql: DEBUG
