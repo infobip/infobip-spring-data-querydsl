@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.test.context.TestConstructor;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -24,6 +25,7 @@ public abstract class TestBase {
     @Autowired
     private List<ReactiveCrudRepository<?, ?>> repositories;
 
+    @Transactional
     @AfterEach
     public void clearRepositories() {
         block(Flux.concat(repositories.stream().map(ReactiveCrudRepository::deleteAll).collect(Collectors.toList()))
