@@ -1,6 +1,5 @@
 package com.infobip.spring.data.r2dbc;
 
-import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.*;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.querydsl.ReactiveQuerydslPredicateExecutor;
@@ -12,12 +11,17 @@ import javax.annotation.Nullable;
 import static com.infobip.spring.data.r2dbc.QPerson.person;
 import static org.assertj.core.api.BDDAssertions.then;
 
-@AllArgsConstructor
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
 
     private final PersonRepository repository;
     private final ReactiveQuerydslPredicateExecutor<Person> executor;
+
+    public ReactiveQuerydslPredicateExecutorTest(PersonRepository repository,
+                                                 ReactiveQuerydslPredicateExecutor<Person> personRepository) {
+        this.repository = repository;
+        this.executor = personRepository;
+    }
 
     @Order(1)
     @Test
