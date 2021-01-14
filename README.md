@@ -104,14 +104,14 @@ See [this answer](https://stackoverflow.com/a/26563841/607767) by Oliver Drotboh
 * new base repository approach:   
 
 ```java
-interface FooRepository extends QuerydslJdbcRepository<Foo, ID> {
+interface TRepository extends QuerydslJdbcRepository<T, ID> {
 }
 ```
 
 * fragments:
 
 ```java
-interface TRepository extends PagingAndSortingRepository<T, ID>, QuerydslPredicateExecutor<T>, QuerydslJdbcFragment<T> {
+interface TooRepository extends PagingAndSortingRepository<T, ID>, QuerydslPredicateExecutor<T>, QuerydslJdbcFragment<T> {
 }
 ```
 
@@ -228,10 +228,19 @@ Take a look at [extension package in tests](infobip-spring-data-jdbc-querydsl/sr
 </dependency>
 ```
 
-2. Refactor repository interfaces to use `QuerydslR2dbcRepository`:
+2. Refactor repository interfaces to either use new base repository or fragments approach:
+
+* new base repository approach:
 
 ```java
-interface FooRepository extends QuerydslR2dbcRepository<Foo, ID> {
+interface TRepository extends QuerydslR2dbcRepository<T, ID> {
+}
+```
+
+* fragments:
+
+```java
+interface TRepository extends ReactiveSortingRepository<T, ID>, ReactiveQuerydslPredicateExecutor<T>, QuerydslR2dbcFragment<T> {
 }
 ```
 
@@ -345,11 +354,19 @@ Take a look at [extension package in tests](infobip-spring-data-r2dbc-querydsl/s
 As this project depends on querydsl-apt with jpa classifier you don't need to set up explicit Maven build phase for Q classes generation.
 For building Q classes without Maven, make sure your IDE has Annotation processing enabled.
 
-2. Refactor repository interfaces to use `ExtendedQueryDslJpaRepository` instead of `JpaRepository` and `QueryDslPredicateExecutor` (note that ExtendedQueryDslJpaRepository extends and provides the API of both):
+2. Refactor repository interfaces to either use new base repository or fragments approach:
+
+* new base repository approach:
 
 ```java
-// ExtendedQueryDslJpaRepository replaces both JpaRepository and QueryDslPredicateExecutor
-interface FooRepository extends ExtendedQueryDslJpaRepository<Foo, ID> {
+interface TRepository extends ExtendedQueryDslJpaRepository<T, ID> {
+}
+```
+
+* fragments:
+
+```java
+interface TRepository extends JpaRepository<T, ID>, QuerydslPredicateExecutor<T>, QuerydslJpaFragment<T> {
 }
 ```
 
