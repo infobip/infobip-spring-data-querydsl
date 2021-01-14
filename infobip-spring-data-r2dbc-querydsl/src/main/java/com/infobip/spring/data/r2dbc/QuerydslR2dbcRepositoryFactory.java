@@ -90,7 +90,6 @@ public class QuerydslR2dbcRepositoryFactory extends R2dbcRepositoryFactory {
                 path,
                 sqlQueryFactory,
                 querydsl,
-                reactiveTransactionManager,
                 databaseClient,
                 converter);
         return RepositoryFragment.implemented(querydslJdbcPredicateExecutor);

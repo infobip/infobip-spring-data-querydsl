@@ -13,8 +13,6 @@ import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.lang.Nullable;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.r2dbc.core.RowsFetchSpec;
-import org.springframework.transaction.ReactiveTransactionManager;
-import org.springframework.transaction.reactive.TransactionalOperator;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -25,7 +23,6 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
     private final RelationalPath<T> path;
     private final SQLQueryFactory sqlQueryFactory;
     private final Querydsl querydsl;
-    private final ReactiveTransactionManager reactiveTransactionManager;
     private final DatabaseClient databaseClient;
     private final R2dbcConverter converter;
 
@@ -33,14 +30,12 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
                                                   RelationalPath<T> path,
                                                   SQLQueryFactory sqlQueryFactory,
                                                   Querydsl querydsl,
-                                                  ReactiveTransactionManager reactiveTransactionManager,
                                                   DatabaseClient databaseClient,
                                                   R2dbcConverter converter) {
         this.constructorExpression = constructorExpression;
         this.path = path;
         this.sqlQueryFactory = sqlQueryFactory;
         this.querydsl = querydsl;
-        this.reactiveTransactionManager = reactiveTransactionManager;
         this.databaseClient = databaseClient;
         this.converter = converter;
     }
@@ -51,13 +46,13 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
                                               .select(constructorExpression)
                                               .where(predicate)
                                               .from(path);
-        return query(sqlQuery).one().as(TransactionalOperator.create(reactiveTransactionManager)::transactional);
+        return query(sqlQuery).one();
     }
 
     @Override
     public Flux<T> findAll(Predicate predicate) {
         SQLQuery<T> query = sqlQueryFactory.query().select(constructorExpression).from(path).where(predicate);
-        return query(query).all().as(TransactionalOperator.create(reactiveTransactionManager)::transactional);
+        return query(query).all();
     }
 
     @Override
@@ -66,8 +61,7 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
         Assert.notNull(predicate, "Predicate must not be null!");
         Assert.notNull(orders, "Order specifiers must not be null!");
 
-        return executeSorted(createQuery(predicate).select(constructorExpression), orders).as(
-                TransactionalOperator.create(reactiveTransactionManager)::transactional);
+        return executeSorted(createQuery(predicate).select(constructorExpression), orders);
     }
 
     @Override
@@ -76,8 +70,7 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
         Assert.notNull(predicate, "Predicate must not be null!");
         Assert.notNull(sort, "Sort must not be null!");
 
-        return executeSorted(createQuery(predicate).select(constructorExpression), sort).as(
-                TransactionalOperator.create(reactiveTransactionManager)::transactional);
+        return executeSorted(createQuery(predicate).select(constructorExpression), sort);
     }
 
     @Override
@@ -85,8 +78,7 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
 
         Assert.notNull(orders, "Order specifiers must not be null!");
 
-        return executeSorted(createQuery(new Predicate[0]).select(constructorExpression), orders).as(
-                TransactionalOperator.create(reactiveTransactionManager)::transactional);
+        return executeSorted(createQuery(new Predicate[0]).select(constructorExpression), orders);
     }
 
     @Override
@@ -96,13 +88,12 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
                                                  .select(count)
                                                  .where(predicate)
                                                  .from(path);
-        return query(sqlQuery).one().as(TransactionalOperator.create(reactiveTransactionManager)::transactional);
+        return query(sqlQuery).one();
     }
 
     @Override
     public Mono<Boolean> exists(Predicate predicate) {
-        return count(predicate).map(result -> result > 0)
-                               .as(TransactionalOperator.create(reactiveTransactionManager)::transactional);
+        return count(predicate).map(result -> result > 0);
     }
 
     protected SQLQuery<?> createQuery(Predicate... predicate) {
