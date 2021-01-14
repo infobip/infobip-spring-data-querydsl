@@ -99,10 +99,19 @@ See [this answer](https://stackoverflow.com/a/26563841/607767) by Oliver Drotboh
 </dependency>
 ```
 
-2. Refactor repository interfaces to use `QuerydslJdbcRepository`:
+2. Refactor repository interfaces to either use new base repository or fragments approach:
+
+* new base repository approach:   
 
 ```java
 interface FooRepository extends QuerydslJdbcRepository<Foo, ID> {
+}
+```
+
+* fragments:
+
+```java
+interface TRepository extends PagingAndSortingRepository<T, ID>, QuerydslPredicateExecutor<T>, QuerydslJdbcFragment<T> {
 }
 ```
 
