@@ -2,6 +2,7 @@ package com.infobip.spring.data.r2dbc;
 
 import lombok.AllArgsConstructor;
 import lombok.Value;
+import org.assertj.core.api.BDDAssertions;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -116,9 +117,6 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
         StepVerifier.create(actual)
                     .expectNext(3)
                     .verifyComplete();
-        StepVerifier.create(repository.findAll())
-                    .expectNextMatches(person("Jane", "Doe"))
-                    .verifyComplete();
     }
 
     @Test
@@ -161,7 +159,7 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
         // then
         StepVerifier.create(actual)
                     .expectNextMatches(
-                            noArgsEntity -> noArgsEntity.equals(new NoArgsEntity(noArgsEntity.getId(), "value")))
+                            noArgsEntity("value"))
                     .verifyComplete();
     }
 
@@ -175,9 +173,9 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
     public static class PersonProjection {
 
         private final String firstName;
+
         private final String lastName;
     }
-
     private Mono<Person> givenSavedPerson(String john, String doe) {
         return repository.save(new Person(null, john, doe));
     }
@@ -192,6 +190,16 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
     }
 
     private Predicate<? super Person> person(String firstName, String lastName) {
-        return person -> person.equals(new Person(person.getId(), firstName, lastName));
+        return person -> {
+            BDDAssertions.then(person).isEqualTo(new Person(person.getId(), firstName, lastName));
+            return true;
+        };
+    }
+
+    private Predicate<NoArgsEntity> noArgsEntity(String value) {
+        return noArgsEntity -> {
+            BDDAssertions.then(noArgsEntity).isEqualTo(new NoArgsEntity(noArgsEntity.getId(), value));
+            return true;
+        };
     }
 }

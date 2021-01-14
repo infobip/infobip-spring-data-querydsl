@@ -4,6 +4,7 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 
+@ToString
 @Getter
 @EqualsAndHashCode
 public class NoArgsEntity {
