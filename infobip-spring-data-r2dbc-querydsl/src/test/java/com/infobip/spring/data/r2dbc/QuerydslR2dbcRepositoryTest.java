@@ -2,7 +2,7 @@ package com.infobip.spring.data.r2dbc;
 
 import lombok.AllArgsConstructor;
 import lombok.Value;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -13,6 +13,7 @@ import static com.infobip.spring.data.r2dbc.QPersonSettings.personSettings;
 import static com.querydsl.core.types.Projections.constructor;
 import static org.assertj.core.api.BDDAssertions.then;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @AllArgsConstructor
 public class QuerydslR2dbcRepositoryTest extends TestBase {
 
@@ -20,6 +21,7 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
     private final PersonSettingsRepository settingsRepository;
     private final NoArgsRepository noArgsRepository;
 
+    @Order(1)
     @Test
     void shouldSaveWithVarArgs() {
 
@@ -35,6 +37,7 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
                            .containsExactly(johnDoe, johnyRoe);
     }
 
+    @Order(2)
     @Test
     void shouldQuery() {
 
@@ -59,6 +62,7 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
                            .containsOnly(johnDoe);
     }
 
+    @Order(3)
     @Test
     void shouldProject() {
 
@@ -75,6 +79,7 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
         then(block(actual)).containsExactly(new PersonProjection(johnDoe.getFirstName(), johnDoe.getLastName()));
     }
 
+    @Order(4)
     @Test
     void shouldUpdate() {
 
@@ -94,6 +99,7 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
                                          .hasSize(3);
     }
 
+    @Order(5)
     @Test
     void shouldDelete() {
 
@@ -111,6 +117,7 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
         then(block(repository.findAll())).containsExactly(janeDoe);
     }
 
+    @Order(6)
     @Test
     void shouldBeAbleToJoin() {
 
@@ -132,6 +139,7 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
         then(block(actual)).extracting(Person::getFirstName).containsExactly(johnDoe.getFirstName());
     }
 
+    @Order(7)
     @Test
     void shouldSupportMultipleConstructors() {
         // given
@@ -147,6 +155,7 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
         then(block(actual)).containsExactly(givenNoArgsEntity);
     }
 
+    @Order(8)
     @Test
     void shouldExtendSimpleQuerydslJdbcRepository() {
         // then
