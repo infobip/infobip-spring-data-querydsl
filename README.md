@@ -6,8 +6,6 @@
 
 Infobip Spring Data Querydsl provides new functionality that enables the user to leverage the full power of Querydsl API on top of Spring Data repository infrastructure.
 
-The project is divided into 2 modules: infobip-spring-data-jdbc-querydsl and infobip-spring-data-jpa-querydsl.
-
 ## Contents
 
 1. [News](#News)
