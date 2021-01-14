@@ -5,11 +5,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.querydsl.ReactiveQuerydslPredicateExecutor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
-import javax.annotation.Nullable;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.infobip.spring.data.r2dbc.QPerson.person;
-import static org.assertj.core.api.BDDAssertions.then;
 
 public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
 
@@ -25,102 +27,128 @@ public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
     @Test
     void shouldFindOne() {
         // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
-        Person johnyRoe = givenSavedPerson("Johny", "Roe");
+        Mono<Void> given = given(givenSavedPerson("John", "Doe"),
+                                 givenSavedPerson("Johny", "Roe"));
 
         // when
-        Mono<Person> actual = executor.findOne(person.firstName.eq("John"));
+        Mono<Person> actual = given.then(executor.findOne(person.firstName.eq("John")));
 
         // then
-        then(block(actual)).isEqualTo(johnDoe);
+        StepVerifier.create(actual)
+                    .expectNextMatches(person("John", "Doe"))
+                    .verifyComplete();
     }
 
     @Test
     void shouldFindAllWithPredicate() {
         // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
-        Person johnyRoe = givenSavedPerson("Johny", "Roe");
-        Person janeDoe = givenSavedPerson("Jane", "Doe");
+        Mono<Void> given = given(givenSavedPerson("John", "Doe"),
+                                 givenSavedPerson("Johny", "Roe"),
+                                 givenSavedPerson("Jane", "Doe"));
 
         // when
-        Flux<Person> actual = executor.findAll(person.lastName.eq("Doe"));
+        Flux<Person> actual = given.thenMany(executor.findAll(person.lastName.eq("Doe")));
 
         // then
-        then(block(actual)).containsExactlyInAnyOrder(johnDoe, janeDoe);
+        StepVerifier.create(actual)
+                    .expectNextMatches(person("John", "Doe"))
+                    .expectNextMatches(person("Jane", "Doe"))
+                    .verifyComplete();
     }
 
     @Test
     void shouldFindAllWithPredicateAndSort() {
         // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
-        Person johnyRoe = givenSavedPerson("Johny", "Roe");
-        Person janeDoe = givenSavedPerson("Jane", "Doe");
+        Mono<Void> given = given(givenSavedPerson("John", "Doe"),
+                                 givenSavedPerson("Johny", "Roe"),
+                                 givenSavedPerson("Jane", "Doe"));
 
         // when
-        Flux<Person> actual = executor.findAll(person.lastName.eq("Doe"), Sort.by(Sort.Order.asc("firstName")));
+        Flux<Person> actual = given.thenMany(executor.findAll(person.lastName.eq("Doe"), Sort.by(Sort.Order.asc("firstName"))));
 
         // then
-        then(block(actual)).containsExactlyInAnyOrder(janeDoe, johnDoe);
+        StepVerifier.create(actual)
+                    .expectNextMatches(person("Jane", "Doe"))
+                    .expectNextMatches(person("John", "Doe"))
+                    .verifyComplete();
     }
 
     @Test
     void shouldFindAllWithPredicateAndOrderSpecifier() {
         // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
-        Person johnyRoe = givenSavedPerson("Johny", "Roe");
-        Person janeDoe = givenSavedPerson("Jane", "Doe");
+        Mono<Void> given = given(givenSavedPerson("John", "Doe"),
+                                 givenSavedPerson("Johny", "Roe"),
+                                 givenSavedPerson("Jane", "Doe"));
 
         // when
-        Flux<Person> actual = executor.findAll(person.lastName.eq("Doe"), person.firstName.asc());
+        Flux<Person> actual = given.thenMany(executor.findAll(person.lastName.eq("Doe"), person.firstName.asc()));
 
         // then
-        then(block(actual)).containsExactlyInAnyOrder(janeDoe, johnDoe);
+        StepVerifier.create(actual)
+                    .expectNextMatches(person("Jane", "Doe"))
+                    .expectNextMatches(person("John", "Doe"))
+                    .verifyComplete();
     }
 
     @Test
     void shouldFindAllWithOrderSpecifier() {
         // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
-        Person johnyRoe = givenSavedPerson("Johny", "Roe");
-        Person janeDoe = givenSavedPerson("Jane", "Doe");
+        Mono<Void> given = given(givenSavedPerson("John", "Doe"),
+                                 givenSavedPerson("Johny", "Roe"),
+                                 givenSavedPerson("Jane", "Doe"));
 
         // when
-        Flux<Person> actual = executor.findAll(person.firstName.asc());
+        Flux<Person> actual = given.thenMany(executor.findAll(person.firstName.asc()));
 
         // then
-        then(block(actual)).containsExactlyInAnyOrder(janeDoe, johnDoe, johnyRoe);
+        StepVerifier.create(actual)
+                    .expectNextMatches(person("Jane", "Doe"))
+                    .expectNextMatches(person("John", "Doe"))
+                    .expectNextMatches(person("Johny", "Roe"))
+                    .verifyComplete();
     }
 
     @Test
     void shouldCount() {
         // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
-        Person johnyRoe = givenSavedPerson("Johny", "Roe");
-        Person janeDoe = givenSavedPerson("Jane", "Doe");
+        Mono<Void> given = given(givenSavedPerson("John", "Doe"),
+                                 givenSavedPerson("Johny", "Roe"),
+                                 givenSavedPerson("Jane", "Doe"));
 
         // when
-        Mono<Long> actual = executor.count(person.lastName.eq("Doe"));
+        Mono<Long> actual = given.then(executor.count(person.lastName.eq("Doe")));
 
         // then
-        then(block(actual)).isEqualTo(2);
+        StepVerifier.create(actual)
+                    .expectNext(2L)
+                    .verifyComplete();
     }
 
     @Test
     void shouldExist() {
         // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
-        Person johnyRoe = givenSavedPerson("Johny", "Roe");
-        Person janeDoe = givenSavedPerson("Jane", "Doe");
+        Mono<Void> given = given(givenSavedPerson("John", "Doe"),
+                                 givenSavedPerson("Johny", "Roe"),
+                                 givenSavedPerson("Jane", "Doe"));
 
         // when
-        Mono<Boolean> actual = executor.exists(person.lastName.eq("Roe"));
+        Mono<Boolean> actual = given.then(executor.exists(person.lastName.eq("Roe")));
 
         // then
-        then(block(actual)).isTrue();
+        StepVerifier.create(actual)
+                    .expectNext(true)
+                    .verifyComplete();
     }
 
-    @Nullable
-    private Person givenSavedPerson(String john, String doe) {
-        return block(repository.save(new Person(null, john, doe)));
+    private Mono<Person> givenSavedPerson(String john, String doe) {
+        return repository.save(new Person(null, john, doe));
+    }
+
+    private Mono<Void> given(Mono<?>... ts) {
+        return Flux.concat(Stream.of(ts).collect(Collectors.toList())).last().then();
+    }
+
+    private Predicate<? super Person> person(String firstName, String lastName) {
+        return person -> person.equals(new Person(person.getId(), firstName, lastName));
     }
 }
