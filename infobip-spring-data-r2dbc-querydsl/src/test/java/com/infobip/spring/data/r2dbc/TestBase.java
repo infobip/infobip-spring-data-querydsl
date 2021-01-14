@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.test.context.TestConstructor;
-import org.springframework.transaction.ReactiveTransactionManager;
-import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -26,16 +24,10 @@ public abstract class TestBase {
     @Autowired
     private List<ReactiveCrudRepository<?, ?>> repositories;
 
-    @Autowired
-    private ReactiveTransactionManager reactiveTransactionManager;
-
     @AfterEach
     public void clearRepositories() {
-        TransactionalOperator transactionalOperator = TransactionalOperator.create(reactiveTransactionManager);
         block(Flux.concat(repositories.stream()
-                                      .map(reactiveCrudRepository -> transactionalOperator.execute(
-                                              status -> reactiveCrudRepository.deleteAll()
-                                      ).then())
+                                      .map(ReactiveCrudRepository::deleteAll)
                                       .collect(Collectors.toList()))
                   .collectList());
     }
