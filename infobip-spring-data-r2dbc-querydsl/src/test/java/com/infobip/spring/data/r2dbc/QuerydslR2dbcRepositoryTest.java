@@ -58,22 +58,22 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
         then(block(actual))
                            .containsOnly(johnDoe);
     }
-//
-//    @Test
-//    void shouldProject() {
-//
-//        // given
-//        Person johnDoe = givenSavedPerson("John", "Doe");
-//
-//        // when
-//        Flux<PersonProjection> actual = repository.query(
-//                query -> query.select(constructor(PersonProjection.class, person.firstName, person.lastName))
-//                              .from(person))
-//                                                  .all();
-//
-//        // then
-//        then(block(actual)).containsExactly(new PersonProjection(johnDoe.getFirstName(), johnDoe.getLastName()));
-//    }
+
+    @Test
+    void shouldProject() {
+
+        // given
+        Person johnDoe = givenSavedPerson("John", "Doe");
+
+        // when
+        Flux<PersonProjection> actual = repository.query(
+                query -> query.select(constructor(PersonProjection.class, person.firstName, person.lastName))
+                              .from(person))
+                                                  .all();
+
+        // then
+        then(block(actual)).containsExactly(new PersonProjection(johnDoe.getFirstName(), johnDoe.getLastName()));
+    }
 //
 //    @Test
 //    void shouldUpdate() {
