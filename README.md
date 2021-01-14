@@ -267,7 +267,7 @@ interface FooRepository extends QuerydslR2dbcRepository<Foo, ID> {
 
 ### <a name="R2DBCFeaturesAndExamples"></a> Features and examples:
 
-All examples have corresponding tests in the project and can be found [here](infobip-spring-data-jdbc-querydsl/src/test/java/com/infobip/spring/data/jdbc/QuerydslJdbcRepositoryTest.java).
+All examples have corresponding tests in the project and can be found [here](infobip-spring-data-r2dbc-querydsl/src/test/java/com/infobip/spring/data/r2dbc).
 
 #### <a name="R2DBCAnnotationProcessor"></a> Annotation Processor:
 
