@@ -24,6 +24,18 @@ The project is divided into 2 modules: infobip-spring-data-jdbc-querydsl and inf
         * [Delete](#JDBCDelete)
         * [Transactional support](#JDBCTransactionalSupport)
     * [Extension](#JDBCExtension)
+2. [R2DBC module:](#R2DBC)
+   * [Requirements](#R2DBCRequirements)
+   * [Setup](#R2DBCSetup)
+   * [Features and examples](#R2DBCFeaturesAndExamples)
+      * [Annotation Processor](#R2DBCAnnotationProcessor)
+      * [Inner Join](#R2DBCInnerJoin)
+      * [Projections](#R2DBCProjections)
+      * [Query](#R2DBCQuery)
+      * [Update](#R2DBCUpdate)
+      * [Delete](#R2DBCDelete)
+      * [Transactional support](#R2DBCTransactionalSupport)
+   * [Extension](#R2DBCExtension)
 3. [JPA module:](#JPA)
     * [Requirements](#JPARequirements)
     * [Setup](#JPASetup)
@@ -111,7 +123,7 @@ public class Main {
 }
 ```
 
-3. Refactor repository interfaces to use `QuerydslJdbcRepository` instead of `CrudRepository`:
+3. Refactor repository interfaces to use `QuerydslJdbcRepository`:
 
 ```java
 interface FooRepository extends QuerydslJdbcRepository<Foo, ID> {
@@ -209,6 +221,135 @@ To create a custom base repository interface you'll need to create:
 *  custom factory bean class and potentially factory class depending on requirements
 
 Take a look at [extension package in tests](infobip-spring-data-jdbc-querydsl/src/test/java/com/infobip/spring/data/jdbc/extension) as an example on how this can be achieved.
+
+## <a name="R2DBC"></a> R2DBC module:
+
+### <a name="R2DBCRequirements"></a> Requirements:
+
+- Java 8 with [parameter names preserved in byte code](https://stackoverflow.com/a/20594685/607767) (used to map columns to constructor parameters)
+- Spring Data R2DBC
+- entities must have an all argument constructor (`@AllArgsConstructor`), can have others as well
+- entity class and all argument constructor must be public (limitation of Querydsl)
+
+### <a name="R2DBCSetup"></a> Setup:
+
+1. Dependency:
+
+```xml
+<dependency>
+   <groupId>com.infobip</groupId>
+   <artifactId>infobip-spring-data-r2dbc-querydsl</artifactId>
+   <version>${infobip-spring-data-r2dbc-querydsl.version}</version>
+</dependency>
+```
+
+2. Add `@EnableQuerydslR2dbcRepositories` to your Main class:
+
+```java
+@EnableQuerydslR2dbcRepositories // replaces @EnableR2dbcRepositories
+@SpringBootApplication
+public class Main {
+ 
+    public static void main(String[] args) {
+        new SpringApplicationBuilder(Main.class).run(args);
+    }
+}
+```
+
+3. Refactor repository interfaces to use `QuerydslR2dbcRepository`:
+
+```java
+interface FooRepository extends QuerydslR2dbcRepository<Foo, ID> {
+}
+```
+
+4. Done
+
+### <a name="R2DBCFeaturesAndExamples"></a> Features and examples:
+
+All examples have corresponding tests in the project and can be found [here](infobip-spring-data-jdbc-querydsl/src/test/java/com/infobip/spring/data/jdbc/QuerydslJdbcRepositoryTest.java).
+
+#### <a name="R2DBCAnnotationProcessor"></a> Annotation Processor:
+
+`infobip-spring-data-jdbc-annotation-processor` provides an annotation processor that automatically generates Q classes without connecting to the database.
+
+`infobip-spring-data-r2dbc-querydsl` depends on `infobip-spring-data-jdbc-annotation-processor` so you don't need to add explicit dependency.
+
+In case you want to manually generate Q classes you can still exclude `infobip-spring-data-jdbc-annotation-processor` and do the process manually (e.g. like [this](https://github.com/infobip/infobip-spring-data-querydsl/commit/9b41403bdea38672caa5a4c57427cdcc2ef8c2a7#diff-ca2587b532ca6c66340cb5032feded4e6b090942f295556d27b480a81d417ba2)).
+
+#### <a name="R2DBCInnerJoin"></a> Inner Join:
+
+Inner join example:
+
+```
+Flux<Person> actual = repository.query(query -> query.select(repository.entityProjection())
+                                                          .from(person)
+                                                          .innerJoin(personSettings)
+                                                          .on(person.id.eq(personSettings.personId))
+                                                          .where(personSettings.id.eq(johnDoeSettings.getId())))
+                                     .all();
+```
+
+#### <a name="R2DBCProjections"></a> Projections
+
+For examples how to construct projections refer to the official documentation - [section result handling](http://www.querydsl.com/static/querydsl/latest/reference/html_single/#result_handling).
+
+Here is an example that uses constructor:
+
+```$xslt
+@Value
+public static class PersonProjection {
+    private final String firstName;
+    private final String lastName;
+}
+...
+
+Flux<PersonProjection> actual = repository.query(query -> query
+        .select(constructor(PersonProjection.class, person.firstName, person.lastName))
+        .from(person))
+                                          .all();
+```
+
+#### <a name="R2DBCQuery"></a> Query
+
+```
+Flux<Person> actual = repository.query(query -> query.select(repository.entityProjection())
+                                                     .from(person)
+                                                     .where(person.firstName.in("John", "Jane"))
+                                                     .orderBy(person.firstName.asc(),
+                                                              person.lastName.asc())
+                                                     .limit(1)
+                                                     .offset(1))
+                                .all();
+```
+
+#### <a name="R2DBCUpdate"></a> Update
+
+```
+Mono<Integer> numberOfAffectedRows = repository.update(query -> query.set(person.firstName, "John")
+                                                                     .where(person.firstName.eq("Johny")));
+```
+
+#### <a name="R2DBCDelete"></a> Delete
+
+```
+Mono<Integer> numberOfAffectedRows = repository.deleteWhere(person.firstName.like("John%"));
+```
+
+#### <a name="R2DBCTransactionalSupport"></a> Transactional support
+
+Queries execution is always done inside the repository implementation (loan pattern) in a transaction so transactions don't have to be
+handled manually (like they do if you are manually managing SQLQuery and other Querydsl constructs).
+
+### <a name="R2DBCExtension"></a> Extension:
+
+To create a custom base repository interface you'll need to create:
+*  custom base interface
+*  custom annotation for enabling
+*  custom factory bean class and potentially factory class depending on requirements
+
+Take a look at [extension package in tests](infobip-spring-data-r2dbc-querydsl/src/test/java/com/infobip/spring/data/r2dbc/extension) as an example on how this can be achieved.
+
 
 ## <a name="JPA"></a> JPA module:
 
