@@ -13,11 +13,6 @@ public class TestConfiguration {
 
     private final Environment env;
 
-    @Bean
-    public SQLServer2012Templates sqlServer2012Templates() {
-        return new SQLServer2012Templates();
-    }
-
     @Bean(initMethod = "migrate")
     public Flyway flyway() {
         return new Flyway(Flyway.configure()
