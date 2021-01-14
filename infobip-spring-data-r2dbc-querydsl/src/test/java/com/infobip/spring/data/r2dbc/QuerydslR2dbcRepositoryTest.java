@@ -93,23 +93,23 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
                                          .containsExactlyInAnyOrder("John", "John", "Jane")
                                          .hasSize(3);
     }
-//
-//    @Test
-//    void shouldDelete() {
-//
-//        // given
-//        givenSavedPerson("John", "Doe");
-//        givenSavedPerson("Johny", "Roe");
-//        Person janeDoe = givenSavedPerson("Jane", "Doe");
-//        givenSavedPerson("John", "Roe");
-//
-//        // when
-//        Mono<Integer> actual = repository.deleteWhere(person.firstName.like("John%"));
-//
-//        // then
-//        then(block(actual)).isEqualTo(3L);
-//        then(block(repository.findAll())).containsExactly(janeDoe);
-//    }
+
+    @Test
+    void shouldDelete() {
+
+        // given
+        givenSavedPerson("John", "Doe");
+        givenSavedPerson("Johny", "Roe");
+        Person janeDoe = givenSavedPerson("Jane", "Doe");
+        givenSavedPerson("John", "Roe");
+
+        // when
+        Mono<Integer> actual = repository.deleteWhere(person.firstName.like("John%"));
+
+        // then
+        then(block(actual)).isEqualTo(3L);
+        then(block(repository.findAll())).containsExactly(janeDoe);
+    }
 //
 //    @Test
 //    void shouldBeAbleToJoin() {
