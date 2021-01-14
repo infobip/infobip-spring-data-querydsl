@@ -134,7 +134,7 @@ interface FooRepository extends QuerydslJdbcRepository<Foo, ID> {
 
 ### <a name="JDBCFeaturesAndExamples"></a> Features and examples:
 
-All examples have corresponding tests in the project and can be found [here](infobip-spring-data-jdbc-querydsl/src/test/java/com/infobip/spring/data/jdbc/QuerydslJdbcRepositoryTest.java).
+All examples have corresponding tests in the project and can be found [here](infobip-spring-data-jdbc-querydsl/src/test/java/com/infobip/spring/data/jdbc).
 
 #### <a name="JDBCAnnotationProcessor"></a> Annotation Processor:
 
@@ -404,7 +404,7 @@ If you need other features from `@EnableJpaRepositories` you can use:
 
 ### <a name="JPAFeaturesAndExamples"></a> Features and examples:
 
-All examples have corresponding tests in the project and can be found [here](infobip-spring-data-jpa-querydsl/src/test/java/com/infobip/spring/data/jpa/ExtendedQuerydslJpaRepositoryTest.java).
+All examples have corresponding tests in the project and can be found [here](infobip-spring-data-jpa-querydsl/src/test/java/com/infobip/spring/data/jpa).
 
 #### <a name="JPANativeQueriesWithQuerydsl"></a> Native queries with Querydsl:
 
