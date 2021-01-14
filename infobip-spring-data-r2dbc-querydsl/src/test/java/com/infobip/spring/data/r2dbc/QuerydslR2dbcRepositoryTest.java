@@ -74,25 +74,25 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
         // then
         then(block(actual)).containsExactly(new PersonProjection(johnDoe.getFirstName(), johnDoe.getLastName()));
     }
-//
-//    @Test
-//    void shouldUpdate() {
-//
-//        // given
-//        givenSavedPerson("John", "Doe");
-//        givenSavedPerson("Johny", "Roe");
-//        givenSavedPerson("Jane", "Doe");
-//
-//        // when
-//        Mono<Integer> actual = repository.update(query -> query.set(person.firstName, "John")
-//                                                               .where(person.firstName.eq("Johny")));
-//
-//        // then
-//        then(block(actual)).isEqualTo(1);
-//        then(block(repository.findAll())).extracting(Person::getFirstName)
-//                                         .containsExactlyInAnyOrder("John", "John", "Jane")
-//                                         .hasSize(3);
-//    }
+
+    @Test
+    void shouldUpdate() {
+
+        // given
+        givenSavedPerson("John", "Doe");
+        givenSavedPerson("Johny", "Roe");
+        givenSavedPerson("Jane", "Doe");
+
+        // when
+        Mono<Integer> actual = repository.update(query -> query.set(person.firstName, "John")
+                                                               .where(person.firstName.eq("Johny")));
+
+        // then
+        then(block(actual)).isEqualTo(1);
+        then(block(repository.findAll())).extracting(Person::getFirstName)
+                                         .containsExactlyInAnyOrder("John", "John", "Jane")
+                                         .hasSize(3);
+    }
 //
 //    @Test
 //    void shouldDelete() {
