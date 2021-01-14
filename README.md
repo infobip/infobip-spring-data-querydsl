@@ -69,17 +69,6 @@ Infobip Spring Data Querydsl provides new functionality that enables the user to
 
    * support for multiple constructors in JDBC module
 
-### 4.1.0
-
-   * `infobip-spring-data-jpa-querydsl` is no longer coupled to Hibernate ORM
-   * `SQLTemplates` for `infobip-spring-data-jpa-querydsl` can now be overidden - simply provide a bean of type SQLTemplates in your context.
-   * `QuerydslJdbcRepository` now extends `PagingAndSortingRepository`
-
-### 4.0.0
-
-* Breaking change:
-    * removed second generic parameter from QuerydslJdbcRepository
-
 ## <a name="NoteOnGeneralUsage"></a> Note on general usage
 
 For the sake of brevity, all examples use repository methods directly.
@@ -103,32 +92,19 @@ See [this answer](https://stackoverflow.com/a/26563841/607767) by Oliver Drotboh
 ```xml
 <dependency>
    <groupId>com.infobip</groupId>
-   <artifactId>infobip-spring-data-jdbc-querydsl</artifactId>
+   <artifactId>infobip-spring-data-jdbc-querydsl-boot-starter</artifactId>
    <version>${infobip-spring-data-jdbc-querydsl.version}</version>
 </dependency>
 ```
 
-2. Add `@EnableQuerydslJdbcRepositories` to your Main class:
-
-```java
-@EnableQuerydslJdbcRepositories // replaces @EnableJdbcRepositories
-@SpringBootApplication
-public class Main {
- 
-    public static void main(String[] args) {
-        new SpringApplicationBuilder(Main.class).run(args);
-    }
-}
-```
-
-3. Refactor repository interfaces to use `QuerydslJdbcRepository`:
+2. Refactor repository interfaces to use `QuerydslJdbcRepository`:
 
 ```java
 interface FooRepository extends QuerydslJdbcRepository<Foo, ID> {
 }
 ```
 
-4. Done
+3. Done
 
 ### <a name="JDBCFeaturesAndExamples"></a> Features and examples:
 
@@ -236,32 +212,19 @@ Take a look at [extension package in tests](infobip-spring-data-jdbc-querydsl/sr
 ```xml
 <dependency>
    <groupId>com.infobip</groupId>
-   <artifactId>infobip-spring-data-r2dbc-querydsl</artifactId>
+   <artifactId>infobip-spring-data-r2dbc-querydsl-boot-starter</artifactId>
    <version>${infobip-spring-data-r2dbc-querydsl.version}</version>
 </dependency>
 ```
 
-2. Add `@EnableQuerydslR2dbcRepositories` to your Main class:
-
-```java
-@EnableQuerydslR2dbcRepositories // replaces @EnableR2dbcRepositories
-@SpringBootApplication
-public class Main {
- 
-    public static void main(String[] args) {
-        new SpringApplicationBuilder(Main.class).run(args);
-    }
-}
-```
-
-3. Refactor repository interfaces to use `QuerydslR2dbcRepository`:
+2. Refactor repository interfaces to use `QuerydslR2dbcRepository`:
 
 ```java
 interface FooRepository extends QuerydslR2dbcRepository<Foo, ID> {
 }
 ```
 
-4. Done
+3. Done
 
 ### <a name="R2DBCFeaturesAndExamples"></a> Features and examples:
 
@@ -363,7 +326,7 @@ Take a look at [extension package in tests](infobip-spring-data-r2dbc-querydsl/s
 ```xml
 <dependency>
    <groupId>com.infobip</groupId>
-   <artifactId>infobip-spring-data-jpa-querydsl</artifactId>
+   <artifactId>infobip-spring-data-jpa-querydsl-boot-starter</artifactId>
    <version>${infobip-spring-data-jpa-querydsl.version}</version>
 </dependency>
 ```
@@ -371,20 +334,7 @@ Take a look at [extension package in tests](infobip-spring-data-r2dbc-querydsl/s
 As this project depends on querydsl-apt with jpa classifier you don't need to set up explicit Maven build phase for Q classes generation.
 For building Q classes without Maven, make sure your IDE has Annotation processing enabled.
 
-2. Add @EnableExtendedJpaRepositories to your Main class:
-
-```java
-@EnableExtendedJpaRepositories // replaces @EnableJpaRepositories
-@SpringBootApplication
-public class Main {
- 
-    public static void main(String[] args) {
-        new SpringApplicationBuilder(Main.class).run(args);
-    }
-}
-```
-
-3. Refactor repository interfaces to use `ExtendedQueryDslJpaRepository` instead of `JpaRepository` and `QueryDslPredicateExecutor` (note that ExtendedQueryDslJpaRepository extends and provides the API of both):
+2. Refactor repository interfaces to use `ExtendedQueryDslJpaRepository` instead of `JpaRepository` and `QueryDslPredicateExecutor` (note that ExtendedQueryDslJpaRepository extends and provides the API of both):
 
 ```java
 // ExtendedQueryDslJpaRepository replaces both JpaRepository and QueryDslPredicateExecutor
@@ -392,7 +342,7 @@ interface FooRepository extends ExtendedQueryDslJpaRepository<Foo, ID> {
 }
 ```
 
-4. Done
+3. Done
 
 If you need other features from `@EnableJpaRepositories` you can use:
 
