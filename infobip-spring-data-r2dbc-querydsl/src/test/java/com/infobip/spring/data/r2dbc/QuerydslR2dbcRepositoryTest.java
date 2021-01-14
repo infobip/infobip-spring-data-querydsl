@@ -59,57 +59,57 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
                            .containsOnly(johnDoe);
     }
 
-    @Test
-    void shouldProject() {
+//    @Test
+//    void shouldProject() {
+//
+//        // given
+//        Person johnDoe = givenSavedPerson("John", "Doe");
+//
+//        // when
+//        Flux<PersonProjection> actual = repository.query(
+//                query -> query.select(constructor(PersonProjection.class, person.firstName, person.lastName))
+//                              .from(person))
+//                                                  .all();
+//
+//        // then
+//        then(block(actual)).containsExactly(new PersonProjection(johnDoe.getFirstName(), johnDoe.getLastName()));
+//    }
 
-        // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
+//    @Test
+//    void shouldUpdate() {
+//
+//        // given
+//        givenSavedPerson("John", "Doe");
+//        givenSavedPerson("Johny", "Roe");
+//        givenSavedPerson("Jane", "Doe");
+//
+//        // when
+//        Mono<Integer> actual = repository.update(query -> query.set(person.firstName, "John")
+//                                                               .where(person.firstName.eq("Johny")));
+//
+//        // then
+//        then(block(actual)).isEqualTo(1);
+//        then(block(repository.findAll())).extracting(Person::getFirstName)
+//                                         .containsExactlyInAnyOrder("John", "John", "Jane")
+//                                         .hasSize(3);
+//    }
 
-        // when
-        Flux<PersonProjection> actual = repository.query(
-                query -> query.select(constructor(PersonProjection.class, person.firstName, person.lastName))
-                              .from(person))
-                                                  .all();
-
-        // then
-        then(block(actual)).containsExactly(new PersonProjection(johnDoe.getFirstName(), johnDoe.getLastName()));
-    }
-
-    @Test
-    void shouldUpdate() {
-
-        // given
-        givenSavedPerson("John", "Doe");
-        givenSavedPerson("Johny", "Roe");
-        givenSavedPerson("Jane", "Doe");
-
-        // when
-        Mono<Integer> actual = repository.update(query -> query.set(person.firstName, "John")
-                                                               .where(person.firstName.eq("Johny")));
-
-        // then
-        then(block(actual)).isEqualTo(1);
-        then(block(repository.findAll())).extracting(Person::getFirstName)
-                                         .containsExactlyInAnyOrder("John", "John", "Jane")
-                                         .hasSize(3);
-    }
-
-    @Test
-    void shouldDelete() {
-
-        // given
-        givenSavedPerson("John", "Doe");
-        givenSavedPerson("Johny", "Roe");
-        Person janeDoe = givenSavedPerson("Jane", "Doe");
-        givenSavedPerson("John", "Roe");
-
-        // when
-        Mono<Integer> actual = repository.deleteWhere(person.firstName.like("John%"));
-
-        // then
-        then(block(actual)).isEqualTo(3L);
-        then(block(repository.findAll())).containsExactly(janeDoe);
-    }
+//    @Test
+//    void shouldDelete() {
+//
+//        // given
+//        givenSavedPerson("John", "Doe");
+//        givenSavedPerson("Johny", "Roe");
+//        Person janeDoe = givenSavedPerson("Jane", "Doe");
+//        givenSavedPerson("John", "Roe");
+//
+//        // when
+//        Mono<Integer> actual = repository.deleteWhere(person.firstName.like("John%"));
+//
+//        // then
+//        then(block(actual)).isEqualTo(3L);
+//        then(block(repository.findAll())).containsExactly(janeDoe);
+//    }
 //
 //    @Test
 //    void shouldBeAbleToJoin() {
