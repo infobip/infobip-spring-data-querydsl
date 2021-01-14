@@ -24,7 +24,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
       - name: Build with Maven
-        run: mvn -B package --file pom.xml
+        run: mvn -B package --file pom.xml --debug
       - name: Coveralls Maven plugin
         env:
           CI_NAME: Github
