@@ -20,44 +20,44 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
     private final PersonSettingsRepository settingsRepository;
     private final NoArgsRepository noArgsRepository;
 
-//    @Test
-//    void shouldSaveWithVarArgs() {
-//
-//        // given
-//        Person johnDoe = new Person(null, "John", "Doe");
-//        Person johnyRoe = new Person(null, "Johny", "Roe");
-//
-//        // when
-//        Flux<Person> actual = repository.save(johnDoe, johnyRoe);
-//
-//        // then
-//        then(block(actual)).usingElementComparatorIgnoringFields("id")
-//                           .containsExactly(johnDoe, johnyRoe);
-//    }
-//
-//    @Test
-//    void shouldQuery() {
-//
-//        // given
-//        Person johnDoe = givenSavedPerson("John", "Doe");
-//        givenSavedPerson("Johny", "Roe");
-//        givenSavedPerson("Jane", "Doe");
-//        givenSavedPerson("John", "Roe");
-//        givenSavedPerson("Janie", "Doe");
-//
-//        // when
-//        Flux<Person> actual = repository.query(query -> query.select(repository.entityProjection())
-//                                                             .from(person)
-//                                                             .where(person.firstName.in("John", "Jane"))
-//                                                             .orderBy(person.firstName.asc(), person.lastName.asc())
-//                                                             .limit(1)
-//                                                             .offset(1))
-//                                        .all();
-//
-//        // then
-//        then(block(actual))
-//                           .containsOnly(johnDoe);
-//    }
+    @Test
+    void shouldSaveWithVarArgs() {
+
+        // given
+        Person johnDoe = new Person(null, "John", "Doe");
+        Person johnyRoe = new Person(null, "Johny", "Roe");
+
+        // when
+        Flux<Person> actual = repository.save(johnDoe, johnyRoe);
+
+        // then
+        then(block(actual)).usingElementComparatorIgnoringFields("id")
+                           .containsExactly(johnDoe, johnyRoe);
+    }
+
+    @Test
+    void shouldQuery() {
+
+        // given
+        Person johnDoe = givenSavedPerson("John", "Doe");
+        givenSavedPerson("Johny", "Roe");
+        givenSavedPerson("Jane", "Doe");
+        givenSavedPerson("John", "Roe");
+        givenSavedPerson("Janie", "Doe");
+
+        // when
+        Flux<Person> actual = repository.query(query -> query.select(repository.entityProjection())
+                                                             .from(person)
+                                                             .where(person.firstName.in("John", "Jane"))
+                                                             .orderBy(person.firstName.asc(), person.lastName.asc())
+                                                             .limit(1)
+                                                             .offset(1))
+                                        .all();
+
+        // then
+        then(block(actual))
+                           .containsOnly(johnDoe);
+    }
 //
 //    @Test
 //    void shouldProject() {
