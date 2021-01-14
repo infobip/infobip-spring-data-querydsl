@@ -1,6 +1,6 @@
 package com.infobip.spring.data.r2dbc;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.querydsl.ReactiveQuerydslPredicateExecutor;
 import reactor.core.publisher.Flux;
@@ -11,6 +11,7 @@ import javax.annotation.Nullable;
 import static com.infobip.spring.data.r2dbc.QPerson.person;
 import static org.assertj.core.api.BDDAssertions.then;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
 
     private final PersonRepository repository;
@@ -22,6 +23,7 @@ public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
         this.executor = personRepository;
     }
 
+    @Order(1)
     @Test
     void shouldFindOne() {
         // given
@@ -35,6 +37,7 @@ public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
         then(block(actual)).isEqualTo(johnDoe);
     }
 
+    @Order(2)
     @Test
     void shouldFindAllWithPredicate() {
         // given
@@ -49,6 +52,7 @@ public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
         then(block(actual)).containsExactlyInAnyOrder(johnDoe, janeDoe);
     }
 
+    @Order(3)
     @Test
     void shouldFindAllWithPredicateAndSort() {
         // given
@@ -63,6 +67,7 @@ public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
         then(block(actual)).containsExactlyInAnyOrder(janeDoe, johnDoe);
     }
 
+    @Order(4)
     @Test
     void shouldFindAllWithPredicateAndOrderSpecifier() {
         // given
@@ -77,6 +82,7 @@ public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
         then(block(actual)).containsExactlyInAnyOrder(janeDoe, johnDoe);
     }
 
+    @Order(5)
     @Test
     void shouldFindAllWithOrderSpecifier() {
         // given
@@ -91,6 +97,7 @@ public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
         then(block(actual)).containsExactlyInAnyOrder(janeDoe, johnDoe, johnyRoe);
     }
 
+    @Order(6)
     @Test
     void shouldCount() {
         // given
@@ -105,6 +112,7 @@ public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
         then(block(actual)).isEqualTo(2);
     }
 
+    @Order(7)
     @Test
     void shouldExist() {
         // given
