@@ -44,6 +44,13 @@ The project is divided into 2 modules: infobip-spring-data-jdbc-querydsl and inf
 
 ## <a name="News"></a> News
 
+### 5.0.0
+
+* Added R2DBC support
+
+* Breaking change:
+   * broke up repositories into fragments to enable easier extension and maintenance (most users shouldn't be affected)
+
 ### 4.1.2
 
    * JPA and JDBC module extension support
