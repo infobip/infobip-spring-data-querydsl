@@ -13,6 +13,7 @@ import javax.annotation.Nullable;
 import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
@@ -33,12 +34,16 @@ public abstract class TestBase {
     }
 
     @Nullable
-    <T> T block(Mono<T> mono) {
+    private <T> T block(Mono<T> mono) {
         return mono.block(Duration.ofSeconds(10));
     }
 
     @Nullable
     <T> List<T> block(Flux<T> flux) {
         return block(flux.collectList());
+    }
+
+    protected Mono<Void> given(Mono<?>... ts) {
+        return Flux.concat(Stream.of(ts).collect(Collectors.toList())).last().then();
     }
 }

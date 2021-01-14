@@ -144,10 +144,6 @@ public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
         return repository.save(new Person(null, john, doe));
     }
 
-    private Mono<Void> given(Mono<?>... ts) {
-        return Flux.concat(Stream.of(ts).collect(Collectors.toList())).last().then();
-    }
-
     private Predicate<? super Person> person(String firstName, String lastName) {
         return person -> person.equals(new Person(person.getId(), firstName, lastName));
     }
