@@ -125,7 +125,7 @@ All examples have corresponding tests in the project and can be found [here](inf
 
 In case you want to manually generate Q classes you can still exclude `infobip-spring-data-jdbc-annotation-processor` and do the process manually (e.g. like [this](https://github.com/infobip/infobip-spring-data-querydsl/commit/9b41403bdea38672caa5a4c57427cdcc2ef8c2a7#diff-ca2587b532ca6c66340cb5032feded4e6b090942f295556d27b480a81d417ba2)). 
 
-#### <a name="JDBCJDBCInnerJoin"></a> Inner Join:
+#### <a name="JDBCInnerJoin"></a> Inner Join:
 
 Inner join example:
 
