@@ -22,32 +22,32 @@ public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
         this.executor = personRepository;
     }
 
-//    @Test
-//    void shouldFindOne() {
-//        // given
-//        Person johnDoe = givenSavedPerson("John", "Doe");
-//        Person johnyRoe = givenSavedPerson("Johny", "Roe");
-//
-//        // when
-//        Mono<Person> actual = executor.findOne(person.firstName.eq("John"));
-//
-//        // then
-//        then(block(actual)).isEqualTo(johnDoe);
-//    }
-//
-//    @Test
-//    void shouldFindAllWithPredicate() {
-//        // given
-//        Person johnDoe = givenSavedPerson("John", "Doe");
-//        Person johnyRoe = givenSavedPerson("Johny", "Roe");
-//        Person janeDoe = givenSavedPerson("Jane", "Doe");
-//
-//        // when
-//        Flux<Person> actual = executor.findAll(person.lastName.eq("Doe"));
-//
-//        // then
-//        then(block(actual)).containsExactlyInAnyOrder(johnDoe, janeDoe);
-//    }
+    @Test
+    void shouldFindOne() {
+        // given
+        Person johnDoe = givenSavedPerson("John", "Doe");
+        Person johnyRoe = givenSavedPerson("Johny", "Roe");
+
+        // when
+        Mono<Person> actual = executor.findOne(person.firstName.eq("John"));
+
+        // then
+        then(block(actual)).isEqualTo(johnDoe);
+    }
+
+    @Test
+    void shouldFindAllWithPredicate() {
+        // given
+        Person johnDoe = givenSavedPerson("John", "Doe");
+        Person johnyRoe = givenSavedPerson("Johny", "Roe");
+        Person janeDoe = givenSavedPerson("Jane", "Doe");
+
+        // when
+        Flux<Person> actual = executor.findAll(person.lastName.eq("Doe"));
+
+        // then
+        then(block(actual)).containsExactlyInAnyOrder(johnDoe, janeDoe);
+    }
 //
 //    @Test
 //    void shouldFindAllWithPredicateAndSort() {
