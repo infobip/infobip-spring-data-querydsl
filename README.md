@@ -56,9 +56,11 @@ Infobip Spring Data Querydsl provides new functionality that enables the user to
 
 ### 5.0.0
 
-* Added R2DBC support
-
-* Breaking change:
+* R2DBC support
+* Spring Boot starters for modules
+* fragment support
+* QuerydslPredicateExecutor fragment support to JDBC module (JPA already has it and R2DBC module has ReactiveQuerydslPredicateExecutor support) 
+* **Breaking change**:
    * broke up repositories into fragments to enable easier extension and maintenance (most users shouldn't be affected)
 
 ### 4.1.2
