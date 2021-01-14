@@ -111,7 +111,7 @@ interface TRepository extends QuerydslJdbcRepository<T, ID> {
 * fragments:
 
 ```java
-interface TooRepository extends PagingAndSortingRepository<T, ID>, QuerydslPredicateExecutor<T>, QuerydslJdbcFragment<T> {
+interface TRepository extends PagingAndSortingRepository<T, ID>, QuerydslPredicateExecutor<T>, QuerydslJdbcFragment<T> {
 }
 ```
 
