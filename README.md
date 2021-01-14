@@ -17,12 +17,12 @@ The project is divided into 2 modules: infobip-spring-data-jdbc-querydsl and inf
     * [Setup](#JDBCSetup)
     * [Features and examples](#JDBCFeaturesAndExamples)
         * [Annotation Processor](#AnnotationProcessor)
-        * [Inner Join](#InnerJoin)
-        * [Projections](#Projections)
-        * [Query](#Query)
-        * [Update](#Update)
-        * [Delete](#Delete)
-        * [Transactional support](#TransactionalSupport)
+        * [Inner Join](#JDBCInnerJoin)
+        * [Projections](#JDBCProjections)
+        * [Query](#JDBCQuery)
+        * [Update](#JDBCUpdate)
+        * [Delete](#JDBCDelete)
+        * [Transactional support](#JDBCTransactionalSupport)
     * [Extension](#JDBCExtension)
 3. [JPA module:](#JPA)
     * [Requirements](#JPARequirements)
@@ -117,7 +117,7 @@ interface FooRepository extends QuerydslJdbcRepository<Foo, ID> {
 
 All examples have corresponding tests in the project and can be found [here](infobip-spring-data-jdbc-querydsl/src/test/java/com/infobip/spring/data/jdbc/QuerydslJdbcRepositoryTest.java).
 
-#### <a name="AnnotationProcessor"></a> Annotation Processor:
+#### <a name="JDBCAnnotationProcessor"></a> Annotation Processor:
 
 `infobip-spring-data-jdbc-annotation-processor` provides an annotation processor that automatically generates Q classes without connecting to the database.
 
@@ -125,7 +125,7 @@ All examples have corresponding tests in the project and can be found [here](inf
 
 In case you want to manually generate Q classes you can still exclude `infobip-spring-data-jdbc-annotation-processor` and do the process manually (e.g. like [this](https://github.com/infobip/infobip-spring-data-querydsl/commit/9b41403bdea38672caa5a4c57427cdcc2ef8c2a7#diff-ca2587b532ca6c66340cb5032feded4e6b090942f295556d27b480a81d417ba2)). 
 
-#### <a name="InnerJoin"></a> Inner Join:
+#### <a name="JDBCJDBCInnerJoin"></a> Inner Join:
 
 Inner join example:
 
@@ -140,7 +140,7 @@ List<Person> actual = repository.query(query -> query
 );
 ```
 
-#### <a name="Projections"></a> Projections
+#### <a name="JDBCProjections"></a> Projections
 
 For examples how to construct projections refer to the official documentation - [section result handling](http://www.querydsl.com/static/querydsl/latest/reference/html_single/#result_handling).
 
@@ -161,7 +161,7 @@ List<PersonProjection> actual = repository.query(query -> query
         .fetch());
 ```
 
-#### <a name="Query"></a> Query
+#### <a name="JDBCQuery"></a> Query
 
 ```
 List<Person> actual = repository.query(query -> query
@@ -174,7 +174,7 @@ List<Person> actual = repository.query(query -> query
         .fetch());
 ```
 
-#### <a name="Update"></a> Update
+#### <a name="JDBCUpdate"></a> Update
 
 ```
 repository.update(query -> query
@@ -183,13 +183,13 @@ repository.update(query -> query
         .execute());
 ```
 
-#### <a name="Delete"></a> Delete
+#### <a name="JDBCDelete"></a> Delete
 
 ```
 long numberOfAffectedRows = repository.deleteWhere(person.firstName.like("John%"));
 ```
 
-#### <a name="TransactionalSupport"></a> Transactional support
+#### <a name="JDBCTransactionalSupport"></a> Transactional support
 
 Queries execution is always done inside the repository implementation (loan pattern) in a transaction so transactions don't have to be 
 handled manually (like they do if you are manually managing SQLQuery and other Querydsl constructs).
