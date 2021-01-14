@@ -1,0 +1,6 @@
+CREATE TABLE Person (
+  Id        BIGINT IDENTITY,
+  FirstName NVARCHAR(20) NOT NULL,
+  LastName  NVARCHAR(20) NOT NULL,
+  CONSTRAINT PK_Person PRIMARY KEY (Id)
+);

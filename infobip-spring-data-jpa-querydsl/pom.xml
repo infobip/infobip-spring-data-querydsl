@@ -21,14 +21,6 @@
 			<artifactId>infobip-spring-data-common</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
-		<dependency>
-			<groupId>com.infobip</groupId>
-			<artifactId>infobip-mssql-testcontainers-spring-boot-starter</artifactId>
-			<version>${infobip-mssql-testcontainers.version}</version>
-			<scope>test</scope>
-		</dependency>
-
 		<dependency>
 			<groupId>com.querydsl</groupId>
 			<artifactId>querydsl-sql</artifactId>
@@ -36,14 +28,13 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-			<scope>provided</scope>
+			<groupId>com.querydsl</groupId>
+			<artifactId>querydsl-jpa</artifactId>
 		</dependency>
 
 		<dependency>
-			<groupId>com.querydsl</groupId>
-			<artifactId>querydsl-jpa</artifactId>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 	</dependencies>
 

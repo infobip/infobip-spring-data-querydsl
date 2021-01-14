@@ -1,0 +1,3 @@
+spring:
+  datasource:
+    url: jdbc:sqlserver://<host>:<port>;database=InfobipSpringDataJpaQuerydslTest

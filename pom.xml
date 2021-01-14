@@ -38,9 +38,12 @@
 	<modules>
 		<module>infobip-spring-data-common</module>
 		<module>infobip-spring-data-jpa-querydsl</module>
+		<module>infobip-spring-data-jpa-querydsl-boot-starter</module>
 		<module>infobip-spring-data-jdbc-querydsl</module>
+		<module>infobip-spring-data-jdbc-querydsl-boot-starter</module>
 		<module>infobip-spring-data-jdbc-annotation-processor</module>
 		<module>infobip-spring-data-r2dbc-querydsl</module>
+		<module>infobip-spring-data-r2dbc-querydsl-boot-starter</module>
 	</modules>
 
 	<developers>
@@ -140,6 +143,13 @@
 		<dependency>
 			<groupId>org.assertj</groupId>
 			<artifactId>assertj-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.infobip</groupId>
+			<artifactId>infobip-mssql-testcontainers-spring-boot-starter</artifactId>
+			<version>${infobip-mssql-testcontainers.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
