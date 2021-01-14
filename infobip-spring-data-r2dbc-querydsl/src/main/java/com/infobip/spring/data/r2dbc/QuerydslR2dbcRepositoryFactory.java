@@ -21,11 +21,14 @@ import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.sql.*;
 import org.springframework.core.ResolvableType;
+import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
 import org.springframework.data.r2dbc.repository.support.R2dbcRepositoryFactory;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.core.support.RepositoryComposition;
 import org.springframework.data.repository.core.support.RepositoryFragment;
+import org.springframework.r2dbc.core.DatabaseClient;
+import org.springframework.transaction.ReactiveTransactionManager;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.*;
@@ -36,14 +39,20 @@ import java.util.stream.Stream;
 
 public class QuerydslR2dbcRepositoryFactory extends R2dbcRepositoryFactory {
 
-    private final R2dbcEntityOperations operations;
     private final SQLQueryFactory sqlQueryFactory;
+    private final ReactiveTransactionManager reactiveTransactionManager;
+    private final DatabaseClient databaseClient;
+    private final R2dbcConverter converter;
 
     public QuerydslR2dbcRepositoryFactory(R2dbcEntityOperations operations,
-                                          SQLQueryFactory sqlQueryFactory) {
+                                          SQLQueryFactory sqlQueryFactory,
+                                          ReactiveTransactionManager reactiveTransactionManager,
+                                          DatabaseClient databaseClient) {
         super(operations);
-        this.operations = operations;
         this.sqlQueryFactory = sqlQueryFactory;
+        this.converter = operations.getConverter();
+        this.reactiveTransactionManager = reactiveTransactionManager;
+        this.databaseClient = databaseClient;
     }
 
     @Override
@@ -66,7 +75,9 @@ public class QuerydslR2dbcRepositoryFactory extends R2dbcRepositoryFactory {
                                                                             sqlQueryFactory,
                                                                             constructor,
                                                                             path,
-                                                                            operations);
+                                                                            reactiveTransactionManager,
+                                                                            databaseClient,
+                                                                            converter);
         return RepositoryFragment.implemented(simpleJPAQuerydslFragment);
     }
 
@@ -78,8 +89,10 @@ public class QuerydslR2dbcRepositoryFactory extends R2dbcRepositoryFactory {
                 constructorExpression,
                 path,
                 sqlQueryFactory,
-                operations,
-                querydsl);
+                querydsl,
+                reactiveTransactionManager,
+                databaseClient,
+                converter);
         return RepositoryFragment.implemented(querydslJdbcPredicateExecutor);
     }
 

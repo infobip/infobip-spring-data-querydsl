@@ -20,9 +20,12 @@ import com.querydsl.sql.*;
 import com.querydsl.sql.dml.SQLDeleteClause;
 import com.querydsl.sql.dml.SQLUpdateClause;
 import org.springframework.data.r2dbc.convert.EntityRowMapper;
-import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
+import org.springframework.data.r2dbc.convert.R2dbcConverter;
+import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.r2dbc.core.RowsFetchSpec;
+import org.springframework.transaction.ReactiveTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Mono;
 
 import java.util.function.Function;
@@ -33,17 +36,23 @@ public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> 
     private final SQLQueryFactory sqlQueryFactory;
     private final ConstructorExpression<T> constructorExpression;
     private final RelationalPath<T> path;
-    private final R2dbcEntityOperations entityOperations;
+    private final ReactiveTransactionManager reactiveTransactionManager;
+    private final DatabaseClient databaseClient;
+    private final R2dbcConverter converter;
 
     @SuppressWarnings("unchecked")
     public SimpleQuerydslR2dbcFragment(SQLQueryFactory sqlQueryFactory,
-                                         ConstructorExpression<T> constructorExpression,
-                                         RelationalPath<?> path,
-                                         R2dbcEntityOperations entityOperations) {
+                                       ConstructorExpression<T> constructorExpression,
+                                       RelationalPath<?> path,
+                                       ReactiveTransactionManager reactiveTransactionManager,
+                                       DatabaseClient databaseClient,
+                                       R2dbcConverter converter) {
         this.sqlQueryFactory = sqlQueryFactory;
         this.constructorExpression = constructorExpression;
         this.path = (RelationalPath<T>) path;
-        this.entityOperations = entityOperations;
+        this.reactiveTransactionManager = reactiveTransactionManager;
+        this.databaseClient = databaseClient;
+        this.converter = converter;
     }
 
     @Override
@@ -60,10 +69,10 @@ public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> 
                            .stream()
                            .map(SQLBindings::getSQL)
                            .collect(Collectors.joining("\n"));
-        return entityOperations.getDatabaseClient()
-                               .sql(sql)
-                               .fetch()
-                               .rowsUpdated();
+        return databaseClient.sql(sql)
+                             .fetch()
+                             .rowsUpdated()
+                             .as(TransactionalOperator.create(reactiveTransactionManager)::transactional);
     }
 
     @Override
@@ -76,10 +85,10 @@ public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> 
                            .stream()
                            .map(SQLBindings::getSQL)
                            .collect(Collectors.joining("\n"));
-        return entityOperations.getDatabaseClient()
-                               .sql(sql)
-                               .fetch()
-                               .rowsUpdated();
+        return databaseClient.sql(sql)
+                             .fetch()
+                             .rowsUpdated()
+                             .as(TransactionalOperator.create(reactiveTransactionManager)::transactional);
     }
 
     @Override
@@ -91,9 +100,9 @@ public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> 
         SQLQuery<O> result = query.apply(sqlQueryFactory.query());
         result.setUseLiterals(true);
         String sql = result.getSQL().getSQL();
-        EntityRowMapper<O> mapper = new EntityRowMapper<>(result.getType(), entityOperations.getConverter());
-        return entityOperations.getDatabaseClient()
-                               .sql(sql)
-                               .map(mapper);
+        EntityRowMapper<O> mapper = new EntityRowMapper<>(result.getType(), converter);
+        return new TransactionalRowsFetchSpec<>(databaseClient.sql(sql)
+                                                              .map(mapper),
+                                                TransactionalOperator.create(reactiveTransactionManager));
     }
 }

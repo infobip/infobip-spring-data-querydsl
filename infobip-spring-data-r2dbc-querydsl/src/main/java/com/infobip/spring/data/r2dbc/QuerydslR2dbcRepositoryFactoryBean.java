@@ -21,6 +21,8 @@ import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
 import org.springframework.data.r2dbc.repository.support.R2dbcRepositoryFactoryBean;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
+import org.springframework.r2dbc.core.DatabaseClient;
+import org.springframework.transaction.ReactiveTransactionManager;
 
 import java.io.Serializable;
 
@@ -28,6 +30,8 @@ public class QuerydslR2dbcRepositoryFactoryBean<T extends Repository<S, ID>, S, 
         extends R2dbcRepositoryFactoryBean<T, S, ID> {
 
     private SQLQueryFactory sqlQueryFactory;
+    private ReactiveTransactionManager reactiveTransactionManager;
+    private DatabaseClient databaseClient;
 
     protected QuerydslR2dbcRepositoryFactoryBean(Class<? extends T> repositoryInterface) {
         super(repositoryInterface);
@@ -35,11 +39,23 @@ public class QuerydslR2dbcRepositoryFactoryBean<T extends Repository<S, ID>, S, 
 
     @Override
     protected RepositoryFactorySupport getFactoryInstance(R2dbcEntityOperations operations) {
-        return new QuerydslR2dbcRepositoryFactory(operations, sqlQueryFactory);
+        return new QuerydslR2dbcRepositoryFactory(operations, sqlQueryFactory, reactiveTransactionManager,
+                                                  databaseClient);
     }
 
     @Autowired
     public void setSQLQueryFactory(SQLQueryFactory sqlQueryFactory) {
         this.sqlQueryFactory = sqlQueryFactory;
+    }
+
+    @Autowired
+    public void setReactiveTransactionManager(ReactiveTransactionManager reactiveTransactionManager) {
+        this.reactiveTransactionManager = reactiveTransactionManager;
+    }
+
+    @Autowired
+    public void setDatabaseClient(DatabaseClient databaseClient) {
+        super.setDatabaseClient(databaseClient);
+        this.databaseClient = databaseClient;
     }
 }

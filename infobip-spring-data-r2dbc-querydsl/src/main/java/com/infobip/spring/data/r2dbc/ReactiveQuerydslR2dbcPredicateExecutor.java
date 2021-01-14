@@ -9,9 +9,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.querydsl.QSort;
 import org.springframework.data.querydsl.ReactiveQuerydslPredicateExecutor;
 import org.springframework.data.r2dbc.convert.EntityRowMapper;
-import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
+import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.lang.Nullable;
+import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.r2dbc.core.RowsFetchSpec;
+import org.springframework.transaction.ReactiveTransactionManager;
+import org.springframework.transaction.reactive.TransactionalOperator;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -21,19 +24,25 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
     private final ConstructorExpression<T> constructorExpression;
     private final RelationalPath<T> path;
     private final SQLQueryFactory sqlQueryFactory;
-    private final R2dbcEntityOperations entityOperations;
     private final Querydsl querydsl;
+    private final ReactiveTransactionManager reactiveTransactionManager;
+    private final DatabaseClient databaseClient;
+    private final R2dbcConverter converter;
 
     public ReactiveQuerydslR2dbcPredicateExecutor(ConstructorExpression<T> constructorExpression,
                                                   RelationalPath<T> path,
                                                   SQLQueryFactory sqlQueryFactory,
-                                                  R2dbcEntityOperations entityOperations,
-                                                  Querydsl querydsl) {
+                                                  Querydsl querydsl,
+                                                  ReactiveTransactionManager reactiveTransactionManager,
+                                                  DatabaseClient databaseClient,
+                                                  R2dbcConverter converter) {
         this.constructorExpression = constructorExpression;
         this.path = path;
         this.sqlQueryFactory = sqlQueryFactory;
-        this.entityOperations = entityOperations;
         this.querydsl = querydsl;
+        this.reactiveTransactionManager = reactiveTransactionManager;
+        this.databaseClient = databaseClient;
+        this.converter = converter;
     }
 
     @Override
@@ -42,13 +51,13 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
                                               .select(constructorExpression)
                                               .where(predicate)
                                               .from(path);
-        return query(sqlQuery).one();
+        return query(sqlQuery).one().as(TransactionalOperator.create(reactiveTransactionManager)::transactional);
     }
 
     @Override
     public Flux<T> findAll(Predicate predicate) {
         SQLQuery<T> query = sqlQueryFactory.query().select(constructorExpression).from(path).where(predicate);
-        return query(query).all();
+        return query(query).all().as(TransactionalOperator.create(reactiveTransactionManager)::transactional);
     }
 
     @Override
@@ -57,7 +66,8 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
         Assert.notNull(predicate, "Predicate must not be null!");
         Assert.notNull(orders, "Order specifiers must not be null!");
 
-        return executeSorted(createQuery(predicate).select(constructorExpression), orders);
+        return executeSorted(createQuery(predicate).select(constructorExpression), orders).as(
+                TransactionalOperator.create(reactiveTransactionManager)::transactional);
     }
 
     @Override
@@ -66,7 +76,8 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
         Assert.notNull(predicate, "Predicate must not be null!");
         Assert.notNull(sort, "Sort must not be null!");
 
-        return executeSorted(createQuery(predicate).select(constructorExpression), sort);
+        return executeSorted(createQuery(predicate).select(constructorExpression), sort).as(
+                TransactionalOperator.create(reactiveTransactionManager)::transactional);
     }
 
     @Override
@@ -74,7 +85,8 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
 
         Assert.notNull(orders, "Order specifiers must not be null!");
 
-        return executeSorted(createQuery(new Predicate[0]).select(constructorExpression), orders);
+        return executeSorted(createQuery(new Predicate[0]).select(constructorExpression), orders).as(
+                TransactionalOperator.create(reactiveTransactionManager)::transactional);
     }
 
     @Override
@@ -84,12 +96,13 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
                                                  .select(count)
                                                  .where(predicate)
                                                  .from(path);
-        return query(sqlQuery).one();
+        return query(sqlQuery).one().as(TransactionalOperator.create(reactiveTransactionManager)::transactional);
     }
 
     @Override
     public Mono<Boolean> exists(Predicate predicate) {
-        return count(predicate).map(result -> result > 0);
+        return count(predicate).map(result -> result > 0)
+                               .as(TransactionalOperator.create(reactiveTransactionManager)::transactional);
     }
 
     protected SQLQuery<?> createQuery(Predicate... predicate) {
@@ -122,9 +135,8 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
     private <O> RowsFetchSpec<O> query(SQLQuery<O> query) {
         query.setUseLiterals(true);
         String sql = query.getSQL().getSQL();
-        EntityRowMapper<O> mapper = new EntityRowMapper<>(query.getType(), entityOperations.getConverter());
-        return entityOperations.getDatabaseClient()
-                               .sql(sql)
-                               .map(mapper);
+        EntityRowMapper<O> mapper = new EntityRowMapper<>(query.getType(), converter);
+        return databaseClient.sql(sql)
+                             .map(mapper);
     }
 }
