@@ -1,6 +1,6 @@
 package jpa;
 
-import com.infobip.spring.data.jpa.EnableExtendedJpaRepositories;
+import com.infobip.spring.data.jpa.ExtendedQuerydslJpaRepository;
 import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -23,9 +23,9 @@ public class AutoConfigurationTest {
     void shouldCreateCustomBaseRepository() {
 
         // when
-        String[] actual = context.getBeanNamesForAnnotation(EnableExtendedJpaRepositories.class);
+        PersonRepository actual = context.getBean(PersonRepository.class);
 
         // then
-        then(actual).isNotEmpty();
+        then(actual).isInstanceOf(ExtendedQuerydslJpaRepository.class);
     }
 }

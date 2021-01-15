@@ -7,7 +7,7 @@ import org.springframework.data.repository.config.RepositoryConfigurationExtensi
 
 import java.lang.annotation.Annotation;
 
-public class QuerydslJdbcRepositoriesRegistrar extends AbstractRepositoryConfigurationSourceSupport {
+class QuerydslJdbcRepositoriesRegistrar extends AbstractRepositoryConfigurationSourceSupport {
 
     @Override
     protected Class<? extends Annotation> getAnnotation() {

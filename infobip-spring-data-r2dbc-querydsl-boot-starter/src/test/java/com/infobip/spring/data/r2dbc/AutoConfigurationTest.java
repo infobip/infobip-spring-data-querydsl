@@ -22,9 +22,9 @@ public class AutoConfigurationTest {
     void shouldCreateCustomBaseRepository() {
 
         // when
-        String[] actual = context.getBeanNamesForAnnotation(EnableQuerydslR2dbcRepositories.class);
+        PersonRepository actual = context.getBean(PersonRepository.class);
 
         // then
-        then(actual).isNotEmpty();
+        then(actual).isInstanceOf(QuerydslR2dbcRepository.class);
     }
 }
