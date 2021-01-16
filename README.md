@@ -215,6 +215,7 @@ Take a look at [extension package in tests](infobip-spring-data-jdbc-querydsl/sr
 - Spring Data R2DBC
 - entities must have an all argument constructor (`@AllArgsConstructor`), can have others as well
 - entity class and all argument constructor must be public (limitation of Querydsl)
+- if you're not using Flyway, you need to provide a SQLTemplates bean
 
 ### <a name="R2DBCSetup"></a> Setup:
 
