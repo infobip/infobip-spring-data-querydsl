@@ -54,6 +54,12 @@ Infobip Spring Data Querydsl provides new functionality that enables the user to
 
 ## <a name="News"></a> News
 
+### 5.0.1
+
+* Fixed an issue with colliding beans of `java.util.Supplier` type when using JPA module
+* **Breaking change**:
+    * if you're using JPA module and have been overriding `jpaSqlFactory` bean, you need to change bean definition to `JPASQLQueryFactory jpaSqlQueryFactory`
+
 ### 5.0.0
 
 * R2DBC support

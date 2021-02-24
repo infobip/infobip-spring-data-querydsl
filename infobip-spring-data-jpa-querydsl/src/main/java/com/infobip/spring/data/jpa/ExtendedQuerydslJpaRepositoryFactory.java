@@ -2,7 +2,6 @@ package com.infobip.spring.data.jpa;
 
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.querydsl.jpa.sql.JPASQLQuery;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 import org.springframework.data.querydsl.EntityPathResolver;
@@ -12,22 +11,21 @@ import org.springframework.data.repository.core.support.RepositoryFragment;
 
 import javax.persistence.EntityManager;
 import java.io.Serializable;
-import java.util.function.Supplier;
 
 public class ExtendedQuerydslJpaRepositoryFactory extends JpaRepositoryFactory {
 
-    private final Supplier<JPASQLQuery<?>> jpaSqlFactory;
+    private final JPASQLQueryFactory jpaSQLQueryFactory;
     private final EntityManager entityManager;
     private final EntityPathResolver entityPathResolver;
     private final JPAQueryFactory jpaQueryFactory;
 
     ExtendedQuerydslJpaRepositoryFactory(EntityManager entityManager,
-                                         Supplier<JPASQLQuery<?>> jpaSqlFactory,
+                                         JPASQLQueryFactory jpaSqlFactory,
                                          EntityPathResolver entityPathResolver,
                                          JPAQueryFactory jpaQueryFactory) {
         super(entityManager);
         this.entityManager = entityManager;
-        this.jpaSqlFactory = jpaSqlFactory;
+        this.jpaSQLQueryFactory = jpaSqlFactory;
         this.entityPathResolver = entityPathResolver;
         this.jpaQueryFactory = jpaQueryFactory;
     }
@@ -41,7 +39,7 @@ public class ExtendedQuerydslJpaRepositoryFactory extends JpaRepositoryFactory {
         Object simpleJPAQuerydslFragment = getTargetRepositoryViaReflection(SimpleQuerydslJpaFragment.class,
                                                                             path,
                                                                             jpaQueryFactory,
-                                                                            jpaSqlFactory,
+                                                                            jpaSQLQueryFactory,
                                                                             entityManager);
         RepositoryFragment<Object> fragment = RepositoryFragment.implemented(simpleJPAQuerydslFragment);
         return fragments.append(fragment);

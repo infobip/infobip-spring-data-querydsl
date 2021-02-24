@@ -7,22 +7,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class SimpleQuerydslJpaFragment<T> implements QuerydslJpaFragment<T> {
 
     private final EntityPath<T> path;
     private final JPAQueryFactory jpaQueryFactory;
-    private final Supplier<JPASQLQuery<T>> jpaSqlFactory;
+    private final JPASQLQueryFactory jpaSqlQueryFactory;
     private final EntityManager entityManager;
 
     public SimpleQuerydslJpaFragment(EntityPath<T> path,
                                      JPAQueryFactory jpaQueryFactory,
-                                     Supplier<JPASQLQuery<T>> jpaSqlFactory,
+                                     JPASQLQueryFactory jpaSqlQueryFactory,
                                      EntityManager entityManager) {
         this.path = path;
         this.jpaQueryFactory = jpaQueryFactory;
-        this.jpaSqlFactory = jpaSqlFactory;
+        this.jpaSqlQueryFactory = jpaSqlQueryFactory;
         this.entityManager = entityManager;
     }
 
@@ -45,9 +44,10 @@ public class SimpleQuerydslJpaFragment<T> implements QuerydslJpaFragment<T> {
         return jpaQueryFactory.delete(path).where(predicate).execute();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <O> O jpaSqlQuery(Function<JPASQLQuery<T>, O> query) {
-        return query.apply(jpaSqlFactory.get());
+        return query.apply((JPASQLQuery<T>) jpaSqlQueryFactory.create());
     }
 
     @Override

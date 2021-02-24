@@ -16,7 +16,6 @@
 package com.infobip.spring.data.jpa;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.querydsl.jpa.sql.JPASQLQuery;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.query.EscapeCharacter;
@@ -31,7 +30,6 @@ import org.springframework.lang.Nullable;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
-import java.util.function.Supplier;
 
 public class ExtendedQuerydslJpaRepositoryFactoryBean<T extends Repository<S, ID>, S, ID extends Serializable>
         extends JpaRepositoryFactoryBean<T, S, ID> {
@@ -41,7 +39,7 @@ public class ExtendedQuerydslJpaRepositoryFactoryBean<T extends Repository<S, ID
     private EscapeCharacter escapeCharacter;
     private JpaQueryMethodFactory queryMethodFactory;
     private JPAQueryFactory jpaQueryFactory;
-    private Supplier<JPASQLQuery<?>> jpaSqlFactory;
+    private JPASQLQueryFactory jpaSqlQueryFactory;
 
     public ExtendedQuerydslJpaRepositoryFactoryBean(Class<? extends T> repositoryInterface) {
         super(repositoryInterface);
@@ -73,15 +71,15 @@ public class ExtendedQuerydslJpaRepositoryFactoryBean<T extends Repository<S, ID
     }
 
     @Autowired
-    public void setJpaSqlFactory(Supplier<JPASQLQuery<?>> jpaSqlFactory) {
-        this.jpaSqlFactory = jpaSqlFactory;
+    public void setJpaSqlQueryFactory(JPASQLQueryFactory jpaSqlQueryFactory) {
+        this.jpaSqlQueryFactory = jpaSqlQueryFactory;
     }
 
     @Override
     protected RepositoryFactorySupport doCreateRepositoryFactory() {
 
         ExtendedQuerydslJpaRepositoryFactory factory = new ExtendedQuerydslJpaRepositoryFactory(entityManager,
-                                                                                                jpaSqlFactory,
+                                                                                                jpaSqlQueryFactory,
                                                                                                 entityPathResolver,
                                                                                                 jpaQueryFactory);
         factory.setEntityPathResolver(this.entityPathResolver);

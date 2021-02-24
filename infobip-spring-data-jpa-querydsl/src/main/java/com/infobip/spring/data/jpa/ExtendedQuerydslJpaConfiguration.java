@@ -9,7 +9,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.*;
 
 import javax.persistence.EntityManager;
-import java.util.function.Supplier;
 
 @Import(InfobipSpringDataCommonConfiguration.class)
 @Configuration
@@ -17,7 +16,7 @@ public class ExtendedQuerydslJpaConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    public Supplier<JPASQLQuery<?>> jpaSqlFactory(EntityManager entityManager, SQLTemplates sqlTemplates) {
+    public JPASQLQueryFactory jpaSqlQueryFactory(EntityManager entityManager, SQLTemplates sqlTemplates) {
         return () -> new JPASQLQuery<>(entityManager, sqlTemplates);
     }
 
