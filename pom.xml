@@ -251,7 +251,7 @@
 
 	<distributionManagement>
 		<repository>
-			<id>ossrh-releases</id>
+			<id>ossrh</id>
 			<name>SonatypeReleases</name>
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
 		</repository>
