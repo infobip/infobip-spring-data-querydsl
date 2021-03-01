@@ -54,6 +54,13 @@ Infobip Spring Data Querydsl provides new functionality that enables the user to
 
 ## <a name="News"></a> News
 
+### 5.0.3
+* deprecated `QuerydslJdbcFragment#query` (replaced by new methods)
+* added `QuerydslJdbcFragment#queryOne` and `QuerydslJdbcFragment#queryMany`
+
+### 5.0.2
+* new release build on CI (no changes in codebase)
+
 ### 5.0.1
 
 * Fixed an issue with colliding beans of `java.util.Supplier` type when using JPA module
