@@ -128,6 +128,6 @@ public class QuerydslPredicateExecutorTest extends TestBase {
     }
 
     private Person givenSavedPerson(String john, String doe) {
-        return repository.save(new Person(null, john, doe));
+        return repository.save(new Person(null, john, doe, BEGINNING_OF_2021));
     }
 }

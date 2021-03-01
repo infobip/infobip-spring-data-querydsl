@@ -5,11 +5,21 @@ import com.querydsl.core.types.Predicate;
 import com.querydsl.sql.SQLQuery;
 import com.querydsl.sql.dml.SQLUpdateClause;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 public interface QuerydslJdbcFragment<T> {
 
+    /**
+     * @deprecated use {@link #queryOne(Function)} or {@link #queryMany(Function)} instead
+     */
+    @Deprecated
     <O> O query(Function<SQLQuery<?>, O> query);
+
+    Optional<T> queryOne(Function<SQLQuery<?>, SQLQuery<T>> query);
+
+    List<T> queryMany(Function<SQLQuery<?>, SQLQuery<T>> query);
 
     /**
      * @return amount of affected rows

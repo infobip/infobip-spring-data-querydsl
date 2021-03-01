@@ -4,9 +4,12 @@ import com.infobip.spring.data.jdbc.extension.CustomQuerydslJdbcRepository;
 import com.querydsl.core.types.Projections;
 import lombok.AllArgsConstructor;
 import lombok.Value;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 
 import static com.infobip.spring.data.jdbc.QPerson.person;
 import static com.infobip.spring.data.jdbc.QPersonSettings.personSettings;
@@ -47,6 +50,11 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
         then(actual).containsOnly(johnDoe, johnyRoe);
     }
 
+    /**
+     * @deprecated {@link QuerydslJdbcFragment#query(Function)}
+     */
+    @Deprecated
+    @Disabled
     @Test
     void shouldQuery() {
 
@@ -66,6 +74,50 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
                 .limit(1)
                 .offset(1)
                 .fetch());
+
+        then(actual).containsOnly(johnDoe);
+    }
+
+    @Test
+    void shouldQueryOne() {
+
+        // given
+        Person johnDoe = givenSavedPerson("John", "Doe");
+        givenSavedPerson("Johny", "Roe");
+        givenSavedPerson("Jane", "Doe");
+        givenSavedPerson("John", "Roe");
+        givenSavedPerson("Janie", "Doe");
+
+        // when
+        Optional<Person> actual = repository.queryOne(query -> query
+                .select(repository.entityProjection())
+                .from(person)
+                .where(person.firstName.in("John", "Jane"))
+                .orderBy(person.firstName.asc(), person.lastName.asc())
+                .limit(1)
+                .offset(1));
+
+        then(actual).contains(johnDoe);
+    }
+
+    @Test
+    void shouldQueryMany() {
+
+        // given
+        Person johnDoe = givenSavedPerson("John", "Doe");
+        givenSavedPerson("Johny", "Roe");
+        givenSavedPerson("Jane", "Doe");
+        givenSavedPerson("John", "Roe");
+        givenSavedPerson("Janie", "Doe");
+
+        // when
+        List<Person> actual = repository.queryMany(query -> query
+                .select(repository.entityProjection())
+                .from(person)
+                .where(person.firstName.in("John", "Jane"))
+                .orderBy(person.firstName.asc(), person.lastName.asc())
+                .limit(1)
+                .offset(1));
 
         then(actual).containsOnly(johnDoe);
     }
@@ -174,7 +226,7 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
     }
 
     private Person givenSavedPerson(String john, String doe) {
-        return repository.save(new Person(null, john, doe));
+        return repository.save(new Person(null, john, doe, BEGINNING_OF_2021));
     }
 
     private NoArgsEntity giveNoArgsEntity() {

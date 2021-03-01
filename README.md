@@ -174,14 +174,23 @@ List<PersonProjection> actual = repository.query(query -> query
 #### <a name="JDBCQuery"></a> Query
 
 ```
-List<Person> actual = repository.query(query -> query
+Optional<Person> actual = repository.queryOne(query -> query
         .select(repository.entityProjection())
         .from(person)
         .where(person.firstName.in("John", "Jane"))
         .orderBy(person.firstName.asc(), person.lastName.asc())
         .limit(1)
-        .offset(1)
-        .fetch());
+        .offset(1));
+```
+
+```
+List<Person> actual = repository.queryMany(query -> query
+        .select(repository.entityProjection())
+        .from(person)
+        .where(person.firstName.in("John", "Jane"))
+        .orderBy(person.firstName.asc(), person.lastName.asc())
+        .limit(1)
+        .offset(1));
 ```
 
 #### <a name="JDBCUpdate"></a> Update
