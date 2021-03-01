@@ -20,19 +20,24 @@ import com.querydsl.sql.*;
 import com.querydsl.sql.dml.SQLUpdateClause;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 @Transactional(readOnly = true)
 public class SimpleQuerydslJdbcFragment<T> implements QuerydslJdbcFragment<T> {
 
+    private final QuerydslJdbcPredicateExecutor<T> querydslJdbcPredicateExecutor;
     private final SQLQueryFactory sqlQueryFactory;
     private final ConstructorExpression<T> constructorExpression;
     private final RelationalPath<T> path;
 
     @SuppressWarnings("unchecked")
-    public SimpleQuerydslJdbcFragment(SQLQueryFactory sqlQueryFactory,
+    public SimpleQuerydslJdbcFragment(QuerydslJdbcPredicateExecutor<T> querydslJdbcPredicateExecutor,
+                                      SQLQueryFactory sqlQueryFactory,
                                       ConstructorExpression<T> constructorExpression,
                                       RelationalPath<?> path) {
+        this.querydslJdbcPredicateExecutor = querydslJdbcPredicateExecutor;
         this.sqlQueryFactory = sqlQueryFactory;
         this.constructorExpression = constructorExpression;
         this.path = (RelationalPath<T>) path;
@@ -41,6 +46,16 @@ public class SimpleQuerydslJdbcFragment<T> implements QuerydslJdbcFragment<T> {
     @Override
     public <O> O query(Function<SQLQuery<?>, O> query) {
         return query.apply(sqlQueryFactory.query());
+    }
+
+    @Override
+    public Optional<T> queryOne(Function<SQLQuery<?>, SQLQuery<T>> query) {
+        return Optional.ofNullable(querydslJdbcPredicateExecutor.queryOne(query.apply(sqlQueryFactory.query())));
+    }
+
+    @Override
+    public List<T> queryMany(Function<SQLQuery<?>, SQLQuery<T>> query) {
+        return querydslJdbcPredicateExecutor.queryMany(query.apply(sqlQueryFactory.query()));
     }
 
     @Override
