@@ -33,12 +33,10 @@ public class SpringDataJdbcAnnotationProcessorTest {
         JavaFileObject givenSource = givenSource(PascalCaseFooBar.class);
 
         // when
-        Compilation compilation = whenCompile(processor, givenSource);
+        Compilation actual = whenCompile(processor, givenSource);
 
-        assertThat(compilation).succeeded();
-        assertThat(compilation)
-                .generatedSourceFile("com.infobip.spring.data.jdbc.annotation.processor.QPascalCaseFooBar")
-                .hasSourceEquivalentTo(JavaFileObjects.forResource("expected/QPascalCaseFooBar.java"));
+        // then
+        thenShouldGenerateSourceFile(actual, QPascalCaseFooBar.class);
     }
 
     @Test
@@ -58,12 +56,10 @@ public class SpringDataJdbcAnnotationProcessorTest {
         JavaFileObject givenSource = givenSource(CamelCaseFooBar.class);
 
         // when
-        Compilation compilation = whenCompile(processor, givenSource);
+        Compilation actual = whenCompile(processor, givenSource);
 
-        assertThat(compilation).succeeded();
-        assertThat(compilation)
-                .generatedSourceFile("com.infobip.spring.data.jdbc.annotation.processor.QCamelCaseFooBar")
-                .hasSourceEquivalentTo(JavaFileObjects.forResource("expected/QCamelCaseFooBar.java"));
+        // then
+        thenShouldGenerateSourceFile(actual, QCamelCaseFooBar.class);
     }
 
     @Test
@@ -84,12 +80,10 @@ public class SpringDataJdbcAnnotationProcessorTest {
         JavaFileObject givenSource = givenSource(EntityWithSchema.class);
 
         // when
-        Compilation compilation = whenCompile(processor, givenSource);
+        Compilation actual = whenCompile(processor, givenSource);
 
-        assertThat(compilation).succeeded();
-        assertThat(compilation)
-                .generatedSourceFile("com.infobip.spring.data.jdbc.annotation.processor.QEntityWithSchema")
-                .hasSourceEquivalentTo(JavaFileObjects.forResource("expected/QEntityWithSchema.java"));
+        // then
+        thenShouldGenerateSourceFile(actual, QEntityWithSchema.class);
     }
 
     @Test
@@ -99,12 +93,17 @@ public class SpringDataJdbcAnnotationProcessorTest {
         JavaFileObject givenSource = givenSource(SnakeCaseAndTransientType.class);
 
         // when
-        Compilation compilation = whenCompile(processor, givenSource);
+        Compilation actual = whenCompile(processor, givenSource);
 
-        assertThat(compilation).succeeded();
-        assertThat(compilation)
-                .generatedSourceFile("com.infobip.spring.data.jdbc.annotation.processor.QSnakeCaseAndTransientType")
-                .hasSourceEquivalentTo(JavaFileObjects.forResource("expected/QSnakeCaseAndTransientType.java"));
+        // then
+        thenShouldGenerateSourceFile(actual, QSnakeCaseAndTransientType.class);
+    }
+
+    private void thenShouldGenerateSourceFile(Compilation actual, Class<?> typeClass) {
+        assertThat(actual).succeeded();
+        assertThat(actual)
+                .generatedSourceFile(typeClass.getName())
+                .hasSourceEquivalentTo(JavaFileObjects.forResource("expected/" + typeClass.getSimpleName() +  ".java"));
     }
 
     private JavaFileObject givenSource(Class<?> type) {
