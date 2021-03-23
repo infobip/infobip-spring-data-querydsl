@@ -1,12 +1,11 @@
 package com.infobip.spring.data.jdbc.annotation.processor;
 
-import lombok.Value;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+@Schema("dbo")
 @Table("camelCaseFooBar")
-@Value
 public class CamelCaseFooBar {
 
     @Id
@@ -18,4 +17,10 @@ public class CamelCaseFooBar {
 
     @Column("bar")
     private final String bar;
+
+    public CamelCaseFooBar(Long id, String foo, String bar) {
+        this.id = id;
+        this.foo = foo;
+        this.bar = bar;
+    }
 }

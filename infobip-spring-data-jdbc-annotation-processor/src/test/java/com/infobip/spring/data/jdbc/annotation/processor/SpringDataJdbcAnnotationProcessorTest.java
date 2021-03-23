@@ -5,6 +5,7 @@ import com.google.testing.compile.JavaFileObjects;
 import org.junit.jupiter.api.Test;
 
 import javax.tools.JavaFileObject;
+import java.net.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -29,17 +30,13 @@ public class SpringDataJdbcAnnotationProcessorTest {
 
         // given
         SpringDataJdbcAnnotationProcessor processor = new SpringDataJdbcAnnotationProcessor();
-        JavaFileObject resource = JavaFileObjects.forResource("PascalCaseFooBar.java");
+        JavaFileObject givenSource = givenSource(PascalCaseFooBar.class);
 
         // when
-        Compilation compilation = javac()
-                .withProcessors(processor)
-                .compile(resource);
+        Compilation actual = whenCompile(processor, givenSource);
 
-        assertThat(compilation).succeeded();
-        assertThat(compilation)
-                .generatedSourceFile("com.infobip.spring.data.jdbc.annotation.processor.QPascalCaseFooBar")
-                .hasSourceEquivalentTo(JavaFileObjects.forResource("expected/QPascalCaseFooBar.java"));
+        // then
+        thenShouldGenerateSourceFile(actual, QPascalCaseFooBar.class);
     }
 
     @Test
@@ -56,17 +53,13 @@ public class SpringDataJdbcAnnotationProcessorTest {
 
         // given
         SpringDataJdbcAnnotationProcessor processor = new SpringDataJdbcAnnotationProcessor();
-        JavaFileObject resource = JavaFileObjects.forResource("CamelCaseFooBar.java");
+        JavaFileObject givenSource = givenSource(CamelCaseFooBar.class);
 
         // when
-        Compilation compilation = javac()
-                .withProcessors(processor)
-                .compile(resource);
+        Compilation actual = whenCompile(processor, givenSource);
 
-        assertThat(compilation).succeeded();
-        assertThat(compilation)
-                .generatedSourceFile("com.infobip.spring.data.jdbc.annotation.processor.QCamelCaseFooBar")
-                .hasSourceEquivalentTo(JavaFileObjects.forResource("expected/QCamelCaseFooBar.java"));
+        // then
+        thenShouldGenerateSourceFile(actual, QCamelCaseFooBar.class);
     }
 
     @Test
@@ -84,16 +77,52 @@ public class SpringDataJdbcAnnotationProcessorTest {
 
         // given
         SpringDataJdbcAnnotationProcessor processor = new SpringDataJdbcAnnotationProcessor();
-        JavaFileObject resource = JavaFileObjects.forResource("EntityWithSchema.java");
+        JavaFileObject givenSource = givenSource(EntityWithSchema.class);
 
         // when
-        Compilation compilation = javac()
-                .withProcessors(processor)
-                .compile(resource);
+        Compilation actual = whenCompile(processor, givenSource);
 
-        assertThat(compilation).succeeded();
-        assertThat(compilation)
-                .generatedSourceFile("com.infobip.spring.data.jdbc.annotation.processor.QEntityWithSchema")
-                .hasSourceEquivalentTo(JavaFileObjects.forResource("expected/QEntityWithSchema.java"));
+        // then
+        thenShouldGenerateSourceFile(actual, QEntityWithSchema.class);
+    }
+
+    @Test
+    void shouldCreateSnakeCaseAndTransientType() {
+        // given
+        SpringDataJdbcAnnotationProcessor processor = new SpringDataJdbcAnnotationProcessor();
+        JavaFileObject givenSource = givenSource(SnakeCaseAndTransientType.class);
+
+        // when
+        Compilation actual = whenCompile(processor, givenSource);
+
+        // then
+        thenShouldGenerateSourceFile(actual, QSnakeCaseAndTransientType.class);
+    }
+
+    private void thenShouldGenerateSourceFile(Compilation actual, Class<?> typeClass) {
+        assertThat(actual).succeeded();
+        assertThat(actual)
+                .generatedSourceFile(typeClass.getName())
+                .hasSourceEquivalentTo(JavaFileObjects.forResource("expected/" + typeClass.getSimpleName() +  ".java"));
+    }
+
+    private JavaFileObject givenSource(Class<?> type) {
+        return JavaFileObjects.forResource(
+                convert(Paths.get("src", "test", "java", "com", "infobip", "spring", "data", "jdbc", "annotation",
+                                  "processor",
+                                  type.getSimpleName() + ".java").toUri()));
+    }
+
+    private URL convert(URI uri) {
+        try {
+            return uri.toURL();
+        } catch (MalformedURLException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    private Compilation whenCompile(SpringDataJdbcAnnotationProcessor processor, JavaFileObject resource) {
+        return javac().withProcessors(processor)
+                      .compile(resource);
     }
 }
