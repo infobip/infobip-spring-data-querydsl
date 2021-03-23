@@ -4,6 +4,7 @@ import com.google.auto.service.AutoService;
 import com.querydsl.apt.*;
 import com.querydsl.codegen.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 
 import javax.annotation.processing.*;
 import javax.lang.model.element.Element;
@@ -31,7 +32,7 @@ public class SpringDataJdbcAnnotationProcessor extends AbstractQuerydslProcessor
         SpringDataJdbcConfiguration springDataJdbcConfiguration = new SpringDataJdbcConfiguration(roundEnv,
                                                                                                   processingEnv,
                                                                                                   entity, null, null,
-                                                                                                  null, Ignored.class,
+                                                                                                  null, Transient.class,
                                                                                                   typeMappings,
                                                                                                   codegenModule);
         this.conf = springDataJdbcConfiguration;
@@ -68,10 +69,5 @@ public class SpringDataJdbcAnnotationProcessor extends AbstractQuerydslProcessor
     @Override
     protected String getClassName(EntityType model) {
         return model.getFullName();
-    }
-
-    @Documented
-    @Retention(RetentionPolicy.RUNTIME)
-    private @interface Ignored {
     }
 }
