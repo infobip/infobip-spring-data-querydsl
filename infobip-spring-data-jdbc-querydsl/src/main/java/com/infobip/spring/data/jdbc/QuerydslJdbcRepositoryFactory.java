@@ -22,6 +22,7 @@ import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.sql.*;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.ResolvableType;
+import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.jdbc.core.convert.DataAccessStrategy;
 import org.springframework.data.jdbc.core.convert.JdbcConverter;
 import org.springframework.data.jdbc.repository.support.JdbcRepositoryFactory;
@@ -34,6 +35,7 @@ import org.springframework.data.repository.core.support.RepositoryComposition;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.util.ReflectionUtils;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.function.Function;
@@ -104,9 +106,7 @@ public class QuerydslJdbcRepositoryFactory extends JdbcRepositoryFactory {
     }
 
     private ConstructorExpression<?> getConstructorExpression(Class<?> type, RelationalPath<?> pathBase) {
-        Constructor<?> constructor = Arrays.stream(type.getDeclaredConstructors())
-                                           .max(Comparator.comparingInt(Constructor::getParameterCount))
-                                           .orElse(null);
+        Constructor<?> constructor = getConstructor(type);
 
         if (constructor == null) {
             throw new IllegalArgumentException(
@@ -125,6 +125,24 @@ public class QuerydslJdbcRepositoryFactory extends JdbcRepositoryFactory {
                                 .toArray(Path[]::new);
 
         return Projections.constructor(type, paths);
+    }
+
+    @Nullable
+    private Constructor<?> getConstructor(Class<?> type) {
+        Constructor<?>[] declaredConstructors = type.getDeclaredConstructors();
+        Constructor<?> persistenceConstructor = Arrays.stream(declaredConstructors)
+                                                      .filter(constructor -> constructor.isAnnotationPresent(
+                                                              PersistenceConstructor.class))
+                                                      .findAny()
+                                                      .orElse(null);
+
+        if (Objects.nonNull(persistenceConstructor)) {
+            return persistenceConstructor;
+        }
+
+        return Arrays.stream(declaredConstructors)
+                     .max(Comparator.comparingInt(Constructor::getParameterCount))
+                     .orElse(null);
     }
 
     private RelationalPathBase<?> getRelationalPathBaseFromQueryRepositoryClass(Class<?> repositoryInterface) {
