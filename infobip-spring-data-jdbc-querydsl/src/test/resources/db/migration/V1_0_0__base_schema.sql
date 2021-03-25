@@ -18,3 +18,9 @@ CREATE TABLE NoArgsEntity (
     Value NVARCHAR(20),
     CONSTRAINT PK_NoArgsEntity PRIMARY KEY (Id),
 );
+
+CREATE TABLE TransientEntity (
+    Id    BIGINT IDENTITY,
+    Value NVARCHAR(20),
+    CONSTRAINT PK_TransientEntity PRIMARY KEY (Id),
+);
