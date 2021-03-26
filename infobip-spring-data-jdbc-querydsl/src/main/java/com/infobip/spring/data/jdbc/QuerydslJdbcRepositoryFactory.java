@@ -36,11 +36,13 @@ import static org.springframework.data.repository.core.support.RepositoryFragmen
 
 public class QuerydslJdbcRepositoryFactory extends JdbcRepositoryFactory {
 
+    private final Class<?> REPOSITORY_TARGET_TYPE = QuerydslJdbcFragment.class;
+
     private final RelationalMappingContext context;
     private final JdbcConverter converter;
     private final SQLQueryFactory sqlQueryFactory;
     private final QuerydslExpressionFactory querydslExpressionFactory = new QuerydslExpressionFactory(
-            QuerydslJdbcFragment.class);
+            REPOSITORY_TARGET_TYPE);
 
     public QuerydslJdbcRepositoryFactory(DataAccessStrategy dataAccessStrategy,
                                          RelationalMappingContext context,
@@ -59,8 +61,15 @@ public class QuerydslJdbcRepositoryFactory extends JdbcRepositoryFactory {
     protected RepositoryComposition.RepositoryFragments getRepositoryFragments(RepositoryMetadata metadata) {
 
         RepositoryComposition.RepositoryFragments fragments = super.getRepositoryFragments(metadata);
+
+        Class<?> repositoryInterface = metadata.getRepositoryInterface();
+
+        if (!REPOSITORY_TARGET_TYPE.isAssignableFrom(repositoryInterface)) {
+            return fragments;
+        }
+
         RelationalPathBase<?> path = querydslExpressionFactory.getRelationalPathBaseFromQueryRepositoryClass(
-                metadata.getRepositoryInterface());
+                repositoryInterface);
         Class<?> type = metadata.getDomainType();
         ConstructorExpression<?> constructorExpression = querydslExpressionFactory.getConstructorExpression(type, path);
         QuerydslPredicateExecutor<?> querydslJdbcPredicateExecutor = createQuerydslJdbcPredicateExecutor(metadata,
