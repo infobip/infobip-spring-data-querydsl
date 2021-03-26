@@ -31,12 +31,14 @@ import org.springframework.transaction.ReactiveTransactionManager;
 
 public class QuerydslR2dbcRepositoryFactory extends R2dbcRepositoryFactory {
 
+    private final Class<?> REPOSITORY_TARGET_TYPE = QuerydslR2dbcFragment.class;
+
     private final SQLQueryFactory sqlQueryFactory;
     private final ReactiveTransactionManager reactiveTransactionManager;
     private final DatabaseClient databaseClient;
     private final R2dbcConverter converter;
     private final QuerydslExpressionFactory querydslExpressionFactory = new QuerydslExpressionFactory(
-            QuerydslR2dbcFragment.class);
+            REPOSITORY_TARGET_TYPE);
 
     public QuerydslR2dbcRepositoryFactory(R2dbcEntityOperations operations,
                                           SQLQueryFactory sqlQueryFactory,
@@ -53,8 +55,15 @@ public class QuerydslR2dbcRepositoryFactory extends R2dbcRepositoryFactory {
     protected RepositoryComposition.RepositoryFragments getRepositoryFragments(RepositoryMetadata metadata) {
 
         RepositoryComposition.RepositoryFragments fragments = super.getRepositoryFragments(metadata);
+
+        Class<?> repositoryInterface = metadata.getRepositoryInterface();
+
+        if (!REPOSITORY_TARGET_TYPE.isAssignableFrom(repositoryInterface)) {
+            return fragments;
+        }
+
         RelationalPathBase<?> path = querydslExpressionFactory.getRelationalPathBaseFromQueryRepositoryClass(
-                metadata.getRepositoryInterface());
+                repositoryInterface);
         Class<?> type = metadata.getDomainType();
         ConstructorExpression<?> constructorExpression = querydslExpressionFactory.getConstructorExpression(type, path);
         RepositoryFragment<Object> simpleQuerydslJdbcFragment = createSimpleQuerydslR2dbcFragment(path,

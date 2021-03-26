@@ -23,3 +23,9 @@ CREATE TABLE TransientEntity (
     Value NVARCHAR(20),
     CONSTRAINT PK_TransientEntity PRIMARY KEY (Id),
 );
+
+CREATE TABLE PagingEntity (
+    Id    BIGINT IDENTITY,
+    Value NVARCHAR(20),
+    CONSTRAINT PK_PagingEntity PRIMARY KEY (Id),
+);
