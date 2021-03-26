@@ -54,8 +54,11 @@ Infobip Spring Data Querydsl provides new functionality that enables the user to
 
 ## <a name="News"></a> News
 
+### 5.1.0
+* added support for `@Transient` to JDBC and R2DBC module (#18)
+
 ### 5.0.5
-* added support for `@Transient` in annotation processor (#18)
+* added support for `@Transient` to annotation processor (#18)
 
 ### 5.0.4
 * deprecated `QuerydslJdbcFragment#query` (replaced by new methods)
