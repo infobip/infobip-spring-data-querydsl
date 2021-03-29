@@ -502,7 +502,7 @@ If this behavior needs to be changed a custom annotation processor should be cre
 public class CustomSpringDataJdbcAnnotationProcessor extends SpringDataJdbcAnnotationProcessorBase {
 
     public CustomSpringDataJdbcAnnotationProcessor() {
-        super(SpringDataJdbcQuerydslNamingStrategy.class);
+        super(CustomNamingStrategy.class);
     }
 }
 ```
