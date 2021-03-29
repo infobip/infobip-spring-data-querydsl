@@ -28,3 +28,42 @@
 * QuerydslPredicateExecutor fragment support to JDBC module (JPA already has it and R2DBC module has ReactiveQuerydslPredicateExecutor support)
 * **Breaking change**:
     * broke up repositories into fragments to enable easier extension and maintenance (most users shouldn't be affected)
+
+### 4.1.2
+
+* JPA and JDBC module extension support
+
+### 4.1.1
+
+* support for multiple constructors in JDBC module
+
+### 4.1.0
+
+* `infobip-spring-data-jpa-querydsl` is no longer coupled to Hibernate ORM
+* `SQLTemplates` for `infobip-spring-data-jpa-querydsl` can now be overidden - simply provide a bean of type SQLTemplates in your context.
+* `QuerydslJdbcRepository` now extends `PagingAndSortingRepository`
+
+### 4.0.0
+
+* Breaking change:
+  * removed second generic parameter from QuerydslJdbcRepository
+
+### 3.0.0
+
+* Breaking changes:
+  * renamed `@EnableExtendedRepositories` to `@EnableExtendedJpaRepositories`
+  * renamed `ExtendedQueryDslJpaRepository` to `ExtendedQuerydslJpaRepository`
+* Added new module - infobip-spring-data-jdbc-querydsl.
+
+### 2.0.1
+
+Changed scope of SimpleExtendedQueryDslJpaRepository to public.
+
+
+### 2.0.0
+
+Upgrade to Spring Data 2 (Spring Boot 2).
+
+Breaking change: new repository methods introduced in Spring Data 2 `CrudRepository#findById(Object)` and
+`QuerydslPredicateExecutor#findOne(Predicate)` replace old `ExtendedQueryDslJpaRepository.findOneById(Object)`
+and `ExtendedQueryDslJpaRepository.findOneByPredicate(Predicate)` (they were removed).
