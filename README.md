@@ -8,9 +8,9 @@ Infobip Spring Data Querydsl provides new functionality that enables the user to
 
 ## Contents
 
-1. [News](#News)
+1. [Changelog](#Changelog)
 2. [Note on general usage](#NoteOnGeneralUsage)
-2. [JDBC module:](#JDBC)
+3. [JDBC module:](#JDBC)
     * [Requirements](#JDBCRequirements)
     * [Setup](#JDBCSetup)
     * [Features and examples](#JDBCFeaturesAndExamples)
@@ -22,7 +22,7 @@ Infobip Spring Data Querydsl provides new functionality that enables the user to
         * [Delete](#JDBCDelete)
         * [Transactional support](#JDBCTransactionalSupport)
     * [Extension](#JDBCExtension)
-2. [R2DBC module:](#R2DBC)
+4. [R2DBC module:](#R2DBC)
    * [Requirements](#R2DBCRequirements)
    * [Setup](#R2DBCSetup)
    * [Features and examples](#R2DBCFeaturesAndExamples)
@@ -34,7 +34,7 @@ Infobip Spring Data Querydsl provides new functionality that enables the user to
       * [Delete](#R2DBCDelete)
       * [Transactional support](#R2DBCTransactionalSupport)
    * [Extension](#R2DBCExtension)
-3. [JPA module:](#JPA)
+5. [JPA module:](#JPA)
     * [Requirements](#JPARequirements)
     * [Setup](#JPASetup)
     * [Features and examples:](#JPAFeaturesAndExamples)
@@ -47,23 +47,14 @@ Infobip Spring Data Querydsl provides new functionality that enables the user to
         * [Transactional support](#JPATransactionalSupport)
         * [Stored procedure builder](#JPAStoredProcedureBuilder)
     * [Extension](#JPAExtension)
-5. [Further reading](#FurtherReading)
-6. [Running tests](#RunningTests)
-7. [Contributing](#Contributing)
-8. [License](#License)
+6. [Further reading](#FurtherReading)
+7. [Running tests](#RunningTests)
+8. [Contributing](#Contributing)
+9. [License](#License)
 
-## <a name="News"></a> News
+## <a name="Changelog"></a> Changelog
 
-### 5.2.0
-* added support for repositories that don't implement `QuerydslJdbcFragment` (JDBC module) and `QuerydslR2dbcFragment` (R2DBC module)
-
-### 5.1.0
-* added support for `@Transient` to JDBC and R2DBC module (#18)
-
-### 5.0.5
-* added support for `@Transient` to annotation processor (#18)
-
-For older changes check the [changelog](CHANGELOG.md).
+For changes check the [changelog](CHANGELOG.md).
 
 ## <a name="NoteOnGeneralUsage"></a> Note on general usage
 
