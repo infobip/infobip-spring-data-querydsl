@@ -493,7 +493,7 @@ Without annotation processor this process can be quite cumbersome as connecting 
 
 Current implementation of Annotation Processor uses pascal casing based naming strategy for table and column names.
 If this behavior needs to be changed a custom annotation processor should be created:
-1. create new Maven module (or Maven project if you want to reuse it across multiple projects)
+1. create a new Maven module (or a Maven project if you want to reuse across multiple projects)
 1. add dependency to `infobip-spring-data-jdbc-annotation-processor-common`
 1. create implementation of `com.querydsl.sql.codegen.NamingStrategy`
 1. create annotation processor that extends the base one:
