@@ -43,6 +43,7 @@
 		<module>infobip-spring-data-jdbc-querydsl</module>
 		<module>infobip-spring-data-jdbc-querydsl-boot-starter</module>
 		<module>infobip-spring-data-jdbc-annotation-processor</module>
+		<module>infobip-spring-data-jdbc-annotation-processor-common</module>
 		<module>infobip-spring-data-r2dbc-querydsl</module>
 		<module>infobip-spring-data-r2dbc-querydsl-boot-starter</module>
 	</modules>

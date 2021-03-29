@@ -28,12 +28,13 @@ class SpringDataJdbcConfiguration extends DefaultConfiguration {
                                        Class<? extends Annotation> embeddedAnn,
                                        Class<? extends Annotation> skipAnn,
                                        TypeMappings typeMappings,
-                                       CodegenModule codegenModule) {
+                                       CodegenModule codegenModule,
+                                       Class<? extends NamingStrategy> namingStrategyClass) {
         super(processingEnv, roundEnv, Keywords.JPA, QueryEntities.class, entityAnn, superTypeAnn,
               embeddableAnn, embeddedAnn, skipAnn, codegenModule);
         setStrictMode(true);
         sqlCodegenModule = new SQLCodegenModule();
-        sqlCodegenModule.bind(NamingStrategy.class, SpringDataJdbcQuerydslNamingStrategy.class);
+        sqlCodegenModule.bind(NamingStrategy.class, namingStrategyClass);
         sqlCodegenModule.bind(TypeMappings.class, typeMappings);
     }
 

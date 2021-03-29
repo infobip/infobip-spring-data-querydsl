@@ -9,12 +9,11 @@ Infobip Spring Data Querydsl provides new functionality that enables the user to
 ## Contents
 
 1. [Changelog](#Changelog)
-2. [Note on general usage](#NoteOnGeneralUsage)
-3. [JDBC module:](#JDBC)
+1. [Note on general usage](#NoteOnGeneralUsage)
+1. [JDBC module:](#JDBC)
     * [Requirements](#JDBCRequirements)
     * [Setup](#JDBCSetup)
     * [Features and examples](#JDBCFeaturesAndExamples)
-        * [Annotation Processor](#JDBCAnnotationProcessor)
         * [Inner Join](#JDBCInnerJoin)
         * [Projections](#JDBCProjections)
         * [Query](#JDBCQuery)
@@ -22,11 +21,10 @@ Infobip Spring Data Querydsl provides new functionality that enables the user to
         * [Delete](#JDBCDelete)
         * [Transactional support](#JDBCTransactionalSupport)
     * [Extension](#JDBCExtension)
-4. [R2DBC module:](#R2DBC)
+1. [R2DBC module:](#R2DBC)
    * [Requirements](#R2DBCRequirements)
    * [Setup](#R2DBCSetup)
    * [Features and examples](#R2DBCFeaturesAndExamples)
-      * [Annotation Processor](#R2DBCAnnotationProcessor)
       * [Inner Join](#R2DBCInnerJoin)
       * [Projections](#R2DBCProjections)
       * [Query](#R2DBCQuery)
@@ -34,7 +32,7 @@ Infobip Spring Data Querydsl provides new functionality that enables the user to
       * [Delete](#R2DBCDelete)
       * [Transactional support](#R2DBCTransactionalSupport)
    * [Extension](#R2DBCExtension)
-5. [JPA module:](#JPA)
+1. [JPA module:](#JPA)
     * [Requirements](#JPARequirements)
     * [Setup](#JPASetup)
     * [Features and examples:](#JPAFeaturesAndExamples)
@@ -47,10 +45,11 @@ Infobip Spring Data Querydsl provides new functionality that enables the user to
         * [Transactional support](#JPATransactionalSupport)
         * [Stored procedure builder](#JPAStoredProcedureBuilder)
     * [Extension](#JPAExtension)
-6. [Further reading](#FurtherReading)
-7. [Running tests](#RunningTests)
-8. [Contributing](#Contributing)
-9. [License](#License)
+1. [Annotation processor](#AnnotationProcessor)
+1. [Further reading](#FurtherReading)
+1. [Running tests](#RunningTests)
+1. [Contributing](#Contributing)
+1. [License](#License)
 
 ## <a name="Changelog"></a> Changelog
 
@@ -105,14 +104,6 @@ interface TRepository extends PagingAndSortingRepository<T, ID>, QuerydslPredica
 ### <a name="JDBCFeaturesAndExamples"></a> Features and examples:
 
 All examples have corresponding tests in the project and can be found [here](infobip-spring-data-jdbc-querydsl/src/test/java/com/infobip/spring/data/jdbc).
-
-#### <a name="JDBCAnnotationProcessor"></a> Annotation Processor:
-
-`infobip-spring-data-jdbc-annotation-processor` provides an annotation processor that automatically generates Q classes without connecting to the database.
-
-`infobip-spring-data-jdbc-querydsl` depends on `infobip-spring-data-jdbc-annotation-processor` so you don't need to add explicit dependency.
-
-In case you want to manually generate Q classes you can still exclude `infobip-spring-data-jdbc-annotation-processor` and do the process manually (e.g. like [this](https://github.com/infobip/infobip-spring-data-querydsl/commit/9b41403bdea38672caa5a4c57427cdcc2ef8c2a7#diff-ca2587b532ca6c66340cb5032feded4e6b090942f295556d27b480a81d417ba2)). 
 
 #### <a name="JDBCInnerJoin"></a> Inner Join:
 
@@ -244,14 +235,6 @@ interface TRepository extends ReactiveSortingRepository<T, ID>, ReactiveQuerydsl
 ### <a name="R2DBCFeaturesAndExamples"></a> Features and examples:
 
 All examples have corresponding tests in the project and can be found [here](infobip-spring-data-r2dbc-querydsl/src/test/java/com/infobip/spring/data/r2dbc).
-
-#### <a name="R2DBCAnnotationProcessor"></a> Annotation Processor:
-
-`infobip-spring-data-jdbc-annotation-processor` provides an annotation processor that automatically generates Q classes without connecting to the database.
-
-`infobip-spring-data-r2dbc-querydsl` depends on `infobip-spring-data-jdbc-annotation-processor` so you don't need to add explicit dependency.
-
-In case you want to manually generate Q classes you can still exclude `infobip-spring-data-jdbc-annotation-processor` and do the process manually (e.g. like [this](https://github.com/infobip/infobip-spring-data-querydsl/commit/9b41403bdea38672caa5a4c57427cdcc2ef8c2a7#diff-ca2587b532ca6c66340cb5032feded4e6b090942f295556d27b480a81d417ba2)).
 
 #### <a name="R2DBCInnerJoin"></a> Inner Join:
 
@@ -502,6 +485,50 @@ To create a custom base repository interface you'll need to create:
 *  custom factory bean class and potentially factory class depending on requirements
 
 Take a look at [extension package in tests](infobip-spring-data-jpa-querydsl/src/test/java/com/infobip/spring/data/jpa/extension) as an example on how this can be achieved.
+
+## <a name="AnnotationProcessor"></a> Annotation processor
+
+Annotation processor [infobip-spring-data-jdbc-annotation-processor](infobip-spring-data-jdbc-annotation-processor) is used by R2DBC and JDBC modules to generate Querydsl Q classes.
+Without annotation processor this process can be quite cumbersome as connecting to database would be required during the build phase.
+
+Current implementation of Annotation Processor uses pascal casing based naming strategy for table and column names.
+If this behavior needs to be changed a custom annotation processor should be created:
+1. create a new Maven module (or a Maven project if you want to reuse across multiple projects)
+1. add dependency to `infobip-spring-data-jdbc-annotation-processor-common`
+1. create implementation of `com.querydsl.sql.codegen.NamingStrategy`
+1. create annotation processor that extends the base one:
+```java
+@AutoService(Processor.class)
+public class CustomSpringDataJdbcAnnotationProcessor extends SpringDataJdbcAnnotationProcessorBase {
+
+    public CustomSpringDataJdbcAnnotationProcessor() {
+        super(CustomNamingStrategy.class);
+    }
+}
+```
+1. in module (or project) that needs to use this new processor exclude the default annotation processor dependency and include your own:
+```xml
+<dependency>
+	<groupId>com.infobip</groupId>
+    <!-- infobip-spring-data-jdbc-querydsl-boot-starter is used as an example here, same pattern applies for other modules --> 
+	<artifactId>infobip-spring-data-jdbc-querydsl-boot-starter</artifactId>
+	<version>${infobip-spring-data-jdbc-querydsl-boot-starter.version}</version>
+	<exclusions>
+		<exclusion>
+			<groupId>com.infobip</groupId>
+			<artifactId>infobip-spring-data-jdbc-annotation-processor</artifactId>
+		</exclusion>
+	</exclusions>
+</dependency>
+
+<!-- include dependency to custom annotation processor -->
+```
+
+[infobip-spring-data-jdbc-annotation-processor](infobip-spring-data-jdbc-annotation-processor) can be used as an example codebase for custom annotation processor. 
+It includes tests that can be used for custom annotation processor as well.
+
+In case you want to manually generate Q classes you can still exclude `infobip-spring-data-jdbc-annotation-processor` and do the process manually (e.g. like [this](https://github.com/infobip/infobip-spring-data-querydsl/commit/9b41403bdea38672caa5a4c57427cdcc2ef8c2a7#diff-ca2587b532ca6c66340cb5032feded4e6b090942f295556d27b480a81d417ba2)).
+
 
 ## <a name="FurtherReading"></a> Further reading
 
