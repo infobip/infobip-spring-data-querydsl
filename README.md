@@ -54,6 +54,9 @@ Infobip Spring Data Querydsl provides new functionality that enables the user to
 
 ## <a name="News"></a> News
 
+### 5.2.0
+* added support for repositories that don't implement `QuerydslJdbcFragment` (JDBC module) and `QuerydslR2dbcFragment` (R2DBC module)
+
 ### 5.1.0
 * added support for `@Transient` to JDBC and R2DBC module (#18)
 
@@ -81,14 +84,6 @@ Infobip Spring Data Querydsl provides new functionality that enables the user to
 * QuerydslPredicateExecutor fragment support to JDBC module (JPA already has it and R2DBC module has ReactiveQuerydslPredicateExecutor support) 
 * **Breaking change**:
    * broke up repositories into fragments to enable easier extension and maintenance (most users shouldn't be affected)
-
-### 4.1.2
-
-   * JPA and JDBC module extension support
-
-### 4.1.1
-
-   * support for multiple constructors in JDBC module
 
 ## <a name="NoteOnGeneralUsage"></a> Note on general usage
 
