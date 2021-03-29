@@ -9,8 +9,9 @@ Infobip Spring Data Querydsl provides new functionality that enables the user to
 ## Contents
 
 1. [Changelog](#Changelog)
-2. [Note on general usage](#NoteOnGeneralUsage)
-3. [JDBC module:](#JDBC)
+1. [Note on general usage](#NoteOnGeneralUsage)
+1. [Annotation processor](#AnnotationProcessor)   
+1. [JDBC module:](#JDBC)
     * [Requirements](#JDBCRequirements)
     * [Setup](#JDBCSetup)
     * [Features and examples](#JDBCFeaturesAndExamples)
@@ -22,7 +23,7 @@ Infobip Spring Data Querydsl provides new functionality that enables the user to
         * [Delete](#JDBCDelete)
         * [Transactional support](#JDBCTransactionalSupport)
     * [Extension](#JDBCExtension)
-4. [R2DBC module:](#R2DBC)
+1. [R2DBC module:](#R2DBC)
    * [Requirements](#R2DBCRequirements)
    * [Setup](#R2DBCSetup)
    * [Features and examples](#R2DBCFeaturesAndExamples)
@@ -34,7 +35,7 @@ Infobip Spring Data Querydsl provides new functionality that enables the user to
       * [Delete](#R2DBCDelete)
       * [Transactional support](#R2DBCTransactionalSupport)
    * [Extension](#R2DBCExtension)
-5. [JPA module:](#JPA)
+1. [JPA module:](#JPA)
     * [Requirements](#JPARequirements)
     * [Setup](#JPASetup)
     * [Features and examples:](#JPAFeaturesAndExamples)
@@ -47,10 +48,10 @@ Infobip Spring Data Querydsl provides new functionality that enables the user to
         * [Transactional support](#JPATransactionalSupport)
         * [Stored procedure builder](#JPAStoredProcedureBuilder)
     * [Extension](#JPAExtension)
-6. [Further reading](#FurtherReading)
-7. [Running tests](#RunningTests)
-8. [Contributing](#Contributing)
-9. [License](#License)
+1. [Further reading](#FurtherReading)
+1. [Running tests](#RunningTests)
+1. [Contributing](#Contributing)
+1. [License](#License)
 
 ## <a name="Changelog"></a> Changelog
 
@@ -62,6 +63,8 @@ For the sake of brevity, all examples use repository methods directly.
 
 In production code persistence layer (SQL) shouldn't leak to service layer.
 See [this answer](https://stackoverflow.com/a/26563841/607767) by Oliver Drotbohm (Spring Data Project Lead @ Pivotal) on how to approach encapsulating persistence logic.
+
+## <a name="AnnotationProcessor"></a> Annotation processor
 
 ## <a name="JDBC"></a> JDBC module:
 
