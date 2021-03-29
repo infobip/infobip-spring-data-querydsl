@@ -1,3 +1,6 @@
+### 5.3.0
+* added infobip-spring-data-jdbc-annotation-processor-common for custom annotation processor naming strategies (#21)
+
 ### 5.2.0
 * added support for repositories that don't implement `QuerydslJdbcFragment` (JDBC module) and `QuerydslR2dbcFragment` (R2DBC module)
 
