@@ -492,7 +492,7 @@ Annotation processor [infobip-spring-data-jdbc-annotation-processor](infobip-spr
 Without annotation processor this process can be quite cumbersome as connecting to database would be required during the build phase.
 
 Current implementation of Annotation Processor uses pascal casing based naming strategy for table and column names.
-In order to change this behavior a custom annotation processor should be created like so:
+If this behavior needs to be changed a custom annotation processor should be created:
 1. create new Maven module (or Maven project if you want to scale it across multiple projects)
 1. add dependency to `infobip-spring-data-jdbc-annotation-processor-common`
 1. create implementation of `com.querydsl.sql.codegen.NamingStrategy`
@@ -524,6 +524,8 @@ public class CustomSpringDataJdbcAnnotationProcessor extends SpringDataJdbcAnnot
 <!-- include dependency to custom annotation processor -->
 ```
 
+[infobip-spring-data-jdbc-annotation-processor](infobip-spring-data-jdbc-annotation-processor) can be used as an example codebase for custom annotation processor. 
+It includes tests that can be used for custom annotation processor as well.
 
 In case you want to manually generate Q classes you can still exclude `infobip-spring-data-jdbc-annotation-processor` and do the process manually (e.g. like [this](https://github.com/infobip/infobip-spring-data-querydsl/commit/9b41403bdea38672caa5a4c57427cdcc2ef8c2a7#diff-ca2587b532ca6c66340cb5032feded4e6b090942f295556d27b480a81d417ba2)).
 
