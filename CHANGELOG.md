@@ -1,3 +1,6 @@
+### 6.0.0
+* upgraded to Querydsl 5.0.0
+
 ### 5.3.0
 * added infobip-spring-data-jdbc-annotation-processor-common for custom annotation processor naming strategies (#21)
 

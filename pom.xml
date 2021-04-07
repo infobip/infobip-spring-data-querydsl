@@ -4,7 +4,7 @@
 
 	<groupId>com.infobip</groupId>
 	<artifactId>infobip-spring-data-querydsl</artifactId>
-	<version>5.3.1-SNAPSHOT</version>
+	<version>6.0.0.M1</version>
 	<packaging>pom</packaging>
 
 	<name>Infobip Spring Data Querydsl</name>
@@ -67,7 +67,7 @@
 		<!-- DEPENDENCY VERSIONS -->
 		<spring-boot.version>2.4.1</spring-boot.version>
 		<joda-time.version>2.10.6</joda-time.version>
-		<querydsl.version>4.4.0</querydsl.version>
+		<querydsl.version>5.0.0.M2</querydsl.version>
 
 		<infobip-mssql-testcontainers.version>3.1.6</infobip-mssql-testcontainers.version>
 
@@ -88,6 +88,19 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
+				<groupId>com.querydsl</groupId>
+				<artifactId>querydsl-bom</artifactId>
+				<version>${querydsl.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.querydsl</groupId>
+				<artifactId>querydsl-apt</artifactId>
+				<version>${querydsl.version}</version>
+				<classifier>jpa</classifier>
+			</dependency>
+			<dependency>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-dependencies</artifactId>
 				<version>${spring-boot.version}</version>
@@ -107,7 +120,6 @@
 		<dependency>
 			<groupId>com.querydsl</groupId>
 			<artifactId>querydsl-apt</artifactId>
-			<version>${querydsl.version}</version>
 			<classifier>jpa</classifier>
 		</dependency>
 

@@ -8,7 +8,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 
 import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import java.lang.annotation.Annotation;
