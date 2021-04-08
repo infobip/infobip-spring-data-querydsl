@@ -17,8 +17,8 @@ public class DefaultElementHandler extends TypeElementHandler {
 
     private final Elements elements;
     private final String defaultSchema;
-    private final CaseFormat columnCaseFormat;
     private final CaseFormat tableCaseFormat;
+    private final CaseFormat columnCaseFormat;
 
     public DefaultElementHandler(Configuration configuration,
                                  ExtendedTypeFactory typeFactory,
@@ -26,13 +26,13 @@ public class DefaultElementHandler extends TypeElementHandler {
                                  QueryTypeFactory queryTypeFactory,
                                  Elements elements,
                                  RoundEnvironment roundEnv,
-                                 CaseFormat columnCaseFormat,
-                                 CaseFormat tableCaseFormat) {
+                                 CaseFormat tableCaseFormat,
+                                 CaseFormat columnCaseFormat) {
         super(configuration, typeFactory, typeMappings, queryTypeFactory);
         this.elements = elements;
         this.defaultSchema = getDefaultSchema(roundEnv);
-        this.columnCaseFormat = columnCaseFormat;
         this.tableCaseFormat = tableCaseFormat;
+        this.columnCaseFormat = columnCaseFormat;
     }
 
     protected String getDefaultSchema(RoundEnvironment roundEnv) {

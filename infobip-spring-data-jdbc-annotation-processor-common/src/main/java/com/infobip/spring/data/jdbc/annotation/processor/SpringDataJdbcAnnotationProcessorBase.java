@@ -49,21 +49,23 @@ public abstract class SpringDataJdbcAnnotationProcessorBase extends AbstractQuer
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 
-        this.projectTableCaseFormat = getProjectColumnCaseFormat(roundEnv, ProjectTableCaseFormat.class, ProjectTableCaseFormat::value);
-        this.projectColumnCaseFormat = getProjectColumnCaseFormat(roundEnv, ProjectColumnCaseFormat.class, ProjectColumnCaseFormat::value);
+        this.projectTableCaseFormat = getProjectCaseFormat(roundEnv, ProjectTableCaseFormat.class,
+                                                           ProjectTableCaseFormat::value);
+        this.projectColumnCaseFormat = getProjectCaseFormat(roundEnv, ProjectColumnCaseFormat.class,
+                                                            ProjectColumnCaseFormat::value);
 
         return super.process(annotations, roundEnv);
     }
 
-    private <A extends Annotation> CaseFormat getProjectColumnCaseFormat(RoundEnvironment roundEnv,
-                                                                         Class<A> annotation,
-                                                                         Function<A, CaseFormat> valueExtractor) {
+    private <A extends Annotation> CaseFormat getProjectCaseFormat(RoundEnvironment roundEnv,
+                                                                   Class<A> annotation,
+                                                                   Function<A, CaseFormat> valueExtractor) {
         return Optional.ofNullable(roundEnv.getElementsAnnotatedWith(annotation))
-                .filter(elements -> elements.size() == 1)
-                .map(elements -> elements.iterator().next())
-                .map(element -> element.getAnnotation(annotation))
-                .map(valueExtractor)
-                .orElse(CaseFormat.UPPER_CAMEL);
+                       .filter(elements -> elements.size() == 1)
+                       .map(elements -> elements.iterator().next())
+                       .map(element -> element.getAnnotation(annotation))
+                       .map(valueExtractor)
+                       .orElse(CaseFormat.UPPER_CAMEL);
     }
 
     @Override

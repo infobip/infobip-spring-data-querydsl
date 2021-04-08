@@ -1,7 +1,7 @@
 import com.google.common.base.CaseFormat;
-import com.infobip.spring.data.jdbc.annotation.processor.ProjectTableCaseFormat;
+import com.infobip.spring.data.jdbc.annotation.processor.ProjectColumnCaseFormat;
 
-@ProjectTableCaseFormat(CaseFormat.LOWER_UNDERSCORE)
+@ProjectColumnCaseFormat(CaseFormat.LOWER_UNDERSCORE)
 public class CustomCaseFormatColumnConfiguration {
 
 }
