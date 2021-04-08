@@ -13,23 +13,29 @@ import javax.lang.model.util.Elements;
 import java.util.*;
 import java.util.stream.Collectors;
 
-class CustomElementHandler extends TypeElementHandler {
+public class DefaultElementHandler extends TypeElementHandler {
 
     private final Elements elements;
     private final String defaultSchema;
+    private final CaseFormat columnCaseFormat;
+    private final CaseFormat tableCaseFormat;
 
-    public CustomElementHandler(Configuration configuration,
-                                ExtendedTypeFactory typeFactory,
-                                TypeMappings typeMappings,
-                                QueryTypeFactory queryTypeFactory,
-                                Elements elements,
-                                RoundEnvironment roundEnv) {
+    public DefaultElementHandler(Configuration configuration,
+                                 ExtendedTypeFactory typeFactory,
+                                 TypeMappings typeMappings,
+                                 QueryTypeFactory queryTypeFactory,
+                                 Elements elements,
+                                 RoundEnvironment roundEnv,
+                                 CaseFormat columnCaseFormat,
+                                 CaseFormat tableCaseFormat) {
         super(configuration, typeFactory, typeMappings, queryTypeFactory);
         this.elements = elements;
         this.defaultSchema = getDefaultSchema(roundEnv);
+        this.columnCaseFormat = columnCaseFormat;
+        this.tableCaseFormat = tableCaseFormat;
     }
 
-    private String getDefaultSchema(RoundEnvironment roundEnv) {
+    protected String getDefaultSchema(RoundEnvironment roundEnv) {
         Set<? extends Element> defaultSchemaElements = roundEnv.getElementsAnnotatedWith(DefaultSchema.class);
 
         if (defaultSchemaElements.isEmpty()) {
@@ -63,7 +69,7 @@ class CustomElementHandler extends TypeElementHandler {
                                                                                         property.getName()))));
     }
 
-    private Optional<String> getSchema(TypeElement element) {
+    protected Optional<String> getSchema(TypeElement element) {
         Schema elementSchema = element.getAnnotation(Schema.class);
 
         if (Objects.isNull(elementSchema)) {
@@ -73,16 +79,17 @@ class CustomElementHandler extends TypeElementHandler {
         return Optional.of(elementSchema.value());
     }
 
-    private String getTableName(EntityType model) {
+    protected String getTableName(EntityType model) {
         String simpleName = simpleNameWithoutPrefix(model.getSimpleName());
         String className = model.getPackageName() + "." + simpleName;
+        String tableName = CaseFormat.UPPER_CAMEL.to(tableCaseFormat, simpleName);
         return Optional.ofNullable(elements.getTypeElement(className)
                                            .getAnnotation(Table.class))
                        .map(Table::value)
-                       .orElse(simpleName);
+                       .orElse(tableName);
     }
 
-    private String getColumnName(Property property) {
+    protected String getColumnName(Property property) {
         String name = nameWithoutPrefix(property.getDeclaringType().getPackageName(),
                                         property.getDeclaringType().getSimpleName());
         TypeElement parentType = elements.getTypeElement(name);
@@ -94,7 +101,7 @@ class CustomElementHandler extends TypeElementHandler {
                          .filter(element -> element.getAnnotation(Column.class) != null)
                          .map(element -> element.getAnnotation(Column.class).value())
                          .findAny()
-                         .orElseGet(() -> CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, property.getName()));
+                         .orElseGet(() -> CaseFormat.LOWER_CAMEL.to(columnCaseFormat, property.getName()));
     }
 
     private Map<String, Integer> getFieldNameToIndex(EntityType model) {

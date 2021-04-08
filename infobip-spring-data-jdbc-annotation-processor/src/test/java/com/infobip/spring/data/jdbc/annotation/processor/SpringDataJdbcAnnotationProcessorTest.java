@@ -22,7 +22,7 @@ public class SpringDataJdbcAnnotationProcessorTest {
         Path actual = Paths.get("src/test/resources/expected/QPascalCaseFooBar.java");
         Path expected = Paths.get(
                 "target/generated-test-sources/test-annotations/com/infobip/spring/data/jdbc/annotation/processor/QPascalCaseFooBar.java");
-        then(actual).hasSameContentAs(expected);
+        then(actual).hasSameTextualContentAs(expected);
     }
 
     @Test
@@ -99,18 +99,51 @@ public class SpringDataJdbcAnnotationProcessorTest {
         thenShouldGenerateSourceFile(actual, QSnakeCaseAndTransientType.class);
     }
 
+    @Test
+    void shouldApplyCustomCaseFormatToColumns() {
+        // given
+        SpringDataJdbcAnnotationProcessor processor = new SpringDataJdbcAnnotationProcessor();
+        JavaFileObject givenEntitySource = givenSource(LowerUnderScoreColumnFooBar.class);
+        JavaFileObject givenConfigurationSource = givenSource(
+                Paths.get("src", "test", "resources", "given", "CustomCaseFormatColumnConfiguration.java"));
+
+        // when
+        Compilation actual = whenCompile(processor, givenConfigurationSource, givenEntitySource);
+
+        // then
+        thenShouldGenerateSourceFile(actual, QLowerUnderScoreColumnFooBar.class);
+    }
+
+    @Test
+    void shouldApplyCustomCaseFormatToTable() {
+        // given
+        SpringDataJdbcAnnotationProcessor processor = new SpringDataJdbcAnnotationProcessor();
+        JavaFileObject givenEntitySource = givenSource(LowerUnderScoreTableFooBar.class);
+        JavaFileObject givenConfigurationSource = givenSource(
+                Paths.get("src", "test", "resources", "given", "CustomCaseFormatTableConfiguration.java"));
+
+        // when
+        Compilation actual = whenCompile(processor, givenConfigurationSource, givenEntitySource);
+
+        // then
+        thenShouldGenerateSourceFile(actual, QLowerUnderScoreTableFooBar.class);
+    }
+
     private void thenShouldGenerateSourceFile(Compilation actual, Class<?> typeClass) {
         assertThat(actual).succeeded();
         assertThat(actual)
                 .generatedSourceFile(typeClass.getName())
-                .hasSourceEquivalentTo(JavaFileObjects.forResource("expected/" + typeClass.getSimpleName() +  ".java"));
+                .hasSourceEquivalentTo(JavaFileObjects.forResource("expected/" + typeClass.getSimpleName() + ".java"));
     }
 
     private JavaFileObject givenSource(Class<?> type) {
-        return JavaFileObjects.forResource(
-                convert(Paths.get("src", "test", "java", "com", "infobip", "spring", "data", "jdbc", "annotation",
-                                  "processor",
-                                  type.getSimpleName() + ".java").toUri()));
+        return givenSource(Paths.get("src", "test", "java", "com", "infobip", "spring", "data", "jdbc", "annotation",
+                                     "processor",
+                                     type.getSimpleName() + ".java"));
+    }
+
+    private JavaFileObject givenSource(Path path) {
+        return JavaFileObjects.forResource(convert(path.toUri()));
     }
 
     private URL convert(URI uri) {
@@ -121,8 +154,8 @@ public class SpringDataJdbcAnnotationProcessorTest {
         }
     }
 
-    private Compilation whenCompile(SpringDataJdbcAnnotationProcessor processor, JavaFileObject resource) {
+    private Compilation whenCompile(SpringDataJdbcAnnotationProcessor processor, JavaFileObject... files) {
         return javac().withProcessors(processor)
-                      .compile(resource);
+                      .compile(files);
     }
 }
