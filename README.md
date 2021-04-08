@@ -492,7 +492,18 @@ Annotation processor [infobip-spring-data-jdbc-annotation-processor](infobip-spr
 Without annotation processor this process can be quite cumbersome as connecting to database would be required during the build phase.
 
 Current implementation of Annotation Processor uses pascal casing based naming strategy for table and column names.
-If this behavior needs to be changed a custom annotation processor should be created:
+
+To customize it add following annotation to one of your classes:
+```
+@ProjectTableCaseFormat(CaseFormat.LOWER_UNDERSCORE)
+@ProjectColumnCaseFormat(CaseFormat.LOWER_UNDERSCORE)
+public class SomeClassOnCompilationPath {
+...
+}
+```
+`SomeClassOnCompilationPath` can be any class that is being compiled in the project.
+
+If this behavior needs to be changed across multiple projects, or you simply wish to customize annotation processor following steps can be taken:
 1. create a new Maven module (or a Maven project if you want to reuse across multiple projects)
 1. add dependency to `infobip-spring-data-jdbc-annotation-processor-common`
 1. create implementation of `com.querydsl.sql.codegen.NamingStrategy`
