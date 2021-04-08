@@ -1,3 +1,7 @@
+### 5.4.0
+* added `@ProjectTableCaseFormat` and `@ProjectColumnCaseFormat` for easier control over generated table and 
+  column names case format in annotation processor
+
 ### 5.3.0
 * added infobip-spring-data-jdbc-annotation-processor-common for custom annotation processor naming strategies (#21)
 
