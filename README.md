@@ -494,7 +494,7 @@ Without annotation processor this process can be quite cumbersome as connecting 
 
 Current implementation of Annotation Processor uses pascal casing based naming strategy for table and column names.
 
-To customize it add following annotation to one of your classes:
+To customize this behavior across whole project add following annotation to one of your classes:
 ```
 @ProjectTableCaseFormat(CaseFormat.LOWER_UNDERSCORE)
 @ProjectColumnCaseFormat(CaseFormat.LOWER_UNDERSCORE)
@@ -502,7 +502,9 @@ public class SomeClassOnCompilationPath {
 ...
 }
 ```
-`SomeClassOnCompilationPath` can be any class that is being compiled in the project.
+`SomeClassOnCompilationPath` can be any class that is being compiled in the project. 
+
+Note that for customizing single column/table mapping [Table](https://docs.spring.io/spring-data/jdbc/docs/2.1.8/api/org/springframework/data/relational/core/mapping/Table.html) and [Column](https://docs.spring.io/spring-data/jdbc/docs/2.1.8/api/org/springframework/data/relational/core/mapping/Column.html) can be used.
 
 If this behavior needs to be changed across multiple projects, or you simply wish to customize annotation processor following steps can be taken:
 1. create a new Maven module (or a Maven project if you want to reuse across multiple projects)
