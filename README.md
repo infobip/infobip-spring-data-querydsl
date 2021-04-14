@@ -504,7 +504,7 @@ public class SomeClassOnCompilationPath {
 ```
 `SomeClassOnCompilationPath` can be any class that is being compiled in the project. 
 
-Note that for customizing single column/table mapping [Table](https://docs.spring.io/spring-data/jdbc/docs/2.1.8/api/org/springframework/data/relational/core/mapping/Table.html) and [Column](https://docs.spring.io/spring-data/jdbc/docs/2.1.8/api/org/springframework/data/relational/core/mapping/Column.html) can be used.
+Note that for customizing single table/column mapping [Table](https://docs.spring.io/spring-data/jdbc/docs/2.1.8/api/org/springframework/data/relational/core/mapping/Table.html) and [Column](https://docs.spring.io/spring-data/jdbc/docs/2.1.8/api/org/springframework/data/relational/core/mapping/Column.html) can be used.
 
 If this behavior needs to be changed across multiple projects, or you simply wish to customize annotation processor following steps can be taken:
 1. create a new Maven module (or a Maven project if you want to reuse across multiple projects)
