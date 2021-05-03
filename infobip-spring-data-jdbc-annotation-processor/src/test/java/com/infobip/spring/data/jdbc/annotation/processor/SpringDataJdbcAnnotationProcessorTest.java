@@ -29,11 +29,10 @@ public class SpringDataJdbcAnnotationProcessorTest {
     void shouldCreateQClassWithCompileTesting() {
 
         // given
-        SpringDataJdbcAnnotationProcessor processor = new SpringDataJdbcAnnotationProcessor();
         JavaFileObject givenSource = givenSource(PascalCaseFooBar.class);
 
         // when
-        Compilation actual = whenCompile(processor, givenSource);
+        Compilation actual = whenCompile(givenSource);
 
         // then
         thenShouldGenerateSourceFile(actual, QPascalCaseFooBar.class);
@@ -52,11 +51,10 @@ public class SpringDataJdbcAnnotationProcessorTest {
     void shouldCreateQClassWithTableAndColumnAnnotationsWithCompileTesting() {
 
         // given
-        SpringDataJdbcAnnotationProcessor processor = new SpringDataJdbcAnnotationProcessor();
         JavaFileObject givenSource = givenSource(CamelCaseFooBar.class);
 
         // when
-        Compilation actual = whenCompile(processor, givenSource);
+        Compilation actual = whenCompile(givenSource);
 
         // then
         thenShouldGenerateSourceFile(actual, QCamelCaseFooBar.class);
@@ -76,11 +74,10 @@ public class SpringDataJdbcAnnotationProcessorTest {
     void shouldCreateQClassWithSchemaWithCompileTesting() {
 
         // given
-        SpringDataJdbcAnnotationProcessor processor = new SpringDataJdbcAnnotationProcessor();
         JavaFileObject givenSource = givenSource(EntityWithSchema.class);
 
         // when
-        Compilation actual = whenCompile(processor, givenSource);
+        Compilation actual = whenCompile(givenSource);
 
         // then
         thenShouldGenerateSourceFile(actual, QEntityWithSchema.class);
@@ -89,11 +86,10 @@ public class SpringDataJdbcAnnotationProcessorTest {
     @Test
     void shouldCreateSnakeCaseAndTransientType() {
         // given
-        SpringDataJdbcAnnotationProcessor processor = new SpringDataJdbcAnnotationProcessor();
         JavaFileObject givenSource = givenSource(SnakeCaseAndTransientType.class);
 
         // when
-        Compilation actual = whenCompile(processor, givenSource);
+        Compilation actual = whenCompile(givenSource);
 
         // then
         thenShouldGenerateSourceFile(actual, QSnakeCaseAndTransientType.class);
@@ -102,13 +98,12 @@ public class SpringDataJdbcAnnotationProcessorTest {
     @Test
     void shouldApplyCustomCaseFormatToColumns() {
         // given
-        SpringDataJdbcAnnotationProcessor processor = new SpringDataJdbcAnnotationProcessor();
         JavaFileObject givenEntitySource = givenSource(LowerUnderScoreColumnFooBar.class);
         JavaFileObject givenConfigurationSource = givenSource(
                 Paths.get("src", "test", "resources", "given", "CustomCaseFormatColumnConfiguration.java"));
 
         // when
-        Compilation actual = whenCompile(processor, givenConfigurationSource, givenEntitySource);
+        Compilation actual = whenCompile(givenConfigurationSource, givenEntitySource);
 
         // then
         thenShouldGenerateSourceFile(actual, QLowerUnderScoreColumnFooBar.class);
@@ -117,13 +112,12 @@ public class SpringDataJdbcAnnotationProcessorTest {
     @Test
     void shouldApplyCustomCaseFormatToTable() {
         // given
-        SpringDataJdbcAnnotationProcessor processor = new SpringDataJdbcAnnotationProcessor();
         JavaFileObject givenEntitySource = givenSource(LowerUnderScoreTableFooBar.class);
         JavaFileObject givenConfigurationSource = givenSource(
                 Paths.get("src", "test", "resources", "given", "CustomCaseFormatTableConfiguration.java"));
 
         // when
-        Compilation actual = whenCompile(processor, givenConfigurationSource, givenEntitySource);
+        Compilation actual = whenCompile(givenConfigurationSource, givenEntitySource);
 
         // then
         thenShouldGenerateSourceFile(actual, QLowerUnderScoreTableFooBar.class);
@@ -154,8 +148,8 @@ public class SpringDataJdbcAnnotationProcessorTest {
         }
     }
 
-    private Compilation whenCompile(SpringDataJdbcAnnotationProcessor processor, JavaFileObject... files) {
-        return javac().withProcessors(processor)
+    private Compilation whenCompile(JavaFileObject... files) {
+        return javac().withProcessors(new SpringDataJdbcAnnotationProcessor())
                       .compile(files);
     }
 }
