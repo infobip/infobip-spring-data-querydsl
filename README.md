@@ -3,6 +3,7 @@
 [![](https://github.com/infobip/infobip-spring-data-querydsl/workflows/maven/badge.svg)](https://github.com/infobip/infobip-spring-data-querydsl/actions?query=workflow%3Amaven)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.infobip/infobip-spring-data-querydsl/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.infobip/infobip-spring-data-querydsl)
 [![Coverage Status](https://coveralls.io/repos/github/infobip/infobip-spring-data-querydsl/badge.svg?branch=master)](https://coveralls.io/github/infobip/infobip-spring-data-querydsl?branch=master)
+[![Known Vulnerabilities](https://snyk.io/test/github/infobip/infobip-spring-data-querydsl/badge.svg)](https://snyk.io/test/github/infobip/infobip-spring-data-querydsl)
 
 Infobip Spring Data Querydsl provides new functionality that enables the user to leverage the full power of Querydsl API on top of Spring Data repository infrastructure.
 
@@ -492,7 +493,20 @@ Annotation processor [infobip-spring-data-jdbc-annotation-processor](infobip-spr
 Without annotation processor this process can be quite cumbersome as connecting to database would be required during the build phase.
 
 Current implementation of Annotation Processor uses pascal casing based naming strategy for table and column names.
-If this behavior needs to be changed a custom annotation processor should be created:
+
+To customize this behavior across whole project add following annotation to one of your classes:
+```
+@ProjectTableCaseFormat(CaseFormat.LOWER_UNDERSCORE)
+@ProjectColumnCaseFormat(CaseFormat.LOWER_UNDERSCORE)
+public class SomeClassOnCompilationPath {
+...
+}
+```
+`SomeClassOnCompilationPath` can be any class that is being compiled in the project. 
+
+Note that for customizing single table/column mapping [Table](https://docs.spring.io/spring-data/jdbc/docs/2.1.8/api/org/springframework/data/relational/core/mapping/Table.html) and [Column](https://docs.spring.io/spring-data/jdbc/docs/2.1.8/api/org/springframework/data/relational/core/mapping/Column.html) can be used.
+
+If this behavior needs to be changed across multiple projects, or you simply wish to customize annotation processor following steps can be taken:
 1. create a new Maven module (or a Maven project if you want to reuse across multiple projects)
 1. add dependency to `infobip-spring-data-jdbc-annotation-processor-common`
 1. create implementation of `com.querydsl.sql.codegen.NamingStrategy`
