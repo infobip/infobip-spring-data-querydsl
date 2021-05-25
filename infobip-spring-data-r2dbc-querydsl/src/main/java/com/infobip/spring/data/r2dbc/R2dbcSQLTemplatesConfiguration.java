@@ -21,6 +21,7 @@ public class R2dbcSQLTemplatesConfiguration {
         org.flywaydb.core.api.configuration.Configuration configuration = flyway.getConfiguration();
         JdbcConnectionFactory jdbcConnectionFactory = new JdbcConnectionFactory(configuration.getDataSource(),
                                                                                 configuration.getConnectRetries(),
+                                                                                null,
                                                                                 null);
         SQLTemplatesRegistry sqlTemplatesRegistry = new SQLTemplatesRegistry();
         DatabaseMetaData metaData = jdbcConnectionFactory.openConnection().getMetaData();
