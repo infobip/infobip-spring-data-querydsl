@@ -127,6 +127,14 @@ public class QuerydslPredicateExecutorTest extends TestBase {
         then(actual).isTrue();
     }
 
+    @Test
+    void findOneShouldNotThrowAnExceptionForNoResult() {
+        // when
+        Optional<Person> actual = executor.findOne(person.firstName.eq("John"));
+
+        then(actual).isEmpty();
+    }
+
     private Person givenSavedPerson(String john, String doe) {
         return repository.save(new Person(null, john, doe, BEGINNING_OF_2021));
     }
