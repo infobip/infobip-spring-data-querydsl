@@ -1,10 +1,13 @@
 package com.infobip.spring.data.jdbc;
 
 import com.infobip.spring.data.jdbc.extension.CustomQuerydslJdbcRepository;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
+import com.querydsl.sql.SQLQueryFactory;
 import lombok.AllArgsConstructor;
 import lombok.Value;
 import org.junit.jupiter.api.Test;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -20,6 +23,8 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
     private final PersonRepository repository;
     private final PersonSettingsRepository settingsRepository;
     private final NoArgsRepository noArgsRepository;
+    private final JdbcTemplate jdbcTemplate;
+    private final SQLQueryFactory sqlQueryFactory;
 
     @Test
     void shouldFindAll() {
@@ -187,6 +192,23 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
         // then
         then(repository).isInstanceOf(QuerydslJdbcRepository.class)
                         .isNotInstanceOf(CustomQuerydslJdbcRepository.class);
+    }
+
+    @Test
+    void issue31Test() {
+        Person givenPerson = new Person(null, "givenFirstName", "givenLastName", BEGINNING_OF_2021);
+
+        sqlQueryFactory.insert(person)
+                       .columns(person.firstName, person.lastName, person.createdAt)
+                       .values(givenPerson.getFirstName(), givenPerson.getLastName(), givenPerson.getCreatedAt())
+                       .execute();
+        repository.save(givenPerson);
+
+        List<Person> querydslResults = sqlQueryFactory.select(repository.entityProjection()).from(person).fetch();
+        List<Person> springDataResults = repository.findAll();
+        System.out.println(querydslResults);
+        System.out.println(springDataResults);
+        then(querydslResults).isEqualTo(springDataResults);
     }
 
     @Test
