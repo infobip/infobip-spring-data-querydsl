@@ -2,14 +2,13 @@ package com.infobip.spring.data.jdbc;
 
 import com.infobip.spring.data.jdbc.extension.CustomQuerydslJdbcRepository;
 import com.querydsl.core.types.Projections;
+import com.querydsl.sql.SQLQueryFactory;
 import lombok.AllArgsConstructor;
 import lombok.Value;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
+import java.time.ZoneOffset;
+import java.util.*;
 
 import static com.infobip.spring.data.jdbc.QPerson.person;
 import static com.infobip.spring.data.jdbc.QPersonSettings.personSettings;
@@ -18,9 +17,22 @@ import static org.assertj.core.api.BDDAssertions.then;
 @AllArgsConstructor
 public class QuerydslJdbcRepositoryTest extends TestBase {
 
+    private static final TimeZone oldTimeZone = TimeZone.getDefault();
+
     private final PersonRepository repository;
     private final PersonSettingsRepository settingsRepository;
     private final NoArgsRepository noArgsRepository;
+    private final SQLQueryFactory sqlQueryFactory;
+
+    @BeforeAll
+    void setupTimeZone() {
+        TimeZone.setDefault(TimeZone.getTimeZone(ZoneOffset.UTC));
+    }
+
+    @AfterAll
+    void cleanUpTimeZone() {
+        TimeZone.setDefault(oldTimeZone);
+    }
 
     @Test
     void shouldFindAll() {
@@ -50,11 +62,6 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
         then(actual).containsOnly(johnDoe, johnyRoe);
     }
 
-    /**
-     * @deprecated {@link QuerydslJdbcFragment#query(Function)}
-     */
-    @Deprecated
-    @Disabled
     @Test
     void shouldQuery() {
 
@@ -216,6 +223,21 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
         // then
         then(repository).isInstanceOf(QuerydslJdbcRepository.class)
                         .isNotInstanceOf(CustomQuerydslJdbcRepository.class);
+    }
+
+    @Test
+    void springDataAndQuerydslShouldHandleTimeZoneTheSameForSameTimeZone() {
+        Person givenPerson = new Person(null, "givenFirstName", "givenLastName", BEGINNING_OF_2021);
+
+        sqlQueryFactory.insert(person)
+                       .columns(person.firstName, person.lastName, person.createdAt)
+                       .values(givenPerson.getFirstName(), givenPerson.getLastName(), givenPerson.getCreatedAt())
+                       .execute();
+        repository.save(givenPerson);
+
+        List<Person> querydslResults = sqlQueryFactory.select(repository.entityProjection()).from(person).fetch();
+        List<Person> springDataResults = repository.findAll();
+        then(querydslResults).isEqualTo(springDataResults);
     }
 
     @Value
