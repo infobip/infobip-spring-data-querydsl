@@ -227,14 +227,17 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
 
     @Test
     void springDataAndQuerydslShouldHandleTimeZoneTheSameForSameTimeZone() {
+        // given
         Person givenPerson = new Person(null, "givenFirstName", "givenLastName", BEGINNING_OF_2021);
 
+        // when
         sqlQueryFactory.insert(person)
                        .columns(person.firstName, person.lastName, person.createdAt)
                        .values(givenPerson.getFirstName(), givenPerson.getLastName(), givenPerson.getCreatedAt())
                        .execute();
         repository.save(givenPerson);
 
+        // then
         List<Person> querydslResults = sqlQueryFactory.select(repository.entityProjection()).from(person).fetch();
         List<Person> springDataResults = repository.findAll();
         then(querydslResults).isEqualTo(springDataResults);
