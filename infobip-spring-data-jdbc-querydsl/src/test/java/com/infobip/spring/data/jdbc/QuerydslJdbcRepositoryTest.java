@@ -240,34 +240,6 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
         then(querydslResults).isEqualTo(springDataResults);
     }
 
-    @Test
-    void queryManyShouldCorrectlyHandleDateTime2Conversion() {
-
-        // given
-        repository.save(new Person(null, "givenFirstName", "givenLastName", BEGINNING_OF_2021));
-
-        // when
-        List<Person> actual = repository.queryMany(query -> query
-                .select(repository.entityProjection())
-                .from(person));
-
-        then(actual).map(Person::getCreatedAt).containsExactly(BEGINNING_OF_2021);
-    }
-
-    @Test
-    void queryOneShouldCorrectlyHandleDateTime2Conversion() {
-
-        // given
-        repository.save(new Person(null, "givenFirstName", "givenLastName", BEGINNING_OF_2021));
-
-        // when
-        Optional<Person> actual = repository.queryOne(query -> query
-                .select(repository.entityProjection())
-                .from(person));
-
-        then(actual).map(Person::getCreatedAt).contains(BEGINNING_OF_2021);
-    }
-
     @Value
     public static class PersonProjection {
 
