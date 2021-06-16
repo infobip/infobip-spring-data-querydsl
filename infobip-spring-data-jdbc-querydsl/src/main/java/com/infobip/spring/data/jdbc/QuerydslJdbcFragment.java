@@ -12,9 +12,12 @@ import java.util.function.Function;
 public interface QuerydslJdbcFragment<T> {
 
     /**
-     * @deprecated use {@link #queryOne(Function)} or {@link #queryMany(Function)} instead
+     * It's generally recommended to use {@link #queryOne(Function)} or {@link #queryMany(Function)} instead but for
+     * specific use cases like projections that might not be possible.
+     * Note that this method uses Querydsl instead of Spring Data infrastructure to execute the query which might
+     * result in inconsistent behavior compared to Spring Data ones.
+     * See https://github.com/spring-projects/spring-data-jdbc/issues/986 for details.
      */
-    @Deprecated
     <O> O query(Function<SQLQuery<?>, O> query);
 
     Optional<T> queryOne(Function<SQLQuery<?>, SQLQuery<T>> query);

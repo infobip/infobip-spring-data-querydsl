@@ -6,7 +6,6 @@ import com.querydsl.sql.SQLQueryFactory;
 import lombok.AllArgsConstructor;
 import lombok.Value;
 import org.junit.jupiter.api.*;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.time.ZoneOffset;
 import java.util.*;
@@ -18,7 +17,7 @@ import static org.assertj.core.api.BDDAssertions.then;
 @AllArgsConstructor
 public class QuerydslJdbcRepositoryTest extends TestBase {
 
-    private static TimeZone oldTimeZone = TimeZone.getDefault();
+    private static final TimeZone oldTimeZone = TimeZone.getDefault();
 
     private final PersonRepository repository;
     private final PersonSettingsRepository settingsRepository;
