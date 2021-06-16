@@ -1,4 +1,4 @@
-### 5.4.1
+### 5.4.2
 * undeprecated `QuerydslJdbcFragment#query` - added warning in javadoc about https://github.com/spring-projects/spring-data-jdbc/issues/986
 
 ### 5.4.0
