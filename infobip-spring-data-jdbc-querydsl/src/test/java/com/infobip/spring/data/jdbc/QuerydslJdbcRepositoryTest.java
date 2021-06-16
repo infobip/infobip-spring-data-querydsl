@@ -63,6 +63,29 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
     }
 
     @Test
+    void shouldQuery() {
+
+        // given
+        Person johnDoe = givenSavedPerson("John", "Doe");
+        givenSavedPerson("Johny", "Roe");
+        givenSavedPerson("Jane", "Doe");
+        givenSavedPerson("John", "Roe");
+        givenSavedPerson("Janie", "Doe");
+
+        // when
+        List<Person> actual = repository.query(query -> query
+                .select(repository.entityProjection())
+                .from(person)
+                .where(person.firstName.in("John", "Jane"))
+                .orderBy(person.firstName.asc(), person.lastName.asc())
+                .limit(1)
+                .offset(1)
+                .fetch());
+
+        then(actual).containsOnly(johnDoe);
+    }
+
+    @Test
     void shouldQueryOne() {
 
         // given
