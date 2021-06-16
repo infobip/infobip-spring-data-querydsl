@@ -15,7 +15,7 @@ public interface QuerydslJdbcFragment<T> {
      * It's generally recommended to use {@link #queryOne(Function)} or {@link #queryMany(Function)} instead but for
      * specific use cases like projections that might not be possible.
      * Note that this method uses Querydsl instead of Spring Data infrastructure to execute the query which might
-     * result in inconsistent behavior compared to Spring Data ones.
+     * result in inconsistent behavior compared to methods using Spring Data infrastructure.
      * See https://github.com/spring-projects/spring-data-jdbc/issues/986 for details.
      */
     <O> O query(Function<SQLQuery<?>, O> query);

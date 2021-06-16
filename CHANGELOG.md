@@ -1,3 +1,6 @@
+### 5.4.1
+* undeprecated `QuerydslJdbcFragment#query` - added warning in javadoc about https://github.com/spring-projects/spring-data-jdbc/issues/986
+
 ### 5.4.0
 * added `@ProjectTableCaseFormat` and `@ProjectColumnCaseFormat` for easier control over generated table and 
   column names case format in annotation processor
