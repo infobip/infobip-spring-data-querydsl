@@ -260,12 +260,7 @@
 		<repository>
 			<id>ossrh</id>
 			<name>SonatypeReleases</name>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+			<url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
-		<snapshotRepository>
-			<id>ossrh-snapshots</id>
-			<name>SonatypeSnapshots</name>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-		</snapshotRepository>
 	</distributionManagement>
 </project>
