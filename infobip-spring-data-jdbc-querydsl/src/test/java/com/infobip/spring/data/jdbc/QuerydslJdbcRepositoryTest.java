@@ -1,17 +1,15 @@
 package com.infobip.spring.data.jdbc;
 
 import com.infobip.spring.data.jdbc.extension.CustomQuerydslJdbcRepository;
-import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.sql.SQLQueryFactory;
 import lombok.AllArgsConstructor;
 import lombok.Value;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Optional;
+import java.time.ZoneOffset;
+import java.util.*;
 
 import static com.infobip.spring.data.jdbc.QPerson.person;
 import static com.infobip.spring.data.jdbc.QPersonSettings.personSettings;
@@ -20,11 +18,22 @@ import static org.assertj.core.api.BDDAssertions.then;
 @AllArgsConstructor
 public class QuerydslJdbcRepositoryTest extends TestBase {
 
+    private static TimeZone oldTimeZone = TimeZone.getDefault();
+
     private final PersonRepository repository;
     private final PersonSettingsRepository settingsRepository;
     private final NoArgsRepository noArgsRepository;
-    private final JdbcTemplate jdbcTemplate;
     private final SQLQueryFactory sqlQueryFactory;
+
+    @BeforeAll
+    void setupTimeZone() {
+        TimeZone.setDefault(TimeZone.getTimeZone(ZoneOffset.UTC));
+    }
+
+    @AfterAll
+    void cleanUpTimeZone() {
+        TimeZone.setDefault(oldTimeZone);
+    }
 
     @Test
     void shouldFindAll() {
@@ -195,7 +204,7 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
     }
 
     @Test
-    void issue31Test() {
+    void springDataAndQuerydslShouldHandleTimeZoneTheSameForSameTimeZone() {
         Person givenPerson = new Person(null, "givenFirstName", "givenLastName", BEGINNING_OF_2021);
 
         sqlQueryFactory.insert(person)
@@ -206,24 +215,7 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
 
         List<Person> querydslResults = sqlQueryFactory.select(repository.entityProjection()).from(person).fetch();
         List<Person> springDataResults = repository.findAll();
-        System.out.println(querydslResults);
-        System.out.println(springDataResults);
         then(querydslResults).isEqualTo(springDataResults);
-    }
-
-    @Test
-    void queryShouldIncorrectlyHandleDateTime2Conversion() {
-
-        // given
-        repository.save(new Person(null, "givenFirstName", "givenLastName", BEGINNING_OF_2021));
-
-        // when
-        List<Person> actual = repository.query(query -> query
-                .select(repository.entityProjection())
-                .from(person)
-                .fetch());
-
-        then(actual).map(Person::getCreatedAt).containsExactly(BEGINNING_OF_2021.plus(1, ChronoUnit.HOURS));
     }
 
     @Test
