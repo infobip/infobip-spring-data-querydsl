@@ -98,6 +98,12 @@
 				<artifactId>querydsl-apt</artifactId>
 				<version>${querydsl.version}</version>
 				<classifier>jpa</classifier>
+				<exclusions>
+					<exclusion>
+						<groupId>org.eclipse.jdt.core.compiler</groupId>
+						<artifactId>ecj</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
@@ -110,12 +116,6 @@
 	</dependencyManagement>
 
 	<dependencies>
-		<dependency>
-			<groupId>com.querydsl</groupId>
-			<artifactId>querydsl-apt</artifactId>
-			<classifier>jpa</classifier>
-		</dependency>
-
 		<!--TEST-->
 		<dependency>
 			<groupId>org.flywaydb</groupId>
