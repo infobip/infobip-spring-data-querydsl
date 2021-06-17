@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.infobip</groupId>
         <artifactId>infobip-spring-data-querydsl</artifactId>
-        <version>5.4.3-SNAPSHOT</version>
+        <version>6.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>infobip-spring-data-r2dbc-querydsl-boot-starter</artifactId>
@@ -18,12 +18,6 @@
         </dependency>
 
         <!--TEST-->
-        <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-
         <dependency>
             <groupId>io.r2dbc</groupId>
             <artifactId>r2dbc-mssql</artifactId>

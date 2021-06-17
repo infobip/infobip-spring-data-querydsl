@@ -4,7 +4,7 @@
 
 	<groupId>com.infobip</groupId>
 	<artifactId>infobip-spring-data-querydsl</artifactId>
-	<version>5.4.3-SNAPSHOT</version>
+	<version>6.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>Infobip Spring Data Querydsl</name>
@@ -65,9 +65,8 @@
 
 	<properties>
 		<!-- DEPENDENCY VERSIONS -->
-		<spring-boot.version>2.4.1</spring-boot.version>
-		<joda-time.version>2.10.10</joda-time.version>
-		<querydsl.version>4.4.0</querydsl.version>
+		<spring-boot.version>2.5.1</spring-boot.version>
+		<querydsl.version>5.0.0.M1</querydsl.version>
 
 		<infobip-mssql-testcontainers.version>3.1.6</infobip-mssql-testcontainers.version>
 
@@ -88,6 +87,25 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
+				<groupId>com.querydsl</groupId>
+				<artifactId>querydsl-bom</artifactId>
+				<version>${querydsl.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.querydsl</groupId>
+				<artifactId>querydsl-apt</artifactId>
+				<version>${querydsl.version}</version>
+				<classifier>jpa</classifier>
+				<exclusions>
+					<exclusion>
+						<groupId>org.eclipse.jdt</groupId>
+						<artifactId>ecj</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-dependencies</artifactId>
 				<version>${spring-boot.version}</version>
@@ -98,25 +116,6 @@
 	</dependencyManagement>
 
 	<dependencies>
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-			<version>${joda-time.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>30.1.1-jre</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.querydsl</groupId>
-			<artifactId>querydsl-apt</artifactId>
-			<version>${querydsl.version}</version>
-			<classifier>jpa</classifier>
-		</dependency>
-
 		<!--TEST-->
 		<dependency>
 			<groupId>org.flywaydb</groupId>

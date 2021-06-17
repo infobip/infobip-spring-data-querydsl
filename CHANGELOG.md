@@ -1,3 +1,8 @@
+### 6.0.0
+* upgraded to Querydsl 5.0.0
+* upgraded to Spring Boot 2.5.1
+* fixed null handling in QuerydslJdbcPredicateExecutor#queryOne
+
 ### 5.4.2
 * undeprecated `QuerydslJdbcFragment#query` - added warning in javadoc about https://github.com/spring-projects/spring-data-jdbc/issues/986
 

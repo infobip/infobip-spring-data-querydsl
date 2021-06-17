@@ -154,7 +154,7 @@ public class QuerydslJdbcPredicateExecutor<T> implements QuerydslPredicateExecut
     @Nullable
     T queryOne(SQLQuery<T> query) {
         List<T> results = queryMany(query);
-        return DataAccessUtils.nullableSingleResult(results);
+        return DataAccessUtils.singleResult(results);
     }
 
     List<T> queryMany(SQLQuery<T> query) {

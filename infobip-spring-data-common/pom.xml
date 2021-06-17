@@ -5,12 +5,21 @@
     <parent>
         <groupId>com.infobip</groupId>
         <artifactId>infobip-spring-data-querydsl</artifactId>
-        <version>5.4.3-SNAPSHOT</version>
+        <version>6.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>infobip-spring-data-common</artifactId>
 
+    <properties>
+        <guava.version>30.1.1-jre</guava.version>
+    </properties>
+
     <dependencies>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
@@ -19,7 +28,6 @@
         <dependency>
             <groupId>com.querydsl</groupId>
             <artifactId>querydsl-sql</artifactId>
-            <version>${querydsl.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.data</groupId>
