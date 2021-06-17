@@ -1,5 +1,6 @@
 ### 6.0.0
 * upgraded to Querydsl 5.0.0
+* upgraded to Spring Boot 2.5.1
 
 ### 5.4.0
 * added `@ProjectTableCaseFormat` and `@ProjectColumnCaseFormat` for easier control over generated table and 
