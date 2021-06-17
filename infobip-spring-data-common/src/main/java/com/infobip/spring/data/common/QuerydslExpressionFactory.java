@@ -8,6 +8,7 @@ import org.springframework.core.ResolvableType;
 import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.util.ReflectionUtils;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.function.Function;
@@ -44,6 +45,7 @@ public class QuerydslExpressionFactory {
         return Projections.constructor(type, paths);
     }
 
+    @Nullable
     private Constructor<?> getConstructor(Class<?> type) {
         Constructor<?>[] declaredConstructors = type.getDeclaredConstructors();
         Constructor<?> persistenceConstructor = Arrays.stream(declaredConstructors)
