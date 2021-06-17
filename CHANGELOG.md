@@ -2,6 +2,12 @@
 * upgraded to Querydsl 5.0.0
 * upgraded to Spring Boot 2.5.1
 
+### 5.4.2
+* undeprecated `QuerydslJdbcFragment#query` - added warning in javadoc about https://github.com/spring-projects/spring-data-jdbc/issues/986
+
+### 5.4.1
+* failed release due to sonatype repository misconfiguration
+
 ### 5.4.0
 * added `@ProjectTableCaseFormat` and `@ProjectColumnCaseFormat` for easier control over generated table and 
   column names case format in annotation processor
