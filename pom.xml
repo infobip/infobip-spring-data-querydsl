@@ -67,7 +67,7 @@
 		<!-- DEPENDENCY VERSIONS -->
 		<spring-boot.version>2.5.0</spring-boot.version>
 		<joda-time.version>2.10.10</joda-time.version>
-		<querydsl.version>5.0.0.M2</querydsl.version>
+		<querydsl.version>5.0.0.M1</querydsl.version>
 
 		<infobip-mssql-testcontainers.version>3.1.6</infobip-mssql-testcontainers.version>
 
