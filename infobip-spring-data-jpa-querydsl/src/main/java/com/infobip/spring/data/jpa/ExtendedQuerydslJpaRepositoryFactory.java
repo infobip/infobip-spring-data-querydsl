@@ -19,10 +19,10 @@ public class ExtendedQuerydslJpaRepositoryFactory extends JpaRepositoryFactory {
     private final EntityPathResolver entityPathResolver;
     private final JPAQueryFactory jpaQueryFactory;
 
-    ExtendedQuerydslJpaRepositoryFactory(EntityManager entityManager,
-                                         JPASQLQueryFactory jpaSqlFactory,
-                                         EntityPathResolver entityPathResolver,
-                                         JPAQueryFactory jpaQueryFactory) {
+    public ExtendedQuerydslJpaRepositoryFactory(EntityManager entityManager,
+                                                JPASQLQueryFactory jpaSqlFactory,
+                                                EntityPathResolver entityPathResolver,
+                                                JPAQueryFactory jpaQueryFactory) {
         super(entityManager);
         this.entityManager = entityManager;
         this.jpaSQLQueryFactory = jpaSqlFactory;
