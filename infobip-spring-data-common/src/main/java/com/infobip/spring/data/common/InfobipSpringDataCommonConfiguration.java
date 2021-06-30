@@ -20,12 +20,6 @@ public class InfobipSpringDataCommonConfiguration {
             metaData = connection.getMetaData();
         }
 
-        SQLTemplates templates = sqlTemplatesRegistry.getTemplates(metaData);
-
-        if (templates instanceof SQLServerTemplates || metaData.getDatabaseMajorVersion() > 11) {
-            return new SQLServer2012Templates();
-        }
-
-        return templates;
+        return sqlTemplatesRegistry.getTemplates(metaData);
     }
 }
