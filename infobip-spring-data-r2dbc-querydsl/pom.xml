@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.infobip</groupId>
         <artifactId>infobip-spring-data-querydsl</artifactId>
-        <version>6.0.0.M2</version>
+        <version>6.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>infobip-spring-data-r2dbc-querydsl</artifactId>
