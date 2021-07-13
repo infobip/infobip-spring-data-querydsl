@@ -354,7 +354,7 @@ interface TRepository extends JpaRepository<T, ID>, QuerydslPredicateExecutor<T>
 If you need other features from `@EnableJpaRepositories` you can use:
 
 ```
-@EnableJpaRepositories(repositoryBaseClass = SimpleExtendedQueryDslJpaRepository.class)
+@EnableJpaRepositories(repositoryFactoryBeanClass = ExtendedQuerydslJpaRepositoryFactoryBean.class)
 ```
 
 ### <a name="JPAFeaturesAndExamples"></a> Features and examples:
