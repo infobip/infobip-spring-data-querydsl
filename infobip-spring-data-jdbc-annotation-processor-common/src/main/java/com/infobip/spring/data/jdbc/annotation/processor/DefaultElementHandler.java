@@ -61,7 +61,7 @@ public class DefaultElementHandler extends TypeElementHandler {
     public EntityType handleEntityType(TypeElement element) {
         EntityType entityType = super.handleEntityType(element);
 
-        Set<Property> embeddedLessProperties =
+        Set<Property> embeddedlessProperties =
                 entityType.getProperties()
                           .stream()
                           .flatMap(property -> {
@@ -73,7 +73,7 @@ public class DefaultElementHandler extends TypeElementHandler {
                           })
                           .collect(Collectors.toSet());
         entityType.getProperties().clear();
-        entityType.getProperties().addAll(embeddedLessProperties);
+        entityType.getProperties().addAll(embeddedlessProperties);
 
         updateModel(element, entityType);
         return entityType;
