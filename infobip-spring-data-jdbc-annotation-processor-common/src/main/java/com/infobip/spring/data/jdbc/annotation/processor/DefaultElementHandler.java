@@ -108,9 +108,9 @@ public class DefaultElementHandler extends TypeElementHandler {
             data.put(IS_EMBEDDED_DATA_KEY, true);
         }
 
+        int index = Optional.ofNullable(fieldNameToIndex.get(property.getName())).orElse(0);
         return data.put("COLUMN", ColumnMetadata.named(getColumnName(property))
-                                                .withIndex(fieldNameToIndex.get(
-                                                        property.getName())));
+                                                .withIndex(index));
     }
 
     protected Optional<String> getSchema(TypeElement element) {
