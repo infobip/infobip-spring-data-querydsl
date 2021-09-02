@@ -7,15 +7,17 @@ import com.querydsl.codegen.*;
 import com.querydsl.sql.codegen.NamingStrategy;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
+import org.springframework.data.relational.core.mapping.Embedded;
 
 import javax.annotation.processing.RoundEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.*;
+import javax.lang.model.util.ElementFilter;
+import javax.lang.model.util.Types;
 import java.lang.annotation.Annotation;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class SpringDataJdbcAnnotationProcessorBase extends AbstractQuerydslProcessor {
 
@@ -80,11 +82,14 @@ public abstract class SpringDataJdbcAnnotationProcessorBase extends AbstractQuer
         CodegenModule codegenModule = new CodegenModule();
         JavaTypeMappings typeMappings = new JavaTypeMappings();
         codegenModule.bind(TypeMappings.class, typeMappings);
-        codegenModule.bind(QueryTypeFactory.class, new QueryTypeFactoryImpl("", "", ""));
+        codegenModule.bind(QueryTypeFactory.class, new QueryTypeFactoryImpl("Q", "", ""));
         SpringDataJdbcConfiguration springDataJdbcConfiguration = new SpringDataJdbcConfiguration(roundEnv,
                                                                                                   processingEnv,
-                                                                                                  entity, null, null,
-                                                                                                  null, Transient.class,
+                                                                                                  entity,
+                                                                                                  null,
+                                                                                                  null,
+                                                                                                  Embedded.class,
+                                                                                                  Transient.class,
                                                                                                   typeMappings,
                                                                                                   codegenModule,
                                                                                                   namingStrategy);
@@ -113,16 +118,29 @@ public abstract class SpringDataJdbcAnnotationProcessorBase extends AbstractQuer
     }
 
     protected Set<TypeElement> collectElements() {
-        return roundEnv.getElementsAnnotatedWith(conf.getEntityAnnotation())
-                       .stream()
-                       .map(Element::getEnclosingElement)
-                       .filter(element -> element instanceof TypeElement)
-                       .map(element -> (TypeElement) element)
-                       .collect(Collectors.toSet());
+        Set<TypeElement> entityElements = roundEnv.getElementsAnnotatedWith(conf.getEntityAnnotation())
+                                                  .stream()
+                                                  .map(Element::getEnclosingElement)
+                                                  .filter(element -> element instanceof TypeElement)
+                                                  .map(element -> (TypeElement) element)
+                                                  .collect(Collectors.toSet());
+
+        return entityElements.stream()
+                             .flatMap(this::getEntityElementWithEmbeddedEntities)
+                             .collect(Collectors.toSet());
     }
 
-    @Override
-    protected String getClassName(EntityType model) {
-        return model.getFullName();
+    private Stream<TypeElement> getEntityElementWithEmbeddedEntities(TypeElement entityElement) {
+        Types types = processingEnv.getTypeUtils();
+        Set<TypeElement> embeddedElements = ElementFilter.fieldsIn(entityElement.getEnclosedElements())
+                                                            .stream()
+                                                            .filter(enclosedElement -> Objects.nonNull(
+                                                                    enclosedElement.getAnnotation(
+                                                                            conf.getEmbeddedAnnotation())))
+                                                            .map(element -> types.asElement(element.asType()))
+                                                            .filter(element -> element instanceof TypeElement)
+                                                            .map(element -> (TypeElement) element)
+                                                            .collect(Collectors.toSet());
+        return Stream.concat(Stream.of(entityElement), embeddedElements.stream());
     }
 }

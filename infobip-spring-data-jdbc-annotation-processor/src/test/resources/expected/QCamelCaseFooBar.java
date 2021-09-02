@@ -15,12 +15,12 @@ import java.sql.Types;
 
 
 /**
- * QCamelCaseFooBar is a Querydsl query type for QCamelCaseFooBar
+ * QCamelCaseFooBar is a Querydsl query type for CamelCaseFooBar
  */
 @Generated("com.querydsl.sql.codegen.MetaDataSerializer")
-public class QCamelCaseFooBar extends com.querydsl.sql.RelationalPathBase<QCamelCaseFooBar> {
+public class QCamelCaseFooBar extends com.querydsl.sql.RelationalPathBase<CamelCaseFooBar> {
 
-    private static final long serialVersionUID = -1949134995;
+    private static final long serialVersionUID = -903696728;
 
     public static final QCamelCaseFooBar camelCaseFooBar = new QCamelCaseFooBar("CamelCaseFooBar");
 
@@ -31,27 +31,27 @@ public class QCamelCaseFooBar extends com.querydsl.sql.RelationalPathBase<QCamel
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public QCamelCaseFooBar(String variable) {
-        super(QCamelCaseFooBar.class, forVariable(variable), "dbo", "camelCaseFooBar");
+        super(CamelCaseFooBar.class, forVariable(variable), "dbo", "camelCaseFooBar");
         addMetadata();
     }
 
     public QCamelCaseFooBar(String variable, String schema, String table) {
-        super(QCamelCaseFooBar.class, forVariable(variable), schema, table);
+        super(CamelCaseFooBar.class, forVariable(variable), schema, table);
         addMetadata();
     }
 
     public QCamelCaseFooBar(String variable, String schema) {
-        super(QCamelCaseFooBar.class, forVariable(variable), schema, "camelCaseFooBar");
+        super(CamelCaseFooBar.class, forVariable(variable), schema, "camelCaseFooBar");
         addMetadata();
     }
 
-    public QCamelCaseFooBar(Path<? extends QCamelCaseFooBar> path) {
+    public QCamelCaseFooBar(Path<? extends CamelCaseFooBar> path) {
         super(path.getType(), path.getMetadata(), "dbo", "camelCaseFooBar");
         addMetadata();
     }
 
     public QCamelCaseFooBar(PathMetadata metadata) {
-        super(QCamelCaseFooBar.class, metadata, "dbo", "camelCaseFooBar");
+        super(CamelCaseFooBar.class, metadata, "dbo", "camelCaseFooBar");
         addMetadata();
     }
 

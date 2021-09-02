@@ -15,39 +15,39 @@ import java.sql.Types;
 
 
 /**
- * QEntityWithSchema is a Querydsl query type for QEntityWithSchema
+ * QEntityWithSchema is a Querydsl query type for EntityWithSchema
  */
 @Generated("com.querydsl.sql.codegen.MetaDataSerializer")
-public class QEntityWithSchema extends com.querydsl.sql.RelationalPathBase<QEntityWithSchema> {
+public class QEntityWithSchema extends com.querydsl.sql.RelationalPathBase<EntityWithSchema> {
 
-    private static final long serialVersionUID = 1703560240;
+    private static final long serialVersionUID = -247591851;
 
     public static final QEntityWithSchema entityWithSchema = new QEntityWithSchema("EntityWithSchema");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public QEntityWithSchema(String variable) {
-        super(QEntityWithSchema.class, forVariable(variable), "foo", "EntityWithSchema");
+        super(EntityWithSchema.class, forVariable(variable), "foo", "EntityWithSchema");
         addMetadata();
     }
 
     public QEntityWithSchema(String variable, String schema, String table) {
-        super(QEntityWithSchema.class, forVariable(variable), schema, table);
+        super(EntityWithSchema.class, forVariable(variable), schema, table);
         addMetadata();
     }
 
     public QEntityWithSchema(String variable, String schema) {
-        super(QEntityWithSchema.class, forVariable(variable), schema, "EntityWithSchema");
+        super(EntityWithSchema.class, forVariable(variable), schema, "EntityWithSchema");
         addMetadata();
     }
 
-    public QEntityWithSchema(Path<? extends QEntityWithSchema> path) {
+    public QEntityWithSchema(Path<? extends EntityWithSchema> path) {
         super(path.getType(), path.getMetadata(), "foo", "EntityWithSchema");
         addMetadata();
     }
 
     public QEntityWithSchema(PathMetadata metadata) {
-        super(QEntityWithSchema.class, metadata, "foo", "EntityWithSchema");
+        super(EntityWithSchema.class, metadata, "foo", "EntityWithSchema");
         addMetadata();
     }
 

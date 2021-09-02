@@ -15,12 +15,12 @@ import java.sql.Types;
 
 
 /**
- * QSnakeCaseAndTransientType is a Querydsl query type for QSnakeCaseAndTransientType
+ * QSnakeCaseAndTransientType is a Querydsl query type for SnakeCaseAndTransientType
  */
 @Generated("com.querydsl.sql.codegen.MetaDataSerializer")
-public class QSnakeCaseAndTransientType extends com.querydsl.sql.RelationalPathBase<QSnakeCaseAndTransientType> {
+public class QSnakeCaseAndTransientType extends com.querydsl.sql.RelationalPathBase<SnakeCaseAndTransientType> {
 
-    private static final long serialVersionUID = -1281843753;
+    private static final long serialVersionUID = 1346580306;
 
     public static final QSnakeCaseAndTransientType snakeCaseAndTransientType = new QSnakeCaseAndTransientType("SnakeCaseAndTransientType");
 
@@ -29,27 +29,27 @@ public class QSnakeCaseAndTransientType extends com.querydsl.sql.RelationalPathB
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public QSnakeCaseAndTransientType(String variable) {
-        super(QSnakeCaseAndTransientType.class, forVariable(variable), "dbo", "customer_order");
+        super(SnakeCaseAndTransientType.class, forVariable(variable), "dbo", "customer_order");
         addMetadata();
     }
 
     public QSnakeCaseAndTransientType(String variable, String schema, String table) {
-        super(QSnakeCaseAndTransientType.class, forVariable(variable), schema, table);
+        super(SnakeCaseAndTransientType.class, forVariable(variable), schema, table);
         addMetadata();
     }
 
     public QSnakeCaseAndTransientType(String variable, String schema) {
-        super(QSnakeCaseAndTransientType.class, forVariable(variable), schema, "customer_order");
+        super(SnakeCaseAndTransientType.class, forVariable(variable), schema, "customer_order");
         addMetadata();
     }
 
-    public QSnakeCaseAndTransientType(Path<? extends QSnakeCaseAndTransientType> path) {
+    public QSnakeCaseAndTransientType(Path<? extends SnakeCaseAndTransientType> path) {
         super(path.getType(), path.getMetadata(), "dbo", "customer_order");
         addMetadata();
     }
 
     public QSnakeCaseAndTransientType(PathMetadata metadata) {
-        super(QSnakeCaseAndTransientType.class, metadata, "dbo", "customer_order");
+        super(SnakeCaseAndTransientType.class, metadata, "dbo", "customer_order");
         addMetadata();
     }
 

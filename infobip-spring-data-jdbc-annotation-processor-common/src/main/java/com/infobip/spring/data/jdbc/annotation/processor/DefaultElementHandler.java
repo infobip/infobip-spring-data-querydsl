@@ -3,22 +3,29 @@ package com.infobip.spring.data.jdbc.annotation.processor;
 import com.google.common.base.CaseFormat;
 import com.querydsl.apt.*;
 import com.querydsl.codegen.*;
+import com.querydsl.codegen.utils.model.Type;
+import com.querydsl.codegen.utils.model.TypeCategory;
 import com.querydsl.sql.ColumnMetadata;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.*;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class DefaultElementHandler extends TypeElementHandler {
+
+    public static final String IS_EMBEDDED_DATA_KEY = "isEmbedded";
 
     private final Elements elements;
     private final String defaultSchema;
     private final CaseFormat tableCaseFormat;
     private final CaseFormat columnCaseFormat;
+    private final Configuration configuration;
 
     public DefaultElementHandler(Configuration configuration,
                                  ExtendedTypeFactory typeFactory,
@@ -33,6 +40,7 @@ public class DefaultElementHandler extends TypeElementHandler {
         this.defaultSchema = getDefaultSchema(roundEnv);
         this.tableCaseFormat = tableCaseFormat;
         this.columnCaseFormat = columnCaseFormat;
+        this.configuration = configuration;
     }
 
     protected String getDefaultSchema(RoundEnvironment roundEnv) {
@@ -52,8 +60,33 @@ public class DefaultElementHandler extends TypeElementHandler {
     @Override
     public EntityType handleEntityType(TypeElement element) {
         EntityType entityType = super.handleEntityType(element);
+
+        Set<Property> embeddedLessProperties =
+                entityType.getProperties()
+                          .stream()
+                          .flatMap(property -> {
+                              if (Embeddeds.isEmbedded(configuration, element, property)) {
+                                  return flattenEmbeddedProperty(property);
+                              }
+
+                              return Stream.of(property);
+                          })
+                          .collect(Collectors.toSet());
+        entityType.getProperties().clear();
+        entityType.getProperties().addAll(embeddedLessProperties);
+
         updateModel(element, entityType);
         return entityType;
+    }
+
+    private Stream<Property> flattenEmbeddedProperty(Property property) {
+        Type type = property.getType();
+
+        if (!type.getCategory().equals(TypeCategory.ENTITY)) {
+            return Stream.of(property);
+        }
+
+        return ((EntityType) type).getProperties().stream();
     }
 
     private void updateModel(TypeElement element, EntityType type) {
@@ -64,9 +97,20 @@ public class DefaultElementHandler extends TypeElementHandler {
         Map<String, Integer> fieldNameToIndex = getFieldNameToIndex(type);
 
         type.getProperties()
-            .forEach(property -> property.getData().put("COLUMN", ColumnMetadata.named(getColumnName(property))
-                                                                                .withIndex(fieldNameToIndex.get(
-                                                                                        property.getName()))));
+            .forEach(property -> addMetaData(element, fieldNameToIndex, property));
+    }
+
+    private Object addMetaData(TypeElement element, Map<String, Integer> fieldNameToIndex,
+                               Property property) {
+
+        Map<Object, Object> data = property.getData();
+        if (Embeddeds.isEmbedded(configuration, element, property)) {
+            data.put(IS_EMBEDDED_DATA_KEY, true);
+        }
+
+        return data.put("COLUMN", ColumnMetadata.named(getColumnName(property))
+                                                .withIndex(fieldNameToIndex.get(
+                                                        property.getName())));
     }
 
     protected Optional<String> getSchema(TypeElement element) {
@@ -80,7 +124,7 @@ public class DefaultElementHandler extends TypeElementHandler {
     }
 
     protected String getTableName(EntityType model) {
-        String simpleName = simpleNameWithoutPrefix(model.getSimpleName());
+        String simpleName = model.getSimpleName();
         String className = model.getPackageName() + "." + simpleName;
         String tableName = CaseFormat.UPPER_CAMEL.to(tableCaseFormat, simpleName);
         return Optional.ofNullable(elements.getTypeElement(className)
@@ -90,9 +134,7 @@ public class DefaultElementHandler extends TypeElementHandler {
     }
 
     protected String getColumnName(Property property) {
-        String name = nameWithoutPrefix(property.getDeclaringType().getPackageName(),
-                                        property.getDeclaringType().getSimpleName());
-        TypeElement parentType = elements.getTypeElement(name);
+        TypeElement parentType = elements.getTypeElement(property.getDeclaringType().getFullName());
         return parentType.getEnclosedElements()
                          .stream()
                          .filter(element -> element instanceof VariableElement)
@@ -105,12 +147,16 @@ public class DefaultElementHandler extends TypeElementHandler {
     }
 
     private Map<String, Integer> getFieldNameToIndex(EntityType model) {
-        String name = nameWithoutPrefix(model.getPackageName(), model.getSimpleName());
+        String name = model.getFullName();
         TypeElement typeElement = elements.getTypeElement(name);
-        List<? extends Element> fields = typeElement.getEnclosedElements()
-                                                    .stream()
-                                                    .filter(element -> element.getKind().equals(ElementKind.FIELD))
-                                                    .collect(Collectors.toList());
+        List<? extends Element> fields = getFields(typeElement).flatMap(field -> {
+            if (Embeddeds.isEmbedded(configuration, field)) {
+                TypeMirror typeMirror = field.asType();
+                return getFields(elements.getTypeElement(typeMirror.toString()));
+            }
+
+            return Stream.of(field);
+        }).collect(Collectors.toList());
 
         Map<String, Integer> fieldNameToIndex = new HashMap<>();
 
@@ -120,15 +166,9 @@ public class DefaultElementHandler extends TypeElementHandler {
         return fieldNameToIndex;
     }
 
-    private String simpleNameWithoutPrefix(String simpleName) {
-        return simpleName.substring(1);
-    }
-
-    private String nameWithoutPrefix(String packageName, String simpleName) {
-        return name(packageName, simpleNameWithoutPrefix(simpleName));
-    }
-
-    private String name(String packageName, String simpleName) {
-        return packageName + "." + simpleName;
+    private Stream<? extends Element> getFields(Element element) {
+        return element.getEnclosedElements()
+                      .stream()
+                      .filter(enclosedElement -> enclosedElement.getKind().equals(ElementKind.FIELD));
     }
 }

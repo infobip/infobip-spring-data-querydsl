@@ -15,12 +15,12 @@ import java.sql.Types;
 
 
 /**
- * QPascalCaseFooBar is a Querydsl query type for QPascalCaseFooBar
+ * QPascalCaseFooBar is a Querydsl query type for PascalCaseFooBar
  */
 @Generated("com.querydsl.sql.codegen.MetaDataSerializer")
-public class QPascalCaseFooBar extends com.querydsl.sql.RelationalPathBase<QPascalCaseFooBar> {
+public class QPascalCaseFooBar extends com.querydsl.sql.RelationalPathBase<PascalCaseFooBar> {
 
-    private static final long serialVersionUID = 402043823;
+    private static final long serialVersionUID = -1549108268;
 
     public static final QPascalCaseFooBar pascalCaseFooBar = new QPascalCaseFooBar("PascalCaseFooBar");
 
@@ -31,27 +31,27 @@ public class QPascalCaseFooBar extends com.querydsl.sql.RelationalPathBase<QPasc
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public QPascalCaseFooBar(String variable) {
-        super(QPascalCaseFooBar.class, forVariable(variable), "dbo", "PascalCaseFooBar");
+        super(PascalCaseFooBar.class, forVariable(variable), "dbo", "PascalCaseFooBar");
         addMetadata();
     }
 
     public QPascalCaseFooBar(String variable, String schema, String table) {
-        super(QPascalCaseFooBar.class, forVariable(variable), schema, table);
+        super(PascalCaseFooBar.class, forVariable(variable), schema, table);
         addMetadata();
     }
 
     public QPascalCaseFooBar(String variable, String schema) {
-        super(QPascalCaseFooBar.class, forVariable(variable), schema, "PascalCaseFooBar");
+        super(PascalCaseFooBar.class, forVariable(variable), schema, "PascalCaseFooBar");
         addMetadata();
     }
 
-    public QPascalCaseFooBar(Path<? extends QPascalCaseFooBar> path) {
+    public QPascalCaseFooBar(Path<? extends PascalCaseFooBar> path) {
         super(path.getType(), path.getMetadata(), "dbo", "PascalCaseFooBar");
         addMetadata();
     }
 
     public QPascalCaseFooBar(PathMetadata metadata) {
-        super(QPascalCaseFooBar.class, metadata, "dbo", "PascalCaseFooBar");
+        super(PascalCaseFooBar.class, metadata, "dbo", "PascalCaseFooBar");
         addMetadata();
     }
 

@@ -25,7 +25,7 @@ public class SpringDataJdbcQuerydslNamingStrategy implements NamingStrategy {
 
     @Override
     public String getDefaultAlias(EntityType entityType) {
-        return entityType.getSimpleName().substring(1);
+        return entityType.getSimpleName();
     }
 
     @Override

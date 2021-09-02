@@ -250,8 +250,8 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
         private final String lastName;
     }
 
-    private Person givenSavedPerson(String john, String doe) {
-        return repository.save(new Person(null, john, doe, BEGINNING_OF_2021));
+    private Person givenSavedPerson(String firstName, String lastName) {
+        return repository.save(new Person(null, firstName, lastName, BEGINNING_OF_2021));
     }
 
     private NoArgsEntity giveNoArgsEntity() {

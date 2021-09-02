@@ -123,6 +123,19 @@ public class SpringDataJdbcAnnotationProcessorTest {
         thenShouldGenerateSourceFile(actual, QLowerUnderScoreTableFooBar.class);
     }
 
+    @Test
+    void shouldGenerateEmbeddedQClass() {
+        // given
+        JavaFileObject givenSource = givenSource(EntityWithEmbedded.class);
+
+        // when
+        Compilation actual = whenCompile(givenSource);
+
+        // then
+        thenShouldGenerateSourceFile(actual, QEntityWithEmbedded.class);
+        thenShouldGenerateSourceFile(actual, QEmbeddedClass.class);
+    }
+
     private void thenShouldGenerateSourceFile(Compilation actual, Class<?> typeClass) {
         assertThat(actual).succeeded();
         assertThat(actual)
