@@ -75,7 +75,6 @@ class CustomExtendedTypeFactory extends ExtendedTypeFactory {
                           })
                           .collect(Collectors.toList());
         entityType.getProperties().clear();
-//        System.out.println(embeddedlessProperties);
         entityType.getProperties().addAll(embeddedlessProperties);
         entityType.getPropertyNames().clear();
         entityType.getPropertyNames()
