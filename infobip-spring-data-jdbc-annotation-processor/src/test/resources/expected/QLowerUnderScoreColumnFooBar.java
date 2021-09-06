@@ -54,7 +54,7 @@ public class QLowerUnderScoreColumnFooBar extends com.querydsl.sql.RelationalPat
     }
 
     public void addMetadata() {
-        addMetadata(fooBar, ColumnMetadata.named("foo_bar").withIndex(2));
+        addMetadata(fooBar, ColumnMetadata.named("foo_bar").withIndex(0));
         addMetadata(id, ColumnMetadata.named("id").withIndex(1));
     }
 

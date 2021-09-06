@@ -56,9 +56,9 @@ public class QPascalCaseFooBar extends com.querydsl.sql.RelationalPathBase<Pasca
     }
 
     public void addMetadata() {
-        addMetadata(bar, ColumnMetadata.named("Bar").withIndex(3));
-        addMetadata(foo, ColumnMetadata.named("Foo").withIndex(2));
-        addMetadata(id, ColumnMetadata.named("Id").withIndex(1));
+        addMetadata(bar, ColumnMetadata.named("Bar").withIndex(0));
+        addMetadata(foo, ColumnMetadata.named("Foo").withIndex(1));
+        addMetadata(id, ColumnMetadata.named("Id").withIndex(2));
     }
 
 }

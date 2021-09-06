@@ -52,7 +52,7 @@ public class QEntityWithSchema extends com.querydsl.sql.RelationalPathBase<Entit
     }
 
     public void addMetadata() {
-        addMetadata(id, ColumnMetadata.named("Id").withIndex(1));
+        addMetadata(id, ColumnMetadata.named("Id").withIndex(0));
     }
 
 }

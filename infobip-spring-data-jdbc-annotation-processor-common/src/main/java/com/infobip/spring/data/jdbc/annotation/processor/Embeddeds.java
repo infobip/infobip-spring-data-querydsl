@@ -12,7 +12,7 @@ import java.util.Objects;
 class Embeddeds {
 
     static boolean isEmbedded(Configuration configuration,
-                              TypeElement element,
+                              Element element,
                               Property property) {
 
         Class<? extends Annotation> embeddedAnnotation = configuration.getEmbeddedAnnotation();

@@ -56,9 +56,9 @@ public class QCamelCaseFooBar extends com.querydsl.sql.RelationalPathBase<CamelC
     }
 
     public void addMetadata() {
-        addMetadata(bar, ColumnMetadata.named("bar").withIndex(3));
-        addMetadata(foo, ColumnMetadata.named("foo").withIndex(2));
-        addMetadata(id, ColumnMetadata.named("id").withIndex(1));
+        addMetadata(bar, ColumnMetadata.named("bar").withIndex(0));
+        addMetadata(foo, ColumnMetadata.named("foo").withIndex(1));
+        addMetadata(id, ColumnMetadata.named("id").withIndex(2));
     }
 
 }

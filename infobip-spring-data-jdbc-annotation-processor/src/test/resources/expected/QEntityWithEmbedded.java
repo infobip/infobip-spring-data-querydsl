@@ -54,7 +54,7 @@ public class QEntityWithEmbedded extends com.querydsl.sql.RelationalPathBase<Ent
     }
 
     public void addMetadata() {
-        addMetadata(foo, ColumnMetadata.named("Foo").withIndex(2));
+        addMetadata(foo, ColumnMetadata.named("Foo").withIndex(0));
         addMetadata(id, ColumnMetadata.named("Id").withIndex(1));
     }
 

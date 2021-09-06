@@ -54,7 +54,7 @@ public class QSnakeCaseAndTransientType extends com.querydsl.sql.RelationalPathB
     }
 
     public void addMetadata() {
-        addMetadata(customerId, ColumnMetadata.named("customer_id").withIndex(2));
+        addMetadata(customerId, ColumnMetadata.named("customer_id").withIndex(0));
         addMetadata(id, ColumnMetadata.named("id").withIndex(1));
     }
 

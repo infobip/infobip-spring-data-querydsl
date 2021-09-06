@@ -108,11 +108,15 @@ public abstract class SpringDataJdbcAnnotationProcessorBase extends AbstractQuer
     protected CustomExtendedTypeFactory createTypeFactory(Set<Class<? extends Annotation>> entityAnnotations,
                                                           TypeMappings typeMappings,
                                                           QueryTypeFactory queryTypeFactory) {
-        CustomExtendedTypeFactory customExtendedTypeFactory = new CustomExtendedTypeFactory(processingEnv,
+        CustomExtendedTypeFactory customExtendedTypeFactory = new CustomExtendedTypeFactory(roundEnv,
+                                                                                            processingEnv,
                                                                                             entityAnnotations,
                                                                                             typeMappings,
                                                                                             queryTypeFactory,
-                                                                                            conf.getVariableNameFunction());
+                                                                                            conf,
+                                                                                            processingEnv.getElementUtils(),
+                                                                                            projectTableCaseFormat,
+                                                                                            projectColumnCaseFormat);
         this.typeFactory = customExtendedTypeFactory;
         return customExtendedTypeFactory;
     }
