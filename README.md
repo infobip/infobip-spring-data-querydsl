@@ -21,6 +21,7 @@ Infobip Spring Data Querydsl provides new functionality that enables the user to
         * [Update](#JDBCUpdate)
         * [Delete](#JDBCDelete)
         * [Transactional support](#JDBCTransactionalSupport)
+        * [Embedded support](#JDBCEmbeddedSupport)
     * [Extension](#JDBCExtension)
 1. [R2DBC module:](#R2DBC)
    * [Requirements](#R2DBCRequirements)
@@ -183,6 +184,41 @@ long numberOfAffectedRows = repository.deleteWhere(person.firstName.like("John%"
 
 Queries execution is always done inside the repository implementation (loan pattern) in a transaction so transactions don't have to be 
 handled manually (like they do if you are manually managing SQLQuery and other Querydsl constructs).
+
+#### <a name="JDBCEmbeddedSupport"></a> Embedded support
+
+Entity columns marked with `@org.springframework.data.relational.core.mapping.Embedded` are inlined in Q classes:
+
+Model:
+```java
+@Table("Person")
+@Value
+public class PersonWithEmbeddedFirstAndLastName {
+
+   @With
+   @Id
+   private final Long id;
+
+   @Embedded(onEmpty = Embedded.OnEmpty.USE_EMPTY)
+   private final FirstAndLastName firstAndLastName;
+   ...
+}
+```
+
+```java
+@Value
+public class FirstAndLastName {
+
+    private final String firstName;
+    private final String lastName;
+}
+```
+
+Query (note the missing .personWithEmbeddedFirstAndLastName field in Q instance):
+
+```java
+repository.findAll(personWithEmbeddedFirstAndLastName.firstName.in("John", "Johny"));
+```
 
 ### <a name="JDBCExtension"></a> Extension:
 
