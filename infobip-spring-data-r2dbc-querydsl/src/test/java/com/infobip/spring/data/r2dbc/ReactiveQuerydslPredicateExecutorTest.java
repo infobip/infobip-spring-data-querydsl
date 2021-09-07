@@ -140,8 +140,8 @@ public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
                     .verifyComplete();
     }
 
-    private Mono<Person> givenSavedPerson(String john, String doe) {
-        return repository.save(new Person(null, john, doe));
+    private Mono<Person> givenSavedPerson(String firstName, String lastName) {
+        return repository.save(new Person(null, firstName, lastName));
     }
 
     private Predicate<? super Person> person(String firstName, String lastName) {

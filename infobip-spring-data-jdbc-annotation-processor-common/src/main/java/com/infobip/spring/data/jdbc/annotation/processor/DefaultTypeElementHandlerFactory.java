@@ -19,7 +19,6 @@ public class DefaultTypeElementHandlerFactory implements TypeElementHandlerFacto
                                                    RoundEnvironment roundEnv,
                                                    CaseFormat projectTableCaseFormat,
                                                    CaseFormat projectColumnCaseFormat) {
-        return new DefaultElementHandler(configuration, typeFactory, typeMappings, queryTypeFactory, elements,
-                                         roundEnv, projectTableCaseFormat, projectColumnCaseFormat);
+        return new TypeElementHandler(configuration, typeFactory, typeMappings, queryTypeFactory);
     }
 }

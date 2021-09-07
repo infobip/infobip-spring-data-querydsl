@@ -15,12 +15,12 @@ import java.sql.Types;
 
 
 /**
- * QLowerUnderScoreColumnFooBar is a Querydsl query type for QLowerUnderScoreColumnFooBar
+ * QLowerUnderScoreColumnFooBar is a Querydsl query type for LowerUnderScoreColumnFooBar
  */
 @Generated("com.querydsl.sql.codegen.MetaDataSerializer")
-public class QLowerUnderScoreColumnFooBar extends com.querydsl.sql.RelationalPathBase<QLowerUnderScoreColumnFooBar> {
+public class QLowerUnderScoreColumnFooBar extends com.querydsl.sql.RelationalPathBase<LowerUnderScoreColumnFooBar> {
 
-    private static final long serialVersionUID = -1786890536;
+    private static final long serialVersionUID = -1312139885;
 
     public static final QLowerUnderScoreColumnFooBar lowerUnderScoreColumnFooBar = new QLowerUnderScoreColumnFooBar("LowerUnderScoreColumnFooBar");
 
@@ -29,32 +29,32 @@ public class QLowerUnderScoreColumnFooBar extends com.querydsl.sql.RelationalPat
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public QLowerUnderScoreColumnFooBar(String variable) {
-        super(QLowerUnderScoreColumnFooBar.class, forVariable(variable), "dbo", "LowerUnderScoreColumnFooBar");
+        super(LowerUnderScoreColumnFooBar.class, forVariable(variable), "dbo", "LowerUnderScoreColumnFooBar");
         addMetadata();
     }
 
     public QLowerUnderScoreColumnFooBar(String variable, String schema, String table) {
-        super(QLowerUnderScoreColumnFooBar.class, forVariable(variable), schema, table);
+        super(LowerUnderScoreColumnFooBar.class, forVariable(variable), schema, table);
         addMetadata();
     }
 
     public QLowerUnderScoreColumnFooBar(String variable, String schema) {
-        super(QLowerUnderScoreColumnFooBar.class, forVariable(variable), schema, "LowerUnderScoreColumnFooBar");
+        super(LowerUnderScoreColumnFooBar.class, forVariable(variable), schema, "LowerUnderScoreColumnFooBar");
         addMetadata();
     }
 
-    public QLowerUnderScoreColumnFooBar(Path<? extends QLowerUnderScoreColumnFooBar> path) {
+    public QLowerUnderScoreColumnFooBar(Path<? extends LowerUnderScoreColumnFooBar> path) {
         super(path.getType(), path.getMetadata(), "dbo", "LowerUnderScoreColumnFooBar");
         addMetadata();
     }
 
     public QLowerUnderScoreColumnFooBar(PathMetadata metadata) {
-        super(QLowerUnderScoreColumnFooBar.class, metadata, "dbo", "LowerUnderScoreColumnFooBar");
+        super(LowerUnderScoreColumnFooBar.class, metadata, "dbo", "LowerUnderScoreColumnFooBar");
         addMetadata();
     }
 
     public void addMetadata() {
-        addMetadata(fooBar, ColumnMetadata.named("foo_bar").withIndex(2));
+        addMetadata(fooBar, ColumnMetadata.named("foo_bar").withIndex(0));
         addMetadata(id, ColumnMetadata.named("id").withIndex(1));
     }
 

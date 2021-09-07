@@ -176,16 +176,16 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
 
         private final String lastName;
     }
-    private Mono<Person> givenSavedPerson(String john, String doe) {
-        return repository.save(new Person(null, john, doe));
+    private Mono<Person> givenSavedPerson(String firstName, String lastName) {
+        return repository.save(new Person(null, firstName, lastName));
     }
 
     private Mono<NoArgsEntity> giveNoArgsEntity(String value) {
         return noArgsRepository.save(new NoArgsEntity(value));
     }
 
-    private Mono<PersonSettings> givenSavedPersonAndSettings(String john, String doe) {
-        return repository.save(new Person(null, john, doe)).flatMap(
+    private Mono<PersonSettings> givenSavedPersonAndSettings(String firstName, String lastName) {
+        return repository.save(new Person(null, firstName, lastName)).flatMap(
                 person -> settingsRepository.save(new PersonSettings(null, person.getId())));
     }
 

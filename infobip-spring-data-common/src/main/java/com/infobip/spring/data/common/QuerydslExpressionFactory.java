@@ -6,6 +6,7 @@ import com.querydsl.sql.RelationalPath;
 import com.querydsl.sql.RelationalPathBase;
 import org.springframework.core.ResolvableType;
 import org.springframework.data.annotation.PersistenceConstructor;
+import org.springframework.data.relational.core.mapping.Embedded;
 import org.springframework.util.ReflectionUtils;
 
 import javax.annotation.Nullable;
@@ -31,18 +32,62 @@ public class QuerydslExpressionFactory {
                     "Could not discover preferred constructor for " + type);
         }
 
-        Map<String, Path<?>> columnNameToColumn = pathBase.getColumns()
-                                                          .stream()
-                                                          .collect(Collectors.toMap(
-                                                                  column -> column.getMetadata().getName(),
-                                                                  Function.identity()));
+        Map<String, Expression<?>> columnNameToExpression = pathBase.getColumns()
+                                                                    .stream()
+                                                                    .collect(Collectors.toMap(
+                                                                            column -> column.getMetadata().getName(),
+                                                                            Function.identity()));
+        Parameter[] parameters = constructor.getParameters();
 
-        Path<?>[] paths = Stream.of(constructor.getParameters())
-                                .map(Parameter::getName)
-                                .map(columnNameToColumn::get)
-                                .toArray(Path[]::new);
+        Map<String, Expression<?>> embeddedConstructorParameterNameToPath = getEmbeddedConstructorParameterNameToPath(
+                type,
+                pathBase,
+                columnNameToExpression,
+                parameters);
 
-        return Projections.constructor(type, paths);
+        Expression<?>[] expressions = Stream.of(constructor.getParameters())
+                                            .map(Parameter::getName)
+                                            .map(name -> getExpression(columnNameToExpression,
+                                                                       embeddedConstructorParameterNameToPath, name))
+                                            .toArray(Expression[]::new);
+
+        return Projections.constructor(type, expressions);
+    }
+
+    private Expression<?> getExpression(Map<String, Expression<?>> columnNameToPath,
+                                        Map<String, Expression<?>> embeddedConstructorParameterNameToPath,
+                                        String name) {
+        Expression<?> path = columnNameToPath.get(name);
+
+        if (Objects.isNull(path)) {
+            return embeddedConstructorParameterNameToPath.get(name);
+        }
+
+        return path;
+    }
+
+    private Map<String, Expression<?>> getEmbeddedConstructorParameterNameToPath(Class<?> type,
+                                                                                 RelationalPath<?> pathBase,
+                                                                                 Map<String, Expression<?>> columnNameToColumn,
+                                                                                 Parameter[] parameters) {
+        Map<String, Expression<?>> embeddedConstructorParameterNameToPath = new HashMap<>();
+        Stream.of(parameters)
+              .filter(parameter -> !columnNameToColumn.containsKey(parameter.getName()))
+              .forEach(parameter -> {
+                  getEmbeddedType(type, parameter).map(
+                                                          embeddedType -> getConstructorExpression(embeddedType, pathBase))
+                                                  .ifPresent(path -> embeddedConstructorParameterNameToPath.put(
+                                                          parameter.getName(), path));
+              });
+        return embeddedConstructorParameterNameToPath;
+    }
+
+    private Optional<Class<?>> getEmbeddedType(Class<?> type, Parameter parameter) {
+        return Stream.of(type.getDeclaredFields())
+                     .filter(field -> field.getName().equals(parameter.getName()))
+                     .filter(field -> field.isAnnotationPresent(Embedded.class))
+                     .<Class<?>>map(Field::getType)
+                     .findAny();
     }
 
     @Nullable
