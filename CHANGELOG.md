@@ -1,3 +1,6 @@
+### 6.1.0
+* added support for `@Embedded` to JDBC module
+
 ### 6.0.0
 * upgraded to Querydsl 5.0.0
 * upgraded to Spring Boot 2.5.1

@@ -187,7 +187,7 @@ handled manually (like they do if you are manually managing SQLQuery and other Q
 
 #### <a name="JDBCEmbeddedSupport"></a> Embedded support
 
-Entity columns marked with `@org.springframework.data.relational.core.mapping.Embedded` are inlined in Q classes:
+Entity fields marked with `@org.springframework.data.relational.core.mapping.Embedded` are inlined in Q classes:
 
 Model:
 ```java
