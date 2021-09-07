@@ -1,9 +1,7 @@
 package com.infobip.spring.data.common;
 
 import com.google.common.base.CaseFormat;
-import com.querydsl.core.types.ConstructorExpression;
-import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.*;
 import com.querydsl.sql.RelationalPath;
 import com.querydsl.sql.RelationalPathBase;
 import org.springframework.core.ResolvableType;
@@ -13,13 +11,8 @@ import org.springframework.data.relational.core.mapping.Embedded;
 import org.springframework.util.ReflectionUtils;
 
 import javax.annotation.Nullable;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Parameter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.lang.reflect.*;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
