@@ -87,7 +87,7 @@ public class QuerydslJdbcRepositoryFactory extends JdbcRepositoryFactory {
                                                                                  ConstructorExpression<?> constructorExpression,
                                                                                  RelationalPathBase<?> path) {
         RelationalPersistentEntity<?> entity = context.getRequiredPersistentEntity(metadata.getDomainType());
-        Querydsl querydsl = new Querydsl(sqlQueryFactory, path);
+        Querydsl querydsl = new Querydsl(sqlQueryFactory, entity);
         return getTargetRepositoryViaReflection(QuerydslJdbcPredicateExecutor.class,
                                                 entity,
                                                 converter,

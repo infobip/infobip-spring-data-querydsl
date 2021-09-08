@@ -19,9 +19,13 @@ import com.infobip.spring.data.common.Querydsl;
 import com.infobip.spring.data.common.QuerydslExpressionFactory;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.sql.*;
+import org.springframework.data.mapping.context.MappingContext;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
 import org.springframework.data.r2dbc.repository.support.R2dbcRepositoryFactory;
+import org.springframework.data.relational.core.mapping.RelationalMappingContext;
+import org.springframework.data.relational.core.mapping.RelationalPersistentEntity;
+import org.springframework.data.relational.core.mapping.RelationalPersistentProperty;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.core.support.RepositoryComposition;
 import org.springframework.data.repository.core.support.RepositoryFragment;
@@ -84,9 +88,15 @@ public class QuerydslR2dbcRepositoryFactory extends R2dbcRepositoryFactory {
         return RepositoryFragment.implemented(simpleJPAQuerydslFragment);
     }
 
+    @SuppressWarnings("unchecked")
     private RepositoryFragment<Object> createQuerydslJdbcPredicateExecutor(ConstructorExpression<?> constructorExpression,
                                                                            RelationalPathBase<?> path) {
-        Querydsl querydsl = new Querydsl(sqlQueryFactory, path);
+
+
+        MappingContext<? extends RelationalPersistentEntity<?>, ? extends RelationalPersistentProperty> context = converter.getMappingContext();
+        RelationalPersistentEntity<?> entity = context.getRequiredPersistentEntity(constructorExpression.getType());
+
+        Querydsl querydsl = new Querydsl(sqlQueryFactory, entity);
         Object querydslJdbcPredicateExecutor = getTargetRepositoryViaReflection(
                 ReactiveQuerydslR2dbcPredicateExecutor.class,
                 constructorExpression,
