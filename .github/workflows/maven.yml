@@ -25,11 +25,15 @@ jobs:
             ${{ runner.os }}-maven-
       - name: Build with Maven
         run: mvn -B package --file pom.xml
-      - name: Coveralls Maven plugin
+      - name: "Report: Coverage via coveralls.io"
+        run: |
+          export CI_BRANCH=${BRANCH_NAME_OR_REF#refs/heads/}
+          export CI_PULL_REQUEST=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          mvn coveralls:report -DrepoToken=$COVERALLS_SECRET
         env:
-          CI_NAME: Github
+          CI_NAME: github
+          BRANCH_NAME_OR_REF: ${{ github.head_ref || github.ref }}
           CI_BUILD_NUMBER: ${{ github.run_id }}
           CI_BUILD_URL: https://github.com/${{ github.repository }}/commit/${{ github.event.after }}/checks
-          CI_BRANCH: ${{ steps.refs.outputs.branch_name }}
-          CI_PULL_REQUEST: ${{ steps.refs.outputs.pr_number }}
-        run: mvn coveralls:report -D repoToken=${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_SECRET: ${{ secrets.GITHUB_TOKEN }}
+
