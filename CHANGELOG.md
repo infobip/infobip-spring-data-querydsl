@@ -1,3 +1,6 @@
+### 6.1.1
+* add support for Kotlin data classes without PersistenceConstructor [#37](#37)
+
 ### 6.1.0
 * added support for `@Embedded` to JDBC module
 
