@@ -5,7 +5,8 @@ import com.querydsl.core.types.*;
 import com.querydsl.sql.RelationalPath;
 import com.querydsl.sql.RelationalPathBase;
 import org.springframework.core.ResolvableType;
-import org.springframework.data.annotation.PersistenceConstructor;
+import org.springframework.data.mapping.PreferredConstructor;
+import org.springframework.data.mapping.model.PreferredConstructorDiscoverer;
 import org.springframework.data.relational.core.mapping.Embedded;
 import org.springframework.util.ReflectionUtils;
 
@@ -92,20 +93,13 @@ public class QuerydslExpressionFactory {
 
     @Nullable
     private Constructor<?> getConstructor(Class<?> type) {
-        Constructor<?>[] declaredConstructors = type.getDeclaredConstructors();
-        Constructor<?> persistenceConstructor = Arrays.stream(declaredConstructors)
-                                                      .filter(constructor -> constructor.isAnnotationPresent(
-                                                              PersistenceConstructor.class))
-                                                      .findAny()
-                                                      .orElse(null);
+        PreferredConstructor<?, ?> preferredConstructor = PreferredConstructorDiscoverer.discover(type);
 
-        if (Objects.nonNull(persistenceConstructor)) {
-            return persistenceConstructor;
+        if (preferredConstructor == null) {
+            return null;
         }
 
-        return Arrays.stream(declaredConstructors)
-                     .max(Comparator.comparingInt(Constructor::getParameterCount))
-                     .orElse(null);
+        return preferredConstructor.getConstructor();
     }
 
     public RelationalPathBase<?> getRelationalPathBaseFromQueryRepositoryClass(Class<?> repositoryInterface) {
