@@ -2,6 +2,7 @@ package com.infobip.spring.data.jdbc;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceConstructor;
 
 @Getter
 @EqualsAndHashCode
@@ -22,6 +23,7 @@ public class NoArgsEntity {
         this.value = null;
     }
 
+    @PersistenceConstructor
     public NoArgsEntity(Long id, String value) {
         this.id = id;
         this.value = value;
