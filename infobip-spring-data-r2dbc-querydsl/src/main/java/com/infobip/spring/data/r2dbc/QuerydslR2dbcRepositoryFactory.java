@@ -18,7 +18,6 @@ package com.infobip.spring.data.r2dbc;
 import com.infobip.spring.data.common.Querydsl;
 import com.infobip.spring.data.common.QuerydslExpressionFactory;
 import com.querydsl.core.types.ConstructorExpression;
-import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.sql.*;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
@@ -87,7 +86,7 @@ public class QuerydslR2dbcRepositoryFactory extends R2dbcRepositoryFactory {
 
     private RepositoryFragment<Object> createQuerydslJdbcPredicateExecutor(ConstructorExpression<?> constructorExpression,
                                                                            RelationalPathBase<?> path) {
-        Querydsl querydsl = new Querydsl(sqlQueryFactory, new PathBuilder<>(path.getType(), path.getMetadata()));
+        Querydsl querydsl = new Querydsl(sqlQueryFactory, path);
         Object querydslJdbcPredicateExecutor = getTargetRepositoryViaReflection(
                 ReactiveQuerydslR2dbcPredicateExecutor.class,
                 constructorExpression,

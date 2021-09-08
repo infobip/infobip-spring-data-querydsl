@@ -15,20 +15,22 @@
  */
 package com.infobip.spring.data.common;
 
-import com.querydsl.core.types.*;
-import com.querydsl.core.types.OrderSpecifier.NullHandling;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.PathBuilder;
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.ComparableExpression;
+import com.querydsl.sql.RelationalPathBase;
 import com.querydsl.sql.SQLQuery;
 import com.querydsl.sql.SQLQueryFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Order;
-import org.springframework.data.mapping.PropertyPath;
 import org.springframework.data.querydsl.QSort;
 import org.springframework.util.Assert;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * // @see org.springframework.data.jpa.repository.support.Querydsl
@@ -36,11 +38,11 @@ import java.util.List;
 public class Querydsl {
 
 	private final SQLQueryFactory sqlQueryFactory;
-	private final PathBuilder<?> builder;
+	private final RelationalPathBase<?> pathBase;
 
-	public Querydsl(SQLQueryFactory sqlQueryFactory, PathBuilder<?> builder) {
+	public Querydsl(SQLQueryFactory sqlQueryFactory, RelationalPathBase<?> pathBase) {
 		this.sqlQueryFactory = sqlQueryFactory;
-		this.builder = builder;
+		this.pathBase = pathBase;
 	}
 
 	public SQLQuery<?> createQuery() {
@@ -79,11 +81,7 @@ public class Querydsl {
 			return query;
 		}
 
-		if (sort instanceof QSort) {
-			return addOrderByFrom((QSort) sort, query);
-		}
-
-		return addOrderByFrom(sort, query);
+		return addOrderByFrom(normalizeSort(sort), query);
 	}
 
 	private <T> SQLQuery<T> addOrderByFrom(QSort qsort, SQLQuery<T> query) {
@@ -93,60 +91,29 @@ public class Querydsl {
 		return query.orderBy(orderSpecifiers.toArray(new OrderSpecifier[0]));
 	}
 
-	private <T> SQLQuery<T> addOrderByFrom(Sort sort, SQLQuery<T> query) {
-
-		Assert.notNull(sort, "Sort must not be null!");
-		Assert.notNull(query, "Query must not be null!");
-
-		for (Order order : sort) {
-			query.orderBy(toOrderSpecifier(order));
+	private QSort normalizeSort(Sort sort) {
+		if (sort instanceof QSort) {
+			return (QSort) sort;
 		}
 
-		return query;
-	}
+		Map<String, Path<?>> pathByName = pathBase.getColumns()
+				.stream()
+				.collect(Collectors.toMap(it -> it.getMetadata().getName(), it -> it));
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private OrderSpecifier<?> toOrderSpecifier(Order order) {
+		List<OrderSpecifier<?>> orderSpecifiers = sort.stream()
+				.map(order -> {
+					Path<?> path = pathByName.get(order.getProperty());
 
-		return new OrderSpecifier(
-				order.isAscending() ? com.querydsl.core.types.Order.ASC : com.querydsl.core.types.Order.DESC,
-				buildOrderPropertyPathFrom(order), toQueryDslNullHandling(order.getNullHandling()));
-	}
+					if (path != null) {
+						ComparableExpression<?> comparablePath = (ComparableExpression<?>) path;
+						return order.isAscending() ? comparablePath.asc() : comparablePath.desc();
+					}
 
-	private NullHandling toQueryDslNullHandling(Sort.NullHandling nullHandling) {
+					return null;
+				})
+				.filter(Objects::nonNull)
+				.collect(Collectors.toList());
 
-		Assert.notNull(nullHandling, "NullHandling must not be null!");
-
-		switch (nullHandling) {
-
-			case NULLS_FIRST:
-				return NullHandling.NullsFirst;
-
-			case NULLS_LAST:
-				return NullHandling.NullsLast;
-
-			case NATIVE:
-			default:
-				return NullHandling.Default;
-		}
-	}
-
-	private Expression<?> buildOrderPropertyPathFrom(Order order) {
-
-		Assert.notNull(order, "Order must not be null!");
-
-		PropertyPath path = PropertyPath.from(order.getProperty(), builder.getType());
-		Expression<?> sortPropertyExpression = builder;
-
-		while (path != null) {
-
-			sortPropertyExpression = !path.hasNext() && order.isIgnoreCase() && String.class.equals(path.getType()) //
-					? Expressions.stringPath((Path<?>) sortPropertyExpression, path.getSegment()).lower() //
-					: Expressions.path(path.getType(), (Path<?>) sortPropertyExpression, path.getSegment());
-
-			path = path.next();
-		}
-
-		return sortPropertyExpression;
+		return new QSort(orderSpecifiers);
 	}
 }
