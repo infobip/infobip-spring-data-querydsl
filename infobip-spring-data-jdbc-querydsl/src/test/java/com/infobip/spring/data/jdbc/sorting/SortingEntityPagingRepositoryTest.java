@@ -65,7 +65,6 @@ public class SortingEntityPagingRepositoryTest extends TestBase {
         // when
         Page<SortingEntity> actual = repository.findAll(
                 sortingEntity.fooBar.startsWith("1"),
-                // does not work because generated classes in this project uses different naming strategy then is used in this project
                  QPageRequest.of(0, 5, sortingEntity.fooBar.desc())
         );
 
