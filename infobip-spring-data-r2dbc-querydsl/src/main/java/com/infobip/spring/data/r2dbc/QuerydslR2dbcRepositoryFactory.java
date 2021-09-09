@@ -23,7 +23,6 @@ import org.springframework.data.mapping.context.MappingContext;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
 import org.springframework.data.r2dbc.repository.support.R2dbcRepositoryFactory;
-import org.springframework.data.relational.core.mapping.RelationalMappingContext;
 import org.springframework.data.relational.core.mapping.RelationalPersistentEntity;
 import org.springframework.data.relational.core.mapping.RelationalPersistentProperty;
 import org.springframework.data.repository.core.RepositoryMetadata;
@@ -88,12 +87,12 @@ public class QuerydslR2dbcRepositoryFactory extends R2dbcRepositoryFactory {
         return RepositoryFragment.implemented(simpleJPAQuerydslFragment);
     }
 
-    @SuppressWarnings("unchecked")
     private RepositoryFragment<Object> createQuerydslJdbcPredicateExecutor(ConstructorExpression<?> constructorExpression,
                                                                            RelationalPathBase<?> path) {
 
 
         MappingContext<? extends RelationalPersistentEntity<?>, ? extends RelationalPersistentProperty> context = converter.getMappingContext();
+        @SuppressWarnings("unchecked")
         RelationalPersistentEntity<?> entity = context.getRequiredPersistentEntity(constructorExpression.getType());
 
         Querydsl querydsl = new Querydsl(sqlQueryFactory, entity);

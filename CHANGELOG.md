@@ -1,3 +1,6 @@
+### 6.1.2
+* fixed sorting issue [#39](/../../issues/39)
+
 ### 6.1.1
 * add support for Kotlin data classes without PersistenceConstructor [#37](/../../issues/37)
 
