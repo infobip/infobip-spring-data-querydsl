@@ -18,7 +18,6 @@ package com.infobip.spring.data.jdbc;
 import com.infobip.spring.data.common.Querydsl;
 import com.infobip.spring.data.common.QuerydslExpressionFactory;
 import com.querydsl.core.types.ConstructorExpression;
-import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.sql.*;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.jdbc.core.convert.DataAccessStrategy;
@@ -88,7 +87,7 @@ public class QuerydslJdbcRepositoryFactory extends JdbcRepositoryFactory {
                                                                                  ConstructorExpression<?> constructorExpression,
                                                                                  RelationalPathBase<?> path) {
         RelationalPersistentEntity<?> entity = context.getRequiredPersistentEntity(metadata.getDomainType());
-        Querydsl querydsl = new Querydsl(sqlQueryFactory, new PathBuilder<>(path.getType(), path.getMetadata()));
+        Querydsl querydsl = new Querydsl(sqlQueryFactory, entity);
         return getTargetRepositoryViaReflection(QuerydslJdbcPredicateExecutor.class,
                                                 entity,
                                                 converter,

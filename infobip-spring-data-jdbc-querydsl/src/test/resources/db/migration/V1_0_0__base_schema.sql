@@ -30,3 +30,9 @@ CREATE TABLE PagingEntity (
     Value NVARCHAR(20),
     CONSTRAINT PK_PagingEntity PRIMARY KEY (Id),
 );
+
+CREATE TABLE sorting_entity (
+   id    BIGINT IDENTITY,
+   foo_bar NVARCHAR(20),
+   CONSTRAINT PK_sorting_entity PRIMARY KEY (id),
+);

@@ -18,14 +18,14 @@ package com.infobip.spring.data.common;
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.OrderSpecifier.NullHandling;
 import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.sql.SQLQuery;
 import com.querydsl.sql.SQLQueryFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
-import org.springframework.data.mapping.PropertyPath;
 import org.springframework.data.querydsl.QSort;
+import org.springframework.data.relational.core.mapping.RelationalPersistentEntity;
+import org.springframework.data.relational.core.mapping.RelationalPersistentProperty;
 import org.springframework.util.Assert;
 
 import java.util.List;
@@ -36,11 +36,11 @@ import java.util.List;
 public class Querydsl {
 
 	private final SQLQueryFactory sqlQueryFactory;
-	private final PathBuilder<?> builder;
+	private final RelationalPersistentEntity<?> entity;
 
-	public Querydsl(SQLQueryFactory sqlQueryFactory, PathBuilder<?> builder) {
+	public Querydsl(SQLQueryFactory sqlQueryFactory, RelationalPersistentEntity<?> entity) {
 		this.sqlQueryFactory = sqlQueryFactory;
-		this.builder = builder;
+		this.entity = entity;
 	}
 
 	public SQLQuery<?> createQuery() {
@@ -135,18 +135,9 @@ public class Querydsl {
 
 		Assert.notNull(order, "Order must not be null!");
 
-		PropertyPath path = PropertyPath.from(order.getProperty(), builder.getType());
-		Expression<?> sortPropertyExpression = builder;
+		RelationalPersistentProperty persistentProperty = entity.getRequiredPersistentProperty(order.getProperty());
+		String columnName = persistentProperty.getColumnName().getReference();
 
-		while (path != null) {
-
-			sortPropertyExpression = !path.hasNext() && order.isIgnoreCase() && String.class.equals(path.getType()) //
-					? Expressions.stringPath((Path<?>) sortPropertyExpression, path.getSegment()).lower() //
-					: Expressions.path(path.getType(), (Path<?>) sortPropertyExpression, path.getSegment());
-
-			path = path.next();
-		}
-
-		return sortPropertyExpression;
+		return Expressions.stringPath(columnName);
 	}
 }
