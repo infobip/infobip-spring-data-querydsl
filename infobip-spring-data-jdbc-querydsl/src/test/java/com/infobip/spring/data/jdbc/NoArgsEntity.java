@@ -23,7 +23,6 @@ public class NoArgsEntity {
         this.value = null;
     }
 
-    @PersistenceConstructor
     public NoArgsEntity(Long id, String value) {
         this.id = id;
         this.value = value;
