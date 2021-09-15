@@ -204,13 +204,28 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
     }
 
     @Test
-    void shouldSupportMultipleConstructors() {
+    void shouldSupportMultipleConstructorsWithEntityProjection() {
         // given
         NoArgsEntity givenNoArgsEntity = giveNoArgsEntity();
 
         // when
         List<NoArgsEntity> actual = noArgsRepository.query(query -> query
                 .select(noArgsRepository.entityProjection())
+                .from(QNoArgsEntity.noArgsEntity)
+                .limit(1)
+                .fetch());
+
+        then(actual).containsExactly(givenNoArgsEntity);
+    }
+
+    @Test
+    void shouldSupportMultipleConstructors() {
+        // given
+        NoArgsEntity givenNoArgsEntity = giveNoArgsEntity();
+
+        // when
+        List<NoArgsEntity> actual = noArgsRepository.query(query -> query
+                .select(QNoArgsEntity.noArgsEntity)
                 .from(QNoArgsEntity.noArgsEntity)
                 .limit(1)
                 .fetch());

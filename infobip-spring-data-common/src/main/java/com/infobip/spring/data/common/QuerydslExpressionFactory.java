@@ -6,7 +6,6 @@ import com.querydsl.sql.RelationalPath;
 import com.querydsl.sql.RelationalPathBase;
 import org.springframework.core.ResolvableType;
 import org.springframework.data.mapping.PreferredConstructor;
-import org.springframework.data.mapping.model.PreferredConstructorDiscoverer;
 import org.springframework.data.relational.core.mapping.Embedded;
 import org.springframework.util.ReflectionUtils;
 
