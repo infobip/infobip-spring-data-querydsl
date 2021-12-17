@@ -208,8 +208,7 @@ public class PersonWithEmbeddedFirstAndLastName {
 
 #### <a name="JDBCStreaming"></a> Streaming
 
-Streaming is nothing new and is built on top of Spring Data infrastructure, 
-but is added as first class citizen method in repository interface that is more convenient to use.
+`streamAll` is a new method added to repository for more convenient use.
 
 ```
 @Transactional
