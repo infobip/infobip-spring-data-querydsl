@@ -4,8 +4,11 @@ import com.querydsl.core.types.Projections;
 import lombok.AllArgsConstructor;
 import lombok.Value;
 import org.junit.jupiter.api.Test;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.infobip.spring.data.jpa.QPerson.person;
 import static com.infobip.spring.data.jpa.QPersonSettings.personSettings;
@@ -16,6 +19,24 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
 
     private final PersonRepository repository;
     private final PersonSettingsRepository settingsRepository;
+
+    @Transactional
+    @Test
+    void shouldStreamAll() {
+
+        // given
+        Person johnDoe = givenSavedPerson("John", "Doe");
+        Person johnyRoe = givenSavedPerson("Johny", "Roe");
+        Person janeDoe = givenSavedPerson("Jane", "Doe");
+        List<Person> actual = null;
+
+        // when
+        try (Stream<Person> stream = repository.streamAll()) {
+            actual = stream.collect(Collectors.toList());
+        }
+
+        then(actual).usingRecursiveFieldByFieldElementComparator().containsExactlyInAnyOrder(johnDoe, johnyRoe, janeDoe);
+    }
 
     @Test
     void shouldFindAllWithPredicate() {
@@ -28,7 +49,7 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
         // when
         List<Person> actual = repository.findAll(person.firstName.in("John", "Johny"));
 
-        then(actual).usingFieldByFieldElementComparator().containsOnly(johnDoe, johnyRoe);
+        then(actual).usingRecursiveFieldByFieldElementComparator().containsOnly(johnDoe, johnyRoe);
     }
 
     @Test
@@ -51,7 +72,7 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
                 .offset(1)
                 .fetch());
 
-        then(actual).usingFieldByFieldElementComparator().containsOnly(johnDoe);
+        then(actual).usingRecursiveFieldByFieldElementComparator().containsOnly(johnDoe);
     }
 
     @Test
@@ -103,7 +124,7 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
         // when
         long numberOfAffectedRows = repository.deleteWhere(person.firstName.like("John%"));
 
-        then(repository.findAll()).usingFieldByFieldElementComparator().containsExactly(janeDoe);
+        then(repository.findAll()).usingRecursiveFieldByFieldElementComparator().containsExactly(janeDoe);
         then(numberOfAffectedRows).isEqualTo(3L);
     }
 
@@ -133,7 +154,7 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
                 .fetch()
         );
 
-        then(actual).usingFieldByFieldElementComparator().containsExactly(janeDoe, janieDoe, johnDoe, johnRoe);
+        then(actual).usingRecursiveFieldByFieldElementComparator().containsExactly(janeDoe, janieDoe, johnDoe, johnRoe);
     }
 
     @Test
@@ -173,7 +194,7 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
 
         // then
         then(actual).containsExactlyInAnyOrder(johnyRoe.getFirstName(), johnRoe.getFirstName());
-        then(repository.findAll()).usingFieldByFieldElementComparator()
+        then(repository.findAll()).usingRecursiveFieldByFieldElementComparator()
                                   .containsExactlyInAnyOrder(johnDoe, janeDoe, janieDoe);
     }
 
@@ -196,8 +217,8 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
                                   .getResultList());
 
         // then
-        then(actual).usingFieldByFieldElementComparator().containsExactlyInAnyOrder(johnyRoe);
-        then(repository.findAll()).usingFieldByFieldElementComparator()
+        then(actual).usingRecursiveFieldByFieldElementComparator().containsExactlyInAnyOrder(johnyRoe);
+        then(repository.findAll()).usingRecursiveFieldByFieldElementComparator()
                                   .containsExactlyInAnyOrder(johnDoe, janeDoe, johnRoe, janieDoe);
     }
 
