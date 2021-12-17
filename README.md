@@ -206,18 +206,6 @@ public class PersonWithEmbeddedFirstAndLastName {
 }
 ```
 
-#### <a name="JDBCStreaming"></a> Streaming
-
-`streamAll` is a new method added to repository for more convenient use.
-
-```
-@Transactional
-public void transactionalAnnotatedMethodRequiredForConsumingStream() {
-   try (Stream<Person> stream = repository.streamAll()) {
-      // use stream
-   }
-}
-```
 
 ```java
 @Value
@@ -232,6 +220,19 @@ Query (note the missing .personWithEmbeddedFirstAndLastName field in Q instance)
 
 ```java
 repository.findAll(personWithEmbeddedFirstAndLastName.firstName.in("John", "Johny"));
+```
+
+#### <a name="JDBCStreaming"></a> Streaming
+
+`streamAll` is a new method added to repository for more convenient use.
+
+```
+@Transactional
+public void transactionalAnnotatedMethodRequiredForConsumingStream() {
+   try (Stream<Person> stream = repository.streamAll()) {
+      // use stream
+   }
+}
 ```
 
 ### <a name="JDBCExtension"></a> Extension:
