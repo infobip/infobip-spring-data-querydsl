@@ -47,6 +47,7 @@ Infobip Spring Data Querydsl provides new functionality that enables the user to
         * [List instead of Iterable return type](#JPAListInsteadOfIterableReturnType)
         * [Transactional support](#JPATransactionalSupport)
         * [Stored procedure builder](#JPAStoredProcedureBuilder)
+        * [Streaming](#JPAStreaming)
     * [Extension](#JPAExtension)
 1. [Annotation processor](#AnnotationProcessor)
 1. [Further reading](#FurtherReading)
@@ -526,6 +527,19 @@ public List<Person> delete(Person personToDelete) {
             builder -> builder.addInParameter(person.firstName, personToDelete.getFirstName())
                               .addInParameter(person.lastName, personToDelete.getLastName())
                               .getResultList());
+}
+```
+
+#### <a name="JPAStreaming"></a> Streaming
+
+`streamAll` is a new method added to repository for more convenient use.
+
+```
+@Transactional
+public void transactionalAnnotatedMethodRequiredForConsumingStream() {
+   try (Stream<Person> stream = repository.streamAll()) {
+      // use stream
+   }
 }
 ```
 
