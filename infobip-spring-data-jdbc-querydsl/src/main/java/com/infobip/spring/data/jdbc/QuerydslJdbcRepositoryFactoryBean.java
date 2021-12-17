@@ -74,14 +74,14 @@ public class QuerydslJdbcRepositoryFactoryBean<T extends Repository<S, ID>, S, I
     }
 
     @Autowired
-    protected void setMappingContext(RelationalMappingContext mappingContext) {
+    public void setMappingContext(RelationalMappingContext mappingContext) {
 
         super.setMappingContext(mappingContext);
         this.mappingContext = mappingContext;
     }
 
     @Autowired
-    protected void setDialect(Dialect dialect) {
+    public void setDialect(Dialect dialect) {
         this.dialect = dialect;
     }
 

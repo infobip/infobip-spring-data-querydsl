@@ -1,15 +1,19 @@
 package com.infobip.spring.data.r2dbc;
 
+import java.util.function.Function;
+
 import com.infobip.spring.data.common.Querydsl;
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.sql.*;
+import org.reactivestreams.Publisher;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.querydsl.QSort;
 import org.springframework.data.querydsl.ReactiveQuerydslPredicateExecutor;
 import org.springframework.data.r2dbc.convert.EntityRowMapper;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
+import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.lang.Nullable;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.r2dbc.core.RowsFetchSpec;
@@ -96,6 +100,11 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
     @Override
     public Mono<Boolean> exists(Predicate predicate) {
         return count(predicate).map(result -> result > 0);
+    }
+
+    @Override
+    public <S extends T, R, P extends Publisher<R>> P findBy(Predicate predicate, Function<FluentQuery.ReactiveFluentQuery<S>, P> queryFunction) {
+        throw new UnsupportedOperationException();
     }
 
     protected SQLQuery<?> createQuery(Predicate... predicate) {
