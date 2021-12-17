@@ -1,5 +1,6 @@
 ### 6.2.0
 
+* upgraded to Spring Boot 2.6.1
 * added `streamAll` to JDBC and JPA modules
 
 ### 6.1.2
