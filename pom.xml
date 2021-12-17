@@ -4,7 +4,7 @@
 
 	<groupId>com.infobip</groupId>
 	<artifactId>infobip-spring-data-querydsl</artifactId>
-	<version>6.1.4-SNAPSHOT</version>
+	<version>6.2.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>Infobip Spring Data Querydsl</name>
