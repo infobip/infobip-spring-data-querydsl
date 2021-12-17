@@ -6,9 +6,12 @@ import com.querydsl.sql.SQLQueryFactory;
 import lombok.AllArgsConstructor;
 import lombok.Value;
 import org.junit.jupiter.api.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZoneOffset;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.infobip.spring.data.jdbc.QPerson.person;
 import static com.infobip.spring.data.jdbc.QPersonSettings.personSettings;
@@ -32,6 +35,24 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
     @AfterAll
     void cleanUpTimeZone() {
         TimeZone.setDefault(oldTimeZone);
+    }
+
+    @Transactional
+    @Test
+    void shouldStreamAll() {
+
+        // given
+        Person johnDoe = givenSavedPerson("John", "Doe");
+        Person johnyRoe = givenSavedPerson("Johny", "Roe");
+        Person janeDoe = givenSavedPerson("Jane", "Doe");
+        List<Person> actual = null;
+
+        // when
+        try (Stream<Person> stream = repository.streamAll()) {
+            actual = stream.collect(Collectors.toList());
+        }
+
+        then(actual).usingRecursiveFieldByFieldElementComparator().containsExactlyInAnyOrder(johnDoe, johnyRoe, janeDoe);
     }
 
     @Test

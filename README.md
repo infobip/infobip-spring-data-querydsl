@@ -22,6 +22,7 @@ Infobip Spring Data Querydsl provides new functionality that enables the user to
         * [Delete](#JDBCDelete)
         * [Transactional support](#JDBCTransactionalSupport)
         * [Embedded support](#JDBCEmbeddedSupport)
+        * [Streaming](#JDBCStreaming)
     * [Extension](#JDBCExtension)
 1. [R2DBC module:](#R2DBC)
    * [Requirements](#R2DBCRequirements)
@@ -46,6 +47,7 @@ Infobip Spring Data Querydsl provides new functionality that enables the user to
         * [List instead of Iterable return type](#JPAListInsteadOfIterableReturnType)
         * [Transactional support](#JPATransactionalSupport)
         * [Stored procedure builder](#JPAStoredProcedureBuilder)
+        * [Streaming](#JPAStreaming)
     * [Extension](#JPAExtension)
 1. [Annotation processor](#AnnotationProcessor)
 1. [Further reading](#FurtherReading)
@@ -205,6 +207,7 @@ public class PersonWithEmbeddedFirstAndLastName {
 }
 ```
 
+
 ```java
 @Value
 public class FirstAndLastName {
@@ -218,6 +221,19 @@ Query (note the missing .personWithEmbeddedFirstAndLastName field in Q instance)
 
 ```java
 repository.findAll(personWithEmbeddedFirstAndLastName.firstName.in("John", "Johny"));
+```
+
+#### <a name="JDBCStreaming"></a> Streaming
+
+`streamAll` is a new method added to repository for more convenient use.
+
+```
+@Transactional
+public void transactionalAnnotatedMethodRequiredForConsumingStream() {
+   try (Stream<Person> stream = repository.streamAll()) {
+      // use stream
+   }
+}
 ```
 
 ### <a name="JDBCExtension"></a> Extension:
@@ -511,6 +527,19 @@ public List<Person> delete(Person personToDelete) {
             builder -> builder.addInParameter(person.firstName, personToDelete.getFirstName())
                               .addInParameter(person.lastName, personToDelete.getLastName())
                               .getResultList());
+}
+```
+
+#### <a name="JPAStreaming"></a> Streaming
+
+`streamAll` is a new method added to repository for more convenient use.
+
+```
+@Transactional
+public void transactionalAnnotatedMethodRequiredForConsumingStream() {
+   try (Stream<Person> stream = repository.streamAll()) {
+      // use stream
+   }
 }
 ```
 

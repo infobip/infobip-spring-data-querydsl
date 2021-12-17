@@ -1,3 +1,7 @@
+### 6.2.0
+
+* added `streamAll` to JDBC and JPA modules
+
 ### 6.1.2
 * fixed sorting issue [#39](/../../issues/39)
 

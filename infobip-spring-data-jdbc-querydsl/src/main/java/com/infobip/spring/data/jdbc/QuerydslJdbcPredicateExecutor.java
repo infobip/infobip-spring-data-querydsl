@@ -14,6 +14,7 @@ import org.springframework.data.jdbc.core.convert.JdbcConverter;
 import org.springframework.data.querydsl.QSort;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.relational.core.mapping.RelationalPersistentEntity;
+import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.jdbc.core.RowMapper;
@@ -26,6 +27,7 @@ import org.springframework.util.Assert;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.function.Function;
 
 public class QuerydslJdbcPredicateExecutor<T> implements QuerydslPredicateExecutor<T> {
 
@@ -113,6 +115,11 @@ public class QuerydslJdbcPredicateExecutor<T> implements QuerydslPredicateExecut
     @Override
     public boolean exists(Predicate predicate) {
         return createQuery(predicate).fetchCount() > 0;
+    }
+
+    @Override
+    public <S extends T, R> R findBy(Predicate predicate, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
+        throw new UnsupportedOperationException();
     }
 
     protected SQLQuery<?> createQuery(Predicate... predicate) {
