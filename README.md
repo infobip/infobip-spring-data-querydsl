@@ -22,6 +22,7 @@ Infobip Spring Data Querydsl provides new functionality that enables the user to
         * [Delete](#JDBCDelete)
         * [Transactional support](#JDBCTransactionalSupport)
         * [Embedded support](#JDBCEmbeddedSupport)
+        * [Streaming](#JDBCStreaming)
     * [Extension](#JDBCExtension)
 1. [R2DBC module:](#R2DBC)
    * [Requirements](#R2DBCRequirements)
@@ -202,6 +203,20 @@ public class PersonWithEmbeddedFirstAndLastName {
    @Embedded(onEmpty = Embedded.OnEmpty.USE_EMPTY)
    private final FirstAndLastName firstAndLastName;
    ...
+}
+```
+
+#### <a name="JDBCStreaming"></a> Streaming
+
+Streaming is nothing new and is built on top of Spring Data infrastructure, 
+but is added as first class citizen method in repository interface that is more convenient to use.
+
+```
+@Transactional
+public void transactionalAnnotatedMethodRequiredForConsumingStream() {
+   try (Stream<Person> stream = repository.streamAll()) {
+      // use stream
+   }
 }
 ```
 
