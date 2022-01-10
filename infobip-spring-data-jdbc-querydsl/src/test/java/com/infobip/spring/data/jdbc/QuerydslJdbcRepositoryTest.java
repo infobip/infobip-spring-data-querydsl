@@ -279,6 +279,22 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
         then(querydslResults).isEqualTo(springDataResults);
     }
 
+    @Transactional
+    @Test
+    void shouldSupportTransactionalAnnotatedTests() {
+        // given
+        Person johnDoe = givenSavedPerson("John", "Doe");
+
+        // when
+        List<Person> actual = repository.query(query -> query
+            .select(repository.entityProjection())
+            .from(person)
+            .fetch());
+
+        // then
+        then(actual).containsOnly(johnDoe);
+    }
+
     @Value
     public static class PersonProjection {
 

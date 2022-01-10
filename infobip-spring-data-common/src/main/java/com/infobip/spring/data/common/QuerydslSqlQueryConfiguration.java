@@ -2,6 +2,7 @@ package com.infobip.spring.data.common;
 
 import com.querydsl.sql.SQLQueryFactory;
 import com.querydsl.sql.SQLTemplates;
+import com.querydsl.sql.spring.SpringConnectionProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.*;
 import org.springframework.data.relational.core.mapping.NamingStrategy;
@@ -28,6 +29,6 @@ public class QuerydslSqlQueryConfiguration {
     @Bean
     public SQLQueryFactory sqlQueryFactory(com.querydsl.sql.Configuration querydslSqlConfiguration,
                                            DataSource dataSource) {
-        return new SQLQueryFactory(querydslSqlConfiguration, dataSource);
+        return new SQLQueryFactory(querydslSqlConfiguration, new SpringConnectionProvider(dataSource));
     }
 }
