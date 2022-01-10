@@ -1,3 +1,8 @@
+### 6.2.1
+
+* fixed jdbc module not reusing connections [#52](/../../issues/52)
+* added spring sql exception translation
+
 ### 6.2.0
 
 * upgraded to Spring Boot 2.6.1
