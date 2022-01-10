@@ -261,6 +261,7 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
                         .isNotInstanceOf(CustomQuerydslJdbcRepository.class);
     }
 
+    @Transactional
     @Test
     void springDataAndQuerydslShouldHandleTimeZoneTheSameForSameTimeZone() {
         // given
