@@ -29,7 +29,7 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.function.Function;
 
-public class QuerydslJdbcPredicateExecutor<T> implements QuerydslPredicateExecutor<T> {
+public class QuerydslJdbcPredicateExecutor<T> implements TransactionalQuerydslPredicateExecutor<T> {
 
     private final RelationalPersistentEntity<T> entity;
     private final JdbcConverter converter;
