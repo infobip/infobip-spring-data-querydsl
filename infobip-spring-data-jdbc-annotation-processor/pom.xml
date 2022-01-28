@@ -12,7 +12,6 @@
 
 	<properties>
 		<!-- DEPENDENCY VERSIONS -->
-		<auto-service.version>1.0-rc6</auto-service.version>
 		<compile-testing.version>0.19</compile-testing.version>
 	</properties>
 
