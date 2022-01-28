@@ -70,6 +70,8 @@
 
 		<infobip-mssql-testcontainers.version>3.3.0</infobip-mssql-testcontainers.version>
 
+		<auto-service.version>1.0.1</auto-service.version>
+
 		<!-- PLUGIN VERSIONS -->
 		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
 		<coveralls-maven-plugin.version>4.3.0</coveralls-maven-plugin.version>
