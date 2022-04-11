@@ -92,13 +92,6 @@
 		<dependencies>
 			<dependency>
 				<groupId>com.querydsl</groupId>
-				<artifactId>querydsl-bom</artifactId>
-				<version>${querydsl.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>com.querydsl</groupId>
 				<artifactId>querydsl-apt</artifactId>
 				<version>${querydsl.version}</version>
 				<classifier>jpa</classifier>
