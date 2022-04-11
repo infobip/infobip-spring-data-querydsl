@@ -1,3 +1,7 @@
+### current snapshot
+
+* upgraded to Spring Boot 2.6.6
+
 ### 6.2.1
 
 * fixed jdbc module not reusing connections [#52](/../../issues/52)
