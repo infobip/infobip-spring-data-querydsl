@@ -557,7 +557,7 @@ Take a look at [extension package in tests](infobip-spring-data-jpa-querydsl/src
 Annotation processor [infobip-spring-data-jdbc-annotation-processor](infobip-spring-data-jdbc-annotation-processor) is used by R2DBC and JDBC modules to generate Querydsl Q classes.
 Without annotation processor this process can be quite cumbersome as connecting to database would be required during the build phase.
 
-Annotation processor generate Q classes for all classes that have `@Id` annotated fields. 
+Annotation processor generates Q classes for all classes that have `@Id` annotated fields. 
 Reason why `@Id` is used and not some custom annotation is because for simplicity of use and implementation and because `@Id` is [required by Spring Data JDBC](https://docs.spring.io/spring-data/jdbc/docs/current/reference/html/#jdbc.entity-persistence.id-generation):
 > Spring Data JDBC uses the ID to identify entities. The ID of an entity must be annotated with Spring Data’s @Id annotation.
 
