@@ -1,13 +1,18 @@
 package com.infobip.spring.data.jpa;
 
-import com.querydsl.core.types.*;
-import com.querydsl.jpa.impl.*;
-import com.querydsl.jpa.sql.JPASQLQuery;
-import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.EntityManager;
 import java.util.function.Function;
 
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.SubQueryExpression;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.querydsl.jpa.impl.JPAUpdateClause;
+import com.querydsl.jpa.sql.JPASQLQuery;
+import org.springframework.transaction.annotation.Transactional;
+
+@Transactional(readOnly = true)
 public class SimpleQuerydslJpaFragment<T> implements QuerydslJpaFragment<T> {
 
     private final EntityPath<T> path;
