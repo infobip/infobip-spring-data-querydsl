@@ -1,6 +1,7 @@
-### current snapshot
+### 6.2.2
 
-* upgraded to Spring Boot 2.6.6
+* removed all `@Transactional(readOnly = true)` from interfaces and added them on concrete classes [#60](/../../issues/60)
+* upgraded to Spring Boot 2.6.7
 
 ### 6.2.1
 
