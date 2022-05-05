@@ -15,9 +15,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.NoRepositoryBean;
-import org.springframework.transaction.annotation.Transactional;
 
-@Transactional(readOnly = true)
 @NoRepositoryBean
 public interface ExtendedQuerydslJpaRepository<T, ID>
         extends JpaRepository<T, ID>, QuerydslPredicateExecutor<T>, QuerydslJpaFragment<T> {

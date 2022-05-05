@@ -1,14 +1,26 @@
 package com.infobip.spring.data.jdbc;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Function;
+
 import com.infobip.spring.data.common.Querydsl;
 import com.querydsl.core.NonUniqueResultException;
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.ConstructorExpression;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.sql.RelationalPath;
 import com.querydsl.sql.SQLQuery;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.dao.support.DataAccessUtils;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jdbc.core.convert.EntityRowMapper;
 import org.springframework.data.jdbc.core.convert.JdbcConverter;
 import org.springframework.data.querydsl.QSort;
@@ -22,14 +34,11 @@ import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.jdbc.support.SQLStateSQLExceptionTranslator;
 import org.springframework.lang.Nullable;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.*;
-import java.util.function.Function;
-
-public class QuerydslJdbcPredicateExecutor<T> implements TransactionalQuerydslPredicateExecutor<T> {
+@Transactional(readOnly = true)
+public class QuerydslJdbcPredicateExecutor<T> implements QuerydslPredicateExecutor<T> {
 
     private final RelationalPersistentEntity<T> entity;
     private final JdbcConverter converter;
