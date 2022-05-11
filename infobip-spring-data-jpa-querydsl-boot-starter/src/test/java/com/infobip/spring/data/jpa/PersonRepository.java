@@ -1,6 +1,4 @@
-package jpa;
-
-import com.infobip.spring.data.jpa.ExtendedQuerydslJpaRepository;
+package com.infobip.spring.data.jpa;
 
 interface PersonRepository extends ExtendedQuerydslJpaRepository<Person, Long> {
 }

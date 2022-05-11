@@ -1,8 +1,11 @@
-package jpa;
-
-import lombok.*;
+package com.infobip.spring.data.jpa;
 
 import javax.persistence.*;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @ToString

@@ -1,4 +1,4 @@
-package jpa;
+package com.infobip.spring.data.jpa;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
