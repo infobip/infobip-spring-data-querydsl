@@ -1,3 +1,7 @@
+### 7.0.0
+
+* upgraded to Spring Boot 2.7.0 (not backwards compatible with previous versions of Spring Data)
+
 ### 6.2.2
 
 * removed all `@Transactional(readOnly = true)` from interfaces and added them on concrete classes [#60](/../../issues/60)
