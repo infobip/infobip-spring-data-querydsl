@@ -15,6 +15,8 @@
  */
 package com.infobip.spring.data.jdbc;
 
+import java.io.Serializable;
+
 import com.querydsl.sql.SQLQueryFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +31,6 @@ import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.util.Assert;
-
-import java.io.Serializable;
 
 public class QuerydslJdbcRepositoryFactoryBean<T extends Repository<S, ID>, S, ID extends Serializable>
         extends JdbcRepositoryFactoryBean<T, S, ID> {
@@ -145,8 +145,12 @@ public class QuerydslJdbcRepositoryFactoryBean<T extends Repository<S, ID>, S, I
 
                                                           SqlGeneratorSource sqlGeneratorSource = new SqlGeneratorSource(this.mappingContext, this.converter,
                                                                                                                          this.dialect);
+                                                          SqlParametersFactory sqlParametersFactory = new SqlParametersFactory(this.mappingContext, this.converter,
+                                                                                                                               this.dialect);
+                                                          InsertStrategyFactory insertStrategyFactory = new InsertStrategyFactory(this.operations,
+                                                                                                                                  new BatchJdbcOperations(this.operations.getJdbcOperations()), this.dialect);
                                                           return new DefaultDataAccessStrategy(sqlGeneratorSource, this.mappingContext, this.converter,
-                                                                                               this.operations);
+                                                                                               this.operations, sqlParametersFactory, insertStrategyFactory);
                                                       });
         }
 
