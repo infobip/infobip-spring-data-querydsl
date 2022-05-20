@@ -1,3 +1,3 @@
 spring:
   datasource:
-    url: jdbc:sqlserver://<host>:<port>;database=InfobipSpringDataJpaQuerydslTest
+    url: jdbc:sqlserver://<host>:<port>;database=InfobipSpringDataJpaQuerydslTest;trustServerCertificate=true

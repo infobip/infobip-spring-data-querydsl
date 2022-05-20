@@ -1,5 +1,11 @@
 package com.infobip.spring.data.common;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+
 import kotlin.jvm.JvmClassMappingKt;
 import kotlin.reflect.KFunction;
 import kotlin.reflect.full.KClasses;
@@ -7,6 +13,7 @@ import kotlin.reflect.jvm.ReflectJvmMapping;
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.data.annotation.PersistenceConstructor;
+import org.springframework.data.mapping.Parameter;
 import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.mapping.PersistentProperty;
 import org.springframework.data.mapping.PreferredConstructor;
@@ -14,10 +21,6 @@ import org.springframework.data.util.ClassTypeInformation;
 import org.springframework.data.util.KotlinReflectionUtils;
 import org.springframework.data.util.TypeInformation;
 import org.springframework.lang.Nullable;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
-import java.util.*;
 
 /**
  * Utility class to find the preferred constructor which is compatible with both Spring Data JDBC and QueryDSL.
@@ -100,7 +103,7 @@ interface PreferredConstructorDiscoverer {
             List<TypeInformation<?>> parameterTypes = typeInformation.getParameterTypes(constructor);
             String[] parameterNames = PARAMETER_NAME_DISCOVERER.getParameterNames(constructor);
 
-            PreferredConstructor.Parameter<Object, P>[] parameters = new PreferredConstructor.Parameter[parameterTypes.size()];
+            Parameter<Object, P>[] parameters = new Parameter[parameterTypes.size()];
             Annotation[][] parameterAnnotations = constructor.getParameterAnnotations();
 
             for (int i = 0; i < parameterTypes.size(); i++) {
@@ -109,7 +112,7 @@ interface PreferredConstructorDiscoverer {
                 TypeInformation<?> type = parameterTypes.get(i);
                 Annotation[] annotations = parameterAnnotations[i];
 
-                parameters[i] = new PreferredConstructor.Parameter(name, type, annotations, entity);
+                parameters[i] = new Parameter(name, type, annotations, entity);
             }
 
             return new PreferredConstructor<>((Constructor<T>) constructor, parameters);
