@@ -1,3 +1,6 @@
+### 7.1.0
+* added generatedAnnotationClass support to annotation processor
+
 ### 7.0.0
 
 * upgraded to Spring Boot 2.7.0 (not backwards compatible with previous versions of Spring Data)
