@@ -7,9 +7,12 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.Generated;
 import com.querydsl.core.types.Path;
-import com.querydsl.core.types.dsl.PathInits;
 
 import com.querydsl.sql.ColumnMetadata;
+import java.sql.Types;
+
+
+
 
 /**
  * QEntityWithMappedCollection is a Querydsl query type for EntityWithMappedCollection
@@ -17,13 +20,11 @@ import com.querydsl.sql.ColumnMetadata;
 @Generated("com.querydsl.sql.codegen.MetaDataSerializer")
 public class QEntityWithMappedCollection extends com.querydsl.sql.RelationalPathBase<EntityWithMappedCollection> {
 
-    private static final long serialVersionUID = 121269028;
+    private static final long serialVersionUID = 94661349;
 
     public static final QEntityWithMappedCollection entityWithMappedCollection = new QEntityWithMappedCollection("EntityWithMappedCollection");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
-
-    public final ListPath<Object, SimplePath<Object>> mappedCollection = this.<Object, SimplePath<Object>>createList("mappedCollection", Object.class, SimplePath.class, PathInits.DIRECT2);
 
     public QEntityWithMappedCollection(String variable) {
         super(EntityWithMappedCollection.class, forVariable(variable), null, "EntityWithMappedCollection");
@@ -52,7 +53,6 @@ public class QEntityWithMappedCollection extends com.querydsl.sql.RelationalPath
 
     public void addMetadata() {
         addMetadata(id, ColumnMetadata.named("Id").withIndex(0));
-        addMetadata(mappedCollection, ColumnMetadata.named("MappedCollection").withIndex(1));
     }
 
 }
