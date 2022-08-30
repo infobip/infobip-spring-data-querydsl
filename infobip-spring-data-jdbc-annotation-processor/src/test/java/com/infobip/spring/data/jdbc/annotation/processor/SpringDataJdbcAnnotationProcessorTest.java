@@ -1,17 +1,19 @@
 package com.infobip.spring.data.jdbc.annotation.processor;
 
-import com.google.testing.compile.Compilation;
-import com.google.testing.compile.JavaFileObjects;
-import org.junit.jupiter.api.Test;
-
-import javax.tools.JavaFileObject;
-import java.net.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import static com.google.testing.compile.CompilationSubject.assertThat;
 import static com.google.testing.compile.Compiler.javac;
 import static org.assertj.core.api.BDDAssertions.then;
+
+import javax.tools.JavaFileObject;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import com.google.testing.compile.Compilation;
+import com.google.testing.compile.JavaFileObjects;
+import org.junit.jupiter.api.Test;
 
 @DefaultSchema("dbo")
 public class SpringDataJdbcAnnotationProcessorTest {
@@ -134,6 +136,18 @@ public class SpringDataJdbcAnnotationProcessorTest {
         // then
         thenShouldGenerateSourceFile(actual, QEntityWithEmbedded.class);
         thenShouldGenerateSourceFile(actual, QEmbeddedClass.class);
+    }
+
+    @Test
+    void shouldIgnoreMappedCollectionAnnotatedFields() {
+        // given
+        JavaFileObject givenSource = givenSource(EntityWithMappedCollection.class);
+
+        // when
+        Compilation actual = whenCompile(givenSource);
+
+        // then
+       thenShouldGenerateSourceFile(actual, QEntityWithMappedCollection.class);
     }
 
     private void thenShouldGenerateSourceFile(Compilation actual, Class<?> typeClass) {

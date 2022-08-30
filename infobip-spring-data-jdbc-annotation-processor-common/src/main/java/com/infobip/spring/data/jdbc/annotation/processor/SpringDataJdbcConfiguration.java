@@ -7,6 +7,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import java.lang.annotation.Annotation;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import com.querydsl.codegen.*;
 import com.querydsl.core.annotations.QueryEntities;
 import com.querydsl.sql.codegen.NamingStrategy;
 import com.querydsl.sql.codegen.SQLCodegenModule;
+import org.springframework.data.relational.core.mapping.MappedCollection;
 
 class SpringDataJdbcConfiguration extends DefaultConfiguration {
 
@@ -39,6 +41,15 @@ class SpringDataJdbcConfiguration extends DefaultConfiguration {
         sqlCodegenModule.bindInstance(CodegenModule.GENERATED_ANNOTATION_CLASS, generatedAnnotationClass);
         sqlCodegenModule.bind(NamingStrategy.class, namingStrategy);
         sqlCodegenModule.bind(TypeMappings.class, typeMappings);
+    }
+
+    @Override
+    public boolean isBlockedField(VariableElement field) {
+        if(field.getAnnotation(MappedCollection.class) != null) {
+            return true;
+        }
+
+        return super.isBlockedField(field);
     }
 
     @Override
