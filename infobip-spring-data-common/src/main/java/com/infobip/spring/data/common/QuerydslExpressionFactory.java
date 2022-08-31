@@ -1,20 +1,26 @@
 package com.infobip.spring.data.common;
 
-import com.google.common.base.CaseFormat;
-import com.querydsl.core.types.*;
-import com.querydsl.sql.RelationalPath;
-import com.querydsl.sql.RelationalPathBase;
-import org.springframework.core.ResolvableType;
-import org.springframework.data.mapping.PreferredConstructor;
-import org.springframework.data.relational.core.mapping.Embedded;
-import org.springframework.util.ReflectionUtils;
-
 import javax.annotation.Nullable;
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Parameter;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import com.google.common.base.CaseFormat;
+import com.querydsl.core.types.ConstructorExpression;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.Projections;
+import com.querydsl.sql.RelationalPath;
+import com.querydsl.sql.RelationalPathBase;
+import org.springframework.core.ResolvableType;
+import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.data.mapping.PreferredConstructor;
+import org.springframework.data.relational.core.mapping.Embedded;
+import org.springframework.data.relational.core.mapping.MappedCollection;
+import org.springframework.util.ReflectionUtils;
 
 public class QuerydslExpressionFactory {
 
@@ -45,25 +51,48 @@ public class QuerydslExpressionFactory {
                 columnNameToExpression,
                 parameters);
 
-        Expression<?>[] expressions = Stream.of(constructor.getParameters())
-                                            .map(Parameter::getName)
-                                            .map(name -> getExpression(columnNameToExpression,
-                                                                       embeddedConstructorParameterNameToPath, name))
-                                            .toArray(Expression[]::new);
+        List<ParameterAndExpressionPair> pairs = Stream.of(constructor.getParameters())
+                                            .map(parameter -> getExpression(type,
+                                                                       columnNameToExpression,
+                                                                       embeddedConstructorParameterNameToPath,
+                                                                       parameter))
+                                            .collect(Collectors.toList());
 
-        return Projections.constructor(type, expressions);
+        Class<?>[] paramTypes = pairs.stream().map(ParameterAndExpressionPair::getParameterType).toArray(Class[]::new);
+        Expression<?>[] expressions = pairs.stream().map(ParameterAndExpressionPair::getExpression).toArray(Expression[]::new);;
+        return Projections.constructor(type, paramTypes, expressions);
     }
 
-    private Expression<?> getExpression(Map<String, Expression<?>> columnNameToPath,
+    private ParameterAndExpressionPair getExpression(Class<?> type,
+                                        Map<String, Expression<?>> columnNameToPath,
                                         Map<String, Expression<?>> embeddedConstructorParameterNameToPath,
-                                        String name) {
-        Expression<?> path = columnNameToPath.get(name);
+                                        Parameter parameter) {
+        Expression<?> path = columnNameToPath.get(parameter.getName());
 
         if (Objects.isNull(path)) {
-            return embeddedConstructorParameterNameToPath.get(name);
+            return resolveNonColumnParameter(type, embeddedConstructorParameterNameToPath, parameter);
         }
 
-        return path;
+        return new ParameterAndExpressionPair(parameter.getType(), path);
+    }
+
+    private static ParameterAndExpressionPair resolveNonColumnParameter(Class<?> type,
+                                                                        Map<String, Expression<?>> embeddedConstructorParameterNameToPath,
+                                                                        Parameter parameter) {
+
+        String name = parameter.getName();
+
+        if (embeddedConstructorParameterNameToPath.containsKey(name)) {
+            return new ParameterAndExpressionPair(parameter.getType(), embeddedConstructorParameterNameToPath.get(name));
+        }
+
+        Field field = ReflectionUtils.findField(type, name);
+
+        if(Objects.nonNull(field) && Objects.nonNull(AnnotationUtils.getAnnotation(field, MappedCollection.class))) {
+            return new ParameterAndExpressionPair(parameter.getType(), null);
+        }
+
+        throw new IllegalArgumentException("Failed to match parameter " + name + " to QClass column for " + type);
     }
 
     private Map<String, Expression<?>> getEmbeddedConstructorParameterNameToPath(Class<?> type,
