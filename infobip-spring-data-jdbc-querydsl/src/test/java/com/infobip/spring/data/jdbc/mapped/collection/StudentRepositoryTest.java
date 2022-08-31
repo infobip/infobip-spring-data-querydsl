@@ -63,6 +63,7 @@ public class StudentRepositoryTest extends TestBase {
                                                           student.name,
                                                           Projections.list(Projections.constructor(StudentCourse.class,
                                                                                                    studentCourse.id,
+                                                                                                   studentCourse.courseId,
                                                                                                    studentCourse.studentId))))
                           .from(student)
                           .innerJoin(studentCourse)
@@ -77,7 +78,7 @@ public class StudentRepositoryTest extends TestBase {
         then(actual).containsExactly(new Student(givenStudent.getId(),
                                                  givenStudent.getName(),
                                                  Collections.singleton(new StudentCourse(givenStudentCourse.getId(),
-                                                                                         null,
+                                                                                         AggregateReference.to(givenCourse.getId()),
                                                                                          givenStudent.getId()))));
     }
 
