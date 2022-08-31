@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 import com.google.common.base.CaseFormat;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.NullExpression;
 import com.querydsl.core.types.Projections;
 import com.querydsl.sql.RelationalPath;
 import com.querydsl.sql.RelationalPathBase;
@@ -89,7 +90,7 @@ public class QuerydslExpressionFactory {
         Field field = ReflectionUtils.findField(type, name);
 
         if(Objects.nonNull(field) && Objects.nonNull(AnnotationUtils.getAnnotation(field, MappedCollection.class))) {
-            return new ParameterAndExpressionPair(parameter.getType(), null);
+            return new ParameterAndExpressionPair(parameter.getType(), new NullExpression<>(parameter.getType()));
         }
 
         throw new IllegalArgumentException("Failed to match parameter " + name + " to QClass column for " + type);
