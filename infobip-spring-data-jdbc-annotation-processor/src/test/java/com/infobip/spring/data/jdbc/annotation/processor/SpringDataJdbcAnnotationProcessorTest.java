@@ -138,18 +138,6 @@ public class SpringDataJdbcAnnotationProcessorTest {
         thenShouldGenerateSourceFile(actual, QEmbeddedClass.class);
     }
 
-    @Test
-    void shouldIgnoreMappedCollectionAnnotatedFields() {
-        // given
-        JavaFileObject givenSource = givenSource(EntityWithMappedCollection.class);
-
-        // when
-        Compilation actual = whenCompile(givenSource);
-
-        // then
-       thenShouldGenerateSourceFile(actual, QEntityWithMappedCollection.class);
-    }
-
     private void thenShouldGenerateSourceFile(Compilation actual, Class<?> typeClass) {
         assertThat(actual).succeeded();
         assertThat(actual)
