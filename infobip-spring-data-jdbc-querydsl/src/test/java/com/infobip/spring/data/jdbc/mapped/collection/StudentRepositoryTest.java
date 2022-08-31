@@ -22,8 +22,7 @@ public class StudentRepositoryTest extends TestBase {
 
         // given
         Course givenCourse = courseRepository.save(new Course(null, "givenCourseName"));
-        Student givenStudent = new Student();
-        givenStudent.name = "givenStudent";
+        Student givenStudent = new Student(null, "givenStudent", null);
         givenStudent.addItem(givenCourse);
         studentRepository.save(givenStudent);
     }
