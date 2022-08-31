@@ -1,11 +1,9 @@
 package com.infobip.spring.data.jdbc.mapped.collection;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Value;
 import org.springframework.data.annotation.Id;
 
-@AllArgsConstructor
-@Data
+@Value
 public class Course {
 
     @Id
