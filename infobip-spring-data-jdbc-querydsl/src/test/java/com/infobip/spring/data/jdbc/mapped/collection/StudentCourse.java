@@ -15,15 +15,14 @@ public class StudentCourse {
 
     Long studentId;
 
+    public StudentCourse(AggregateReference<Course, Long> courseId, Long id, Long studentId) {
+        this(id, courseId, studentId);
+    }
+
     @PersistenceCreator
     public StudentCourse(Long id, AggregateReference<Course, Long> courseId, Long studentId) {
         this.id = id;
         this.courseId = courseId;
         this.studentId = studentId;
     }
-
-    public StudentCourse(Long id, Long studentId) {
-        this(id, null, studentId);
-    }
-
 }

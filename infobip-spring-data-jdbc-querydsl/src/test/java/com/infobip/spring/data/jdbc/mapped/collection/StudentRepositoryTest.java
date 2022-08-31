@@ -61,10 +61,7 @@ public class StudentRepositoryTest extends TestBase {
             query -> query.select(Projections.constructor(Student.class,
                                                           student.id,
                                                           student.name,
-                                                          Projections.list(Projections.constructor(StudentCourse.class,
-                                                                                                   studentCourse.id,
-                                                                                                   studentCourse.courseId,
-                                                                                                   studentCourse.studentId))))
+                                                          Projections.list(studentCourse)))
                           .from(student)
                           .innerJoin(studentCourse)
                           .on(student.id.eq(studentCourse.studentId))
