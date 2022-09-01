@@ -22,6 +22,7 @@ Infobip Spring Data Querydsl provides new functionality that enables the user to
         * [Delete](#JDBCDelete)
         * [Transactional support](#JDBCTransactionalSupport)
         * [Embedded support](#JDBCEmbeddedSupport)
+        * [@MappedCollection](#MappedCollection)
         * [Streaming](#JDBCStreaming)
     * [Extension](#JDBCExtension)
 1. [R2DBC module:](#R2DBC)
@@ -221,6 +222,62 @@ Query (note the missing .personWithEmbeddedFirstAndLastName field in Q instance)
 
 ```java
 repository.findAll(personWithEmbeddedFirstAndLastName.firstName.in("John", "Johny"));
+```
+
+#### <a name="MappedCollection"></a> @MappedCollection support
+
+Model:
+```java
+@Value
+public class Student {
+
+   @Id
+   Long id;
+
+   String name;
+
+   @MappedCollection(idColumn = "StudentId", keyColumn = "CourseId")
+   Set<StudentCourse> courses;
+
+   void addItem(Course course) {
+      StudentCourse studentCourse = new StudentCourse(null, AggregateReference.to(course.getId()), null);
+      courses.add(studentCourse);
+   }
+}
+```
+
+```java
+@Value
+public class Course {
+
+   @Id
+   Long id;
+
+   String name;
+}
+```
+
+```java
+@Value
+public class StudentCourse {
+
+   @Id
+   Long id;
+
+   AggregateReference<Course,Long> courseId;
+
+   Long studentId;
+}
+```
+
+Query:
+
+```java
+List<Student> actual = studentRepository.query(query -> query.select(studentRepository.entityProjection())
+                                                             .from(student)
+                                                             .innerJoin(studentCourse)
+                                                             .on(student.id.eq(studentCourse.studentId))
+                                                             .fetch());
 ```
 
 #### <a name="JDBCStreaming"></a> Streaming

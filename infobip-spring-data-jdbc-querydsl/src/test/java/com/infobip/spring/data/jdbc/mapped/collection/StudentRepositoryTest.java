@@ -56,12 +56,11 @@ public class StudentRepositoryTest extends TestBase {
         Student givenStudent = givenStudentAttendingCourse(givenCourse);
 
         // when
-        List<Student> actual = studentRepository.query(
-            query -> query.select(studentRepository.entityProjection())
-                          .from(student)
-                          .innerJoin(studentCourse)
-                          .on(student.id.eq(studentCourse.studentId))
-                          .fetch());
+        List<Student> actual = studentRepository.query(query -> query.select(studentRepository.entityProjection())
+                                                                     .from(student)
+                                                                     .innerJoin(studentCourse)
+                                                                     .on(student.id.eq(studentCourse.studentId))
+                                                                     .fetch());
 
         // then
         StudentCourse givenStudentCourse = givenStudent.getCourses()
