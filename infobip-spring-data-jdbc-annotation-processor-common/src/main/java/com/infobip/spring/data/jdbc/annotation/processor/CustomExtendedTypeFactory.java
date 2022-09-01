@@ -1,18 +1,10 @@
 package com.infobip.spring.data.jdbc.annotation.processor;
 
-import com.google.common.base.CaseFormat;
-import com.querydsl.apt.Configuration;
-import com.querydsl.apt.ExtendedTypeFactory;
-import com.querydsl.codegen.*;
-import com.querydsl.codegen.utils.model.Type;
-import com.querydsl.codegen.utils.model.TypeCategory;
-import com.querydsl.sql.ColumnMetadata;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
-import javax.lang.model.element.*;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
@@ -22,6 +14,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.google.common.base.CaseFormat;
+import com.querydsl.apt.Configuration;
+import com.querydsl.apt.ExtendedTypeFactory;
+import com.querydsl.codegen.EntityType;
+import com.querydsl.codegen.Property;
+import com.querydsl.codegen.QueryTypeFactory;
+import com.querydsl.codegen.TypeMappings;
+import com.querydsl.codegen.utils.model.Type;
+import com.querydsl.codegen.utils.model.TypeCategory;
+import org.springframework.data.relational.core.mapping.Table;
+
 class CustomExtendedTypeFactory extends ExtendedTypeFactory {
 
     public static final String IS_EMBEDDED_DATA_KEY = "isEmbedded";
@@ -30,7 +33,6 @@ class CustomExtendedTypeFactory extends ExtendedTypeFactory {
     private final Elements elements;
     private final String defaultSchema;
     private final CaseFormat tableCaseFormat;
-    private final CaseFormat columnCaseFormat;
     private final Types types;
 
     public CustomExtendedTypeFactory(RoundEnvironment roundEnv,
@@ -40,15 +42,13 @@ class CustomExtendedTypeFactory extends ExtendedTypeFactory {
                                      QueryTypeFactory queryTypeFactory,
                                      Configuration configuration,
                                      Elements elements,
-                                     CaseFormat tableCaseFormat,
-                                     CaseFormat columnCaseFormat) {
+                                     CaseFormat tableCaseFormat) {
         super(env, annotations, typeMappings, queryTypeFactory, configuration.getVariableNameFunction());
         this.types = env.getTypeUtils();
         this.configuration = configuration;
         this.elements = elements;
         this.defaultSchema = getDefaultSchema(roundEnv);
         this.tableCaseFormat = tableCaseFormat;
-        this.columnCaseFormat = columnCaseFormat;
     }
 
     @Override
@@ -117,16 +117,12 @@ class CustomExtendedTypeFactory extends ExtendedTypeFactory {
             .forEach(property -> addMetaData(element, counter, property));
     }
 
-    private Object addMetaData(Element element, AtomicInteger counter,
+    private void addMetaData(Element element, AtomicInteger counter,
                                Property property) {
 
-        Map<Object, Object> data = property.getData();
         if (Embeddeds.isEmbedded(configuration, element, property)) {
-            data.put(IS_EMBEDDED_DATA_KEY, true);
+            property.getData().put(IS_EMBEDDED_DATA_KEY, true);
         }
-
-        return data.put("COLUMN", ColumnMetadata.named(getColumnName(property))
-                                                .withIndex(counter.getAndIncrement()));
     }
 
     protected Optional<String> getSchema(Element element) {
@@ -147,19 +143,6 @@ class CustomExtendedTypeFactory extends ExtendedTypeFactory {
                                            .getAnnotation(Table.class))
                        .map(Table::value)
                        .orElse(tableName);
-    }
-
-    protected String getColumnName(Property property) {
-        TypeElement parentType = elements.getTypeElement(property.getDeclaringType().getFullName());
-        return parentType.getEnclosedElements()
-                         .stream()
-                         .filter(element -> element instanceof VariableElement)
-                         .map(element -> (VariableElement) element)
-                         .filter(element -> element.getSimpleName().toString().equals(property.getName()))
-                         .filter(element -> element.getAnnotation(Column.class) != null)
-                         .map(element -> element.getAnnotation(Column.class).value())
-                         .findAny()
-                         .orElseGet(() -> CaseFormat.LOWER_CAMEL.to(columnCaseFormat, property.getName()));
     }
 
     private Stream<? extends Element> getFields(Element element) {

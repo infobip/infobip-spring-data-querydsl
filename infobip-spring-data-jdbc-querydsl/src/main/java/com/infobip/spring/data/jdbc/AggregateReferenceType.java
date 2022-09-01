@@ -1,0 +1,41 @@
+package com.infobip.spring.data.jdbc;
+
+import javax.annotation.Nullable;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.Optional;
+
+import com.querydsl.sql.types.Type;
+import org.springframework.data.jdbc.core.mapping.AggregateReference;
+
+public class AggregateReferenceType implements Type<AggregateReference> {
+
+    @Override
+    public int[] getSQLTypes() {
+        return new int[]{ Types.BIGINT };
+    }
+
+    @Override
+    @Nullable
+    public String getLiteral(@Nullable AggregateReference value) {
+        return Optional.ofNullable(value).map(AggregateReference::getId).map(Object::toString).orElse(null);
+    }
+
+    @Override
+    public Class<AggregateReference> getReturnedClass() {
+        return AggregateReference.class;
+    }
+
+    @Override
+    public AggregateReference getValue(ResultSet rs, int startIndex) throws SQLException {
+        return AggregateReference.to(rs.getObject(startIndex));
+    }
+
+    @Override
+    public void setValue(PreparedStatement st, int startIndex, AggregateReference value) throws SQLException {
+        st.setObject(startIndex, value.getId());
+    }
+
+}

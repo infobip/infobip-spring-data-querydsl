@@ -7,15 +7,18 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import java.lang.annotation.Annotation;
 import java.util.List;
 
+import com.google.common.base.CaseFormat;
 import com.querydsl.apt.DefaultConfiguration;
 import com.querydsl.apt.VisitorConfig;
 import com.querydsl.codegen.*;
 import com.querydsl.core.annotations.QueryEntities;
 import com.querydsl.sql.codegen.NamingStrategy;
 import com.querydsl.sql.codegen.SQLCodegenModule;
+import org.springframework.data.relational.core.mapping.MappedCollection;
 
 class SpringDataJdbcConfiguration extends DefaultConfiguration {
 
@@ -23,6 +26,7 @@ class SpringDataJdbcConfiguration extends DefaultConfiguration {
 
     public SpringDataJdbcConfiguration(RoundEnvironment roundEnv,
                                        ProcessingEnvironment processingEnv,
+                                       CaseFormat columnCaseFormat,
                                        Class<? extends Annotation> entityAnn,
                                        Class<? extends Annotation> superTypeAnn,
                                        Class<? extends Annotation> embeddableAnn,
@@ -39,6 +43,18 @@ class SpringDataJdbcConfiguration extends DefaultConfiguration {
         sqlCodegenModule.bindInstance(CodegenModule.GENERATED_ANNOTATION_CLASS, generatedAnnotationClass);
         sqlCodegenModule.bind(NamingStrategy.class, namingStrategy);
         sqlCodegenModule.bind(TypeMappings.class, typeMappings);
+        sqlCodegenModule.bind(ProcessingEnvironment.class, processingEnv);
+        sqlCodegenModule.bind(CaseFormat.class, columnCaseFormat);
+        sqlCodegenModule.bind(Serializer.class, CustomMetaDataSerializer.class);
+    }
+
+    @Override
+    public boolean isBlockedField(VariableElement field) {
+        if(field.getAnnotation(MappedCollection.class) != null) {
+            return true;
+        }
+
+        return super.isBlockedField(field);
     }
 
     @Override

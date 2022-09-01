@@ -1,23 +1,28 @@
 package com.infobip.spring.data.jdbc.annotation.processor;
 
+import javax.annotation.processing.RoundEnvironment;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.util.ElementFilter;
+import javax.lang.model.util.Types;
+import java.lang.annotation.Annotation;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableSet;
-import com.querydsl.apt.*;
+import com.querydsl.apt.AbstractQuerydslProcessor;
+import com.querydsl.apt.Configuration;
+import com.querydsl.apt.TypeElementHandler;
 import com.querydsl.codegen.*;
 import com.querydsl.sql.codegen.NamingStrategy;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Embedded;
-
-import javax.annotation.processing.RoundEnvironment;
-import javax.lang.model.element.*;
-import javax.lang.model.util.ElementFilter;
-import javax.lang.model.util.Types;
-import java.lang.annotation.Annotation;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public abstract class SpringDataJdbcAnnotationProcessorBase extends AbstractQuerydslProcessor {
 
@@ -85,6 +90,7 @@ public abstract class SpringDataJdbcAnnotationProcessorBase extends AbstractQuer
         codegenModule.bind(QueryTypeFactory.class, new QueryTypeFactoryImpl("Q", "", ""));
         SpringDataJdbcConfiguration springDataJdbcConfiguration = new SpringDataJdbcConfiguration(roundEnv,
                                                                                                   processingEnv,
+                                                                                                  projectColumnCaseFormat,
                                                                                                   entity,
                                                                                                   null,
                                                                                                   null,
@@ -115,8 +121,7 @@ public abstract class SpringDataJdbcAnnotationProcessorBase extends AbstractQuer
                                                                                             queryTypeFactory,
                                                                                             conf,
                                                                                             processingEnv.getElementUtils(),
-                                                                                            projectTableCaseFormat,
-                                                                                            projectColumnCaseFormat);
+                                                                                            projectTableCaseFormat);
         this.typeFactory = customExtendedTypeFactory;
         return customExtendedTypeFactory;
     }
