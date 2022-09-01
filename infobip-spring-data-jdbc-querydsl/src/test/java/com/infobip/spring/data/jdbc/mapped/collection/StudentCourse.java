@@ -13,10 +13,4 @@ public class StudentCourse {
     AggregateReference<Course,Long> courseId;
 
     Long studentId;
-
-    public StudentCourse(Long id, AggregateReference<Course, Long> courseId, Long studentId) {
-        this.id = id;
-        this.courseId = courseId;
-        this.studentId = studentId;
-    }
 }
