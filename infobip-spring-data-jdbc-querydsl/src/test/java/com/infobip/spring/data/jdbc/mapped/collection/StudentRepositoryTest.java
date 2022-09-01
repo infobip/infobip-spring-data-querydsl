@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 
 import com.infobip.spring.data.jdbc.TestBase;
-import com.querydsl.core.types.Projections;
 import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -58,10 +57,7 @@ public class StudentRepositoryTest extends TestBase {
 
         // when
         List<Student> actual = studentRepository.query(
-            query -> query.select(Projections.constructor(Student.class,
-                                                          student.id,
-                                                          student.name,
-                                                          Projections.list(studentCourse)))
+            query -> query.select(studentRepository.entityProjection())
                           .from(student)
                           .innerJoin(studentCourse)
                           .on(student.id.eq(studentCourse.studentId))

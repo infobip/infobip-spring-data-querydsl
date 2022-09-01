@@ -12,7 +12,6 @@ import java.util.stream.Stream;
 import com.google.common.base.CaseFormat;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.NullExpression;
 import com.querydsl.core.types.Projections;
 import com.querydsl.sql.RelationalPath;
 import com.querydsl.sql.RelationalPathBase;
@@ -36,38 +35,39 @@ public class QuerydslExpressionFactory {
 
         if (constructor == null) {
             throw new IllegalArgumentException(
-                    "Could not discover preferred constructor for " + type);
+                "Could not discover preferred constructor for " + type);
         }
 
         Map<String, Expression<?>> columnNameToExpression = pathBase.getColumns()
                                                                     .stream()
                                                                     .collect(Collectors.toMap(
-                                                                            column -> column.getMetadata().getName(),
-                                                                            Function.identity()));
+                                                                        column -> column.getMetadata().getName(),
+                                                                        Function.identity()));
         Parameter[] parameters = constructor.getParameters();
 
         Map<String, Expression<?>> embeddedConstructorParameterNameToPath = getEmbeddedConstructorParameterNameToPath(
-                type,
-                pathBase,
-                columnNameToExpression,
-                parameters);
+            type,
+            pathBase,
+            columnNameToExpression,
+            parameters);
 
         List<ParameterAndExpressionPair> pairs = Stream.of(constructor.getParameters())
-                                            .map(parameter -> getExpression(type,
-                                                                       columnNameToExpression,
-                                                                       embeddedConstructorParameterNameToPath,
-                                                                       parameter))
-                                            .collect(Collectors.toList());
+                                                       .map(parameter -> getExpression(type,
+                                                                                       columnNameToExpression,
+                                                                                       embeddedConstructorParameterNameToPath,
+                                                                                       parameter))
+                                                       .collect(Collectors.toList());
 
         Class<?>[] paramTypes = pairs.stream().map(ParameterAndExpressionPair::getParameterType).toArray(Class[]::new);
-        Expression<?>[] expressions = pairs.stream().map(ParameterAndExpressionPair::getExpression).toArray(Expression[]::new);;
+        Expression<?>[] expressions = pairs.stream().map(ParameterAndExpressionPair::getExpression).toArray(Expression[]::new);
+        ;
         return Projections.constructor(type, paramTypes, expressions);
     }
 
     private ParameterAndExpressionPair getExpression(Class<?> type,
-                                        Map<String, Expression<?>> columnNameToPath,
-                                        Map<String, Expression<?>> embeddedConstructorParameterNameToPath,
-                                        Parameter parameter) {
+                                                     Map<String, Expression<?>> columnNameToPath,
+                                                     Map<String, Expression<?>> embeddedConstructorParameterNameToPath,
+                                                     Parameter parameter) {
         Expression<?> path = columnNameToPath.get(parameter.getName());
 
         if (Objects.isNull(path)) {
@@ -77,9 +77,9 @@ public class QuerydslExpressionFactory {
         return new ParameterAndExpressionPair(parameter.getType(), path);
     }
 
-    private static ParameterAndExpressionPair resolveNonColumnParameter(Class<?> type,
-                                                                        Map<String, Expression<?>> embeddedConstructorParameterNameToPath,
-                                                                        Parameter parameter) {
+    private ParameterAndExpressionPair resolveNonColumnParameter(Class<?> type,
+                                                                 Map<String, Expression<?>> embeddedConstructorParameterNameToPath,
+                                                                 Parameter parameter) {
 
         String name = parameter.getName();
 
@@ -89,11 +89,24 @@ public class QuerydslExpressionFactory {
 
         Field field = ReflectionUtils.findField(type, name);
 
-        if(Objects.nonNull(field) && Objects.nonNull(AnnotationUtils.getAnnotation(field, MappedCollection.class))) {
-            return new ParameterAndExpressionPair(parameter.getType(), new NullExpression<>(parameter.getType()));
+        if (Objects.nonNull(field) && Objects.nonNull(AnnotationUtils.getAnnotation(field, MappedCollection.class))) {
+            return resolveMappedCollectionParameter(parameter);
         }
 
         throw new IllegalArgumentException("Failed to match parameter " + name + " to QClass column for " + type);
+    }
+
+    private ParameterAndExpressionPair resolveMappedCollectionParameter(Parameter parameter) {
+        Class<?> collectionType = parameter.getType();
+
+        if (Set.class.isAssignableFrom(collectionType)) {
+            ResolvableType resolvableType = ResolvableType.forType(parameter.getParameterizedType()).as(Set.class).getGeneric(0);
+            Class<?> target = Objects.requireNonNull(resolvableType.resolve());
+            Expression<?> qClass = getRelationalPathBaseFromQueryClass(getQueryClass(target));
+            return new ParameterAndExpressionPair(collectionType, new QSet(qClass));
+        }
+
+        throw new IllegalArgumentException("Unsupported collection type " + collectionType);
     }
 
     private Map<String, Expression<?>> getEmbeddedConstructorParameterNameToPath(Class<?> type,
@@ -105,9 +118,9 @@ public class QuerydslExpressionFactory {
               .filter(parameter -> !columnNameToColumn.containsKey(parameter.getName()))
               .forEach(parameter -> {
                   getEmbeddedType(type, parameter).map(
-                                                          embeddedType -> getConstructorExpression(embeddedType, pathBase))
+                                                      embeddedType -> getConstructorExpression(embeddedType, pathBase))
                                                   .ifPresent(path -> embeddedConstructorParameterNameToPath.put(
-                                                          parameter.getName(), path));
+                                                      parameter.getName(), path));
               });
         return embeddedConstructorParameterNameToPath;
     }
@@ -163,4 +176,5 @@ public class QuerydslExpressionFactory {
 
         return (RelationalPathBase<?>) ReflectionUtils.getField(field, null);
     }
+
 }
