@@ -17,18 +17,18 @@ import java.sql.Types;
 /**
  * QPascalCaseFooBar is a Querydsl query type for PascalCaseFooBar
  */
-@Generated("com.querydsl.sql.codegen.MetaDataSerializer")
+@Generated("com.infobip.spring.data.jdbc.annotation.processor.CustomMetaDataSerializer")
 public class QPascalCaseFooBar extends com.querydsl.sql.RelationalPathBase<PascalCaseFooBar> {
 
     private static final long serialVersionUID = -1549108268;
 
     public static final QPascalCaseFooBar pascalCaseFooBar = new QPascalCaseFooBar("PascalCaseFooBar");
 
-    public final StringPath bar = createString("bar");
+    public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final StringPath foo = createString("foo");
 
-    public final NumberPath<Long> id = createNumber("id", Long.class);
+    public final StringPath bar = createString("bar");
 
     public QPascalCaseFooBar(String variable) {
         super(PascalCaseFooBar.class, forVariable(variable), "dbo", "PascalCaseFooBar");
@@ -56,9 +56,9 @@ public class QPascalCaseFooBar extends com.querydsl.sql.RelationalPathBase<Pasca
     }
 
     public void addMetadata() {
-        addMetadata(bar, ColumnMetadata.named("Bar").withIndex(0));
+        addMetadata(id, ColumnMetadata.named("Id").withIndex(0));
         addMetadata(foo, ColumnMetadata.named("Foo").withIndex(1));
-        addMetadata(id, ColumnMetadata.named("Id").withIndex(2));
+        addMetadata(bar, ColumnMetadata.named("Bar").withIndex(2));
     }
 
 }

@@ -17,16 +17,16 @@ import java.sql.Types;
 /**
  * QLowerUnderScoreTableFooBar is a Querydsl query type for LowerUnderScoreTableFooBar
  */
-@Generated("com.querydsl.sql.codegen.MetaDataSerializer")
+@Generated("com.infobip.spring.data.jdbc.annotation.processor.CustomMetaDataSerializer")
 public class QLowerUnderScoreTableFooBar extends com.querydsl.sql.RelationalPathBase<LowerUnderScoreTableFooBar> {
 
     private static final long serialVersionUID = 425210795;
 
     public static final QLowerUnderScoreTableFooBar lowerUnderScoreTableFooBar = new QLowerUnderScoreTableFooBar("LowerUnderScoreTableFooBar");
 
-    public final StringPath fooBar = createString("fooBar");
-
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    public final StringPath fooBar = createString("fooBar");
 
     public QLowerUnderScoreTableFooBar(String variable) {
         super(LowerUnderScoreTableFooBar.class, forVariable(variable), "dbo", "lower_under_score_table_foo_bar");
@@ -54,9 +54,8 @@ public class QLowerUnderScoreTableFooBar extends com.querydsl.sql.RelationalPath
     }
 
     public void addMetadata() {
-        addMetadata(fooBar, ColumnMetadata.named("FooBar").withIndex(0));
-        addMetadata(id, ColumnMetadata.named("Id").withIndex(1));
+        addMetadata(id, ColumnMetadata.named("Id").withIndex(0));
+        addMetadata(fooBar, ColumnMetadata.named("FooBar").withIndex(1));
     }
 
 }
-

@@ -17,7 +17,7 @@ import java.sql.Types;
 /**
  * QEntityWithSchema is a Querydsl query type for EntityWithSchema
  */
-@Generated("com.querydsl.sql.codegen.MetaDataSerializer")
+@Generated("com.infobip.spring.data.jdbc.annotation.processor.CustomMetaDataSerializer")
 public class QEntityWithSchema extends com.querydsl.sql.RelationalPathBase<EntityWithSchema> {
 
     private static final long serialVersionUID = -247591851;

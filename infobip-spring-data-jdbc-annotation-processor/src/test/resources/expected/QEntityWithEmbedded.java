@@ -17,16 +17,16 @@ import java.sql.Types;
 /**
  * QEntityWithEmbedded is a Querydsl query type for EntityWithEmbedded
  */
-@Generated("com.querydsl.sql.codegen.MetaDataSerializer")
+@Generated("com.infobip.spring.data.jdbc.annotation.processor.CustomMetaDataSerializer")
 public class QEntityWithEmbedded extends com.querydsl.sql.RelationalPathBase<EntityWithEmbedded> {
 
     private static final long serialVersionUID = -229043138;
 
     public static final QEntityWithEmbedded entityWithEmbedded = new QEntityWithEmbedded("EntityWithEmbedded");
 
-    public final StringPath foo = createString("foo");
-
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    public final StringPath foo = createString("foo");
 
     public QEntityWithEmbedded(String variable) {
         super(EntityWithEmbedded.class, forVariable(variable), "foo", "EntityWithEmbedded");
@@ -54,8 +54,8 @@ public class QEntityWithEmbedded extends com.querydsl.sql.RelationalPathBase<Ent
     }
 
     public void addMetadata() {
-        addMetadata(foo, ColumnMetadata.named("Foo").withIndex(0));
-        addMetadata(id, ColumnMetadata.named("Id").withIndex(1));
+        addMetadata(id, ColumnMetadata.named("Id").withIndex(0));
+        addMetadata(foo, ColumnMetadata.named("Foo").withIndex(1));
     }
 
 }

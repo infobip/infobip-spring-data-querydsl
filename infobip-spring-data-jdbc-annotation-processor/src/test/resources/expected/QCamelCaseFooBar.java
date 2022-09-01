@@ -17,18 +17,18 @@ import java.sql.Types;
 /**
  * QCamelCaseFooBar is a Querydsl query type for CamelCaseFooBar
  */
-@Generated("com.querydsl.sql.codegen.MetaDataSerializer")
+@Generated("com.infobip.spring.data.jdbc.annotation.processor.CustomMetaDataSerializer")
 public class QCamelCaseFooBar extends com.querydsl.sql.RelationalPathBase<CamelCaseFooBar> {
 
     private static final long serialVersionUID = -903696728;
 
     public static final QCamelCaseFooBar camelCaseFooBar = new QCamelCaseFooBar("CamelCaseFooBar");
 
-    public final StringPath bar = createString("bar");
+    public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final StringPath foo = createString("foo");
 
-    public final NumberPath<Long> id = createNumber("id", Long.class);
+    public final StringPath bar = createString("bar");
 
     public QCamelCaseFooBar(String variable) {
         super(CamelCaseFooBar.class, forVariable(variable), "dbo", "camelCaseFooBar");
@@ -56,9 +56,9 @@ public class QCamelCaseFooBar extends com.querydsl.sql.RelationalPathBase<CamelC
     }
 
     public void addMetadata() {
-        addMetadata(bar, ColumnMetadata.named("bar").withIndex(0));
+        addMetadata(id, ColumnMetadata.named("id").withIndex(0));
         addMetadata(foo, ColumnMetadata.named("foo").withIndex(1));
-        addMetadata(id, ColumnMetadata.named("id").withIndex(2));
+        addMetadata(bar, ColumnMetadata.named("bar").withIndex(2));
     }
 
 }

@@ -17,7 +17,7 @@ import java.sql.Types;
 /**
  * QEntityWithMappedCollection is a Querydsl query type for EntityWithMappedCollection
  */
-@Generated("com.querydsl.sql.codegen.MetaDataSerializer")
+@Generated("com.infobip.spring.data.jdbc.annotation.processor.CustomMetaDataSerializer")
 public class QEntityWithMappedCollection extends com.querydsl.sql.RelationalPathBase<EntityWithMappedCollection> {
 
     private static final long serialVersionUID = 94661349;
