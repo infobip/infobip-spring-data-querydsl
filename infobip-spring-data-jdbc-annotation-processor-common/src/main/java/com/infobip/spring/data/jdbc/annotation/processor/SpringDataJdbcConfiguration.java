@@ -11,6 +11,7 @@ import javax.lang.model.element.VariableElement;
 import java.lang.annotation.Annotation;
 import java.util.List;
 
+import com.google.common.base.CaseFormat;
 import com.querydsl.apt.DefaultConfiguration;
 import com.querydsl.apt.VisitorConfig;
 import com.querydsl.codegen.*;
@@ -25,6 +26,7 @@ class SpringDataJdbcConfiguration extends DefaultConfiguration {
 
     public SpringDataJdbcConfiguration(RoundEnvironment roundEnv,
                                        ProcessingEnvironment processingEnv,
+                                       CaseFormat columnCaseFormat,
                                        Class<? extends Annotation> entityAnn,
                                        Class<? extends Annotation> superTypeAnn,
                                        Class<? extends Annotation> embeddableAnn,
@@ -41,6 +43,9 @@ class SpringDataJdbcConfiguration extends DefaultConfiguration {
         sqlCodegenModule.bindInstance(CodegenModule.GENERATED_ANNOTATION_CLASS, generatedAnnotationClass);
         sqlCodegenModule.bind(NamingStrategy.class, namingStrategy);
         sqlCodegenModule.bind(TypeMappings.class, typeMappings);
+        sqlCodegenModule.bind(ProcessingEnvironment.class, processingEnv);
+        sqlCodegenModule.bind(CaseFormat.class, columnCaseFormat);
+        sqlCodegenModule.bind(Serializer.class, CustomMetaDataSerializer.class);
     }
 
     @Override
