@@ -15,8 +15,16 @@
  */
 package com.infobip.spring.data.r2dbc;
 
-import com.querydsl.core.types.*;
-import com.querydsl.sql.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import com.querydsl.core.types.ConstructorExpression;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.sql.RelationalPath;
+import com.querydsl.sql.SQLBindings;
+import com.querydsl.sql.SQLQuery;
+import com.querydsl.sql.SQLQueryFactory;
 import com.querydsl.sql.dml.SQLDeleteClause;
 import com.querydsl.sql.dml.SQLUpdateClause;
 import org.springframework.data.r2dbc.convert.EntityRowMapper;
@@ -27,9 +35,6 @@ import org.springframework.transaction.ReactiveTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Mono;
-
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> {
 
@@ -62,7 +67,7 @@ public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> 
 
     @Override
     @Transactional
-    public Mono<Integer> update(Function<SQLUpdateClause, SQLUpdateClause> update) {
+    public Mono<Long> update(Function<SQLUpdateClause, SQLUpdateClause> update) {
         SQLUpdateClause clause = sqlQueryFactory.update(path);
         clause.setUseLiterals(true);
         String sql = update.apply(clause).getSQL()
@@ -77,7 +82,7 @@ public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> 
 
     @Override
     @Transactional
-    public Mono<Integer> deleteWhere(Predicate predicate) {
+    public Mono<Long> deleteWhere(Predicate predicate) {
         SQLDeleteClause clause = sqlQueryFactory.delete(path)
                                                 .where(predicate);
         clause.setUseLiterals(true);
