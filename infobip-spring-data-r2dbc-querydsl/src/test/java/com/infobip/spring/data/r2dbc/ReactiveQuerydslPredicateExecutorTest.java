@@ -1,17 +1,15 @@
 package com.infobip.spring.data.r2dbc;
 
+import static com.infobip.spring.data.r2dbc.QPerson.person;
+
+import java.util.function.Predicate;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.querydsl.ReactiveQuerydslPredicateExecutor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static com.infobip.spring.data.r2dbc.QPerson.person;
 
 public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
 
