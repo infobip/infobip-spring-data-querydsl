@@ -1,6 +1,5 @@
 package com.infobip.spring.data.common;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
@@ -133,7 +132,6 @@ public class QuerydslExpressionFactory {
                      .findAny();
     }
 
-    @Nullable
     private Constructor<?> getConstructor(Class<?> type) {
         PreferredConstructor<?, ?> preferredConstructor = PreferredConstructorDiscoverer.discover(type);
 

@@ -15,7 +15,11 @@
  */
 package com.infobip.spring.data.jpa;
 
+import java.io.Serializable;
+
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.query.EscapeCharacter;
@@ -26,10 +30,6 @@ import org.springframework.data.querydsl.SimpleEntityPathResolver;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
 import org.springframework.lang.Nullable;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.io.Serializable;
 
 public class ExtendedQuerydslJpaRepositoryFactoryBean<T extends Repository<S, ID>, S, ID extends Serializable>
         extends JpaRepositoryFactoryBean<T, S, ID> {

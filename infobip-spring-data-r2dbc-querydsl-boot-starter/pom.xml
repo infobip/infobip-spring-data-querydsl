@@ -21,6 +21,7 @@
         <dependency>
             <groupId>io.r2dbc</groupId>
             <artifactId>r2dbc-mssql</artifactId>
+            <version>0.9.0.RELEASE</version>
             <scope>test</scope>
         </dependency>
 

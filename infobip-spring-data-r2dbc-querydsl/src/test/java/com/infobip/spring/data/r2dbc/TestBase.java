@@ -1,5 +1,12 @@
 package com.infobip.spring.data.r2dbc;
 
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
+
+import java.time.Duration;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,14 +15,6 @@ import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.test.context.TestConstructor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import javax.annotation.Nullable;
-import java.time.Duration;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @TestInstance(PER_CLASS)
@@ -33,12 +32,10 @@ public abstract class TestBase {
                   .collectList());
     }
 
-    @Nullable
     private <T> T block(Mono<T> mono) {
         return mono.block(Duration.ofSeconds(10));
     }
 
-    @Nullable
     <T> List<T> block(Flux<T> flux) {
         return block(flux.collectList());
     }

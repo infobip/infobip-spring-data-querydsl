@@ -1,9 +1,13 @@
 package com.infobip.spring.data.jpa;
 
-import com.querydsl.core.types.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
-import javax.persistence.*;
-import java.util.*;
+import com.querydsl.core.types.Path;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.ParameterMode;
+import jakarta.persistence.StoredProcedureQuery;
 
 public class StoredProcedureQueryBuilder {
 

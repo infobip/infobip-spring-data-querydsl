@@ -5,10 +5,11 @@ import com.querydsl.jpa.impl.JPAProvider;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.querydsl.jpa.sql.JPASQLQuery;
 import com.querydsl.sql.SQLTemplates;
+import jakarta.persistence.EntityManager;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.context.annotation.*;
-
-import javax.persistence.EntityManager;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 @Import(InfobipSpringDataCommonConfiguration.class)
 @Configuration

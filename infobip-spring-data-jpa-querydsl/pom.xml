@@ -19,7 +19,7 @@
 		<dependency>
 			<groupId>com.querydsl</groupId>
 			<artifactId>querydsl-apt</artifactId>
-			<classifier>jpa</classifier>
+<!--			<classifier>jpa</classifier>-->
 			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.jdt</groupId>
@@ -41,6 +41,8 @@
 		<dependency>
 			<groupId>com.querydsl</groupId>
 			<artifactId>querydsl-jpa</artifactId>
+			<version>${querydsl.version}</version>
+			<classifier>jakarta</classifier>
 		</dependency>
 
 		<dependency>

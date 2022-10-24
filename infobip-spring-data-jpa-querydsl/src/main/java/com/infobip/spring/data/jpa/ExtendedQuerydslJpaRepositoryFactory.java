@@ -1,16 +1,16 @@
 package com.infobip.spring.data.jpa;
 
+import java.io.Serializable;
+
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 import org.springframework.data.querydsl.EntityPathResolver;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.core.support.RepositoryComposition;
 import org.springframework.data.repository.core.support.RepositoryFragment;
-
-import javax.persistence.EntityManager;
-import java.io.Serializable;
 
 public class ExtendedQuerydslJpaRepositoryFactory extends JpaRepositoryFactory {
 

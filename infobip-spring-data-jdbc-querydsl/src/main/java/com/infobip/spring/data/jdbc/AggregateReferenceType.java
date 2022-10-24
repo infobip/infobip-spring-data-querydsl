@@ -1,6 +1,5 @@
 package com.infobip.spring.data.jdbc;
 
-import javax.annotation.Nullable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,8 +17,7 @@ public class AggregateReferenceType implements Type<AggregateReference> {
     }
 
     @Override
-    @Nullable
-    public String getLiteral(@Nullable AggregateReference value) {
+    public String getLiteral(AggregateReference value) {
         return Optional.ofNullable(value).map(AggregateReference::getId).map(Object::toString).orElse(null);
     }
 
