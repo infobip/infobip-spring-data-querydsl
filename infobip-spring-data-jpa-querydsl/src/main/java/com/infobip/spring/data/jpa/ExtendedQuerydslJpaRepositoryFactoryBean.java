@@ -78,10 +78,10 @@ public class ExtendedQuerydslJpaRepositoryFactoryBean<T extends Repository<S, ID
     @Override
     protected RepositoryFactorySupport doCreateRepositoryFactory() {
 
-        ExtendedQuerydslJpaRepositoryFactory factory = new ExtendedQuerydslJpaRepositoryFactory(entityManager,
-                                                                                                jpaSqlQueryFactory,
-                                                                                                entityPathResolver,
-                                                                                                jpaQueryFactory);
+        var factory = new ExtendedQuerydslJpaRepositoryFactory(entityManager,
+                                                               jpaSqlQueryFactory,
+                                                               entityPathResolver,
+                                                               jpaQueryFactory);
         factory.setEntityPathResolver(this.entityPathResolver);
         factory.setEscapeCharacter(this.escapeCharacter);
         if (this.queryMethodFactory != null) {

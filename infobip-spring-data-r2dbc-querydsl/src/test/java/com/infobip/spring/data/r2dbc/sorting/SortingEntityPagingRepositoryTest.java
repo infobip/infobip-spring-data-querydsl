@@ -1,5 +1,10 @@
 package com.infobip.spring.data.r2dbc.sorting;
 
+import static com.infobip.spring.data.r2dbc.sorting.QSortingEntity.sortingEntity;
+
+import java.util.Arrays;
+import java.util.function.Predicate;
+
 import com.infobip.spring.data.r2dbc.TestBase;
 import lombok.AllArgsConstructor;
 import org.assertj.core.api.BDDAssertions;
@@ -9,11 +14,6 @@ import org.springframework.data.domain.Sort.Order;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
-import java.util.Arrays;
-import java.util.function.Predicate;
-
-import static com.infobip.spring.data.r2dbc.sorting.QSortingEntity.sortingEntity;
-
 @AllArgsConstructor
 public class SortingEntityPagingRepositoryTest extends TestBase {
 
@@ -22,11 +22,11 @@ public class SortingEntityPagingRepositoryTest extends TestBase {
     @Test
     void shouldSortUsingQSort() {
         // given
-        SortingEntity givenEntityA = new SortingEntity(null, "A");
-        SortingEntity givenEntityC = new SortingEntity(null, "C");
-        SortingEntity givenEntityB = new SortingEntity(null, "B");
+        var givenEntityA = new SortingEntity(null, "A");
+        var givenEntityC = new SortingEntity(null, "C");
+        var givenEntityB = new SortingEntity(null, "B");
 
-        Flux<SortingEntity> given = repository.saveAll(Arrays.asList(givenEntityA, givenEntityC, givenEntityB));
+        var given = repository.saveAll(Arrays.asList(givenEntityA, givenEntityC, givenEntityB));
 
         // when
         Flux<SortingEntity> actual = given.thenMany(repository.findAll(sortingEntity.fooBar.desc()));
@@ -42,14 +42,14 @@ public class SortingEntityPagingRepositoryTest extends TestBase {
     @Test
     void shouldSortUsingSort() {
         // given
-        SortingEntity givenEntityA = new SortingEntity(null, "A");
-        SortingEntity givenEntityC = new SortingEntity(null, "C");
-        SortingEntity givenEntityB = new SortingEntity(null, "B");
+        var givenEntityA = new SortingEntity(null, "A");
+        var givenEntityC = new SortingEntity(null, "C");
+        var givenEntityB = new SortingEntity(null, "B");
 
-        Flux<SortingEntity> given = repository.saveAll(Arrays.asList(givenEntityA, givenEntityC, givenEntityB));
+        var given = repository.saveAll(Arrays.asList(givenEntityA, givenEntityC, givenEntityB));
 
         // when
-        Flux<SortingEntity> actual = given.thenMany(repository.findAll(Sort.by(Order.desc("fooBar"))));
+        var actual = given.thenMany(repository.findAll(Sort.by(Order.desc("fooBar"))));
 
         // then
         StepVerifier.create(actual)
@@ -62,12 +62,12 @@ public class SortingEntityPagingRepositoryTest extends TestBase {
     @Test
     void shouldSortUsingQSortCombinedWithPredicate() {
         // given
-        SortingEntity givenEntityA = new SortingEntity(null, "1A");
-        SortingEntity givenEntityC = new SortingEntity(null, "1C");
-        SortingEntity givenEntityB = new SortingEntity(null, "1B");
-        SortingEntity otherEntity = new SortingEntity(null, "2");
+        var givenEntityA = new SortingEntity(null, "1A");
+        var givenEntityC = new SortingEntity(null, "1C");
+        var givenEntityB = new SortingEntity(null, "1B");
+        var otherEntity = new SortingEntity(null, "2");
 
-        Flux<SortingEntity> given = repository.saveAll(Arrays.asList(givenEntityA, givenEntityC, givenEntityB, otherEntity));
+        var given = repository.saveAll(Arrays.asList(givenEntityA, givenEntityC, givenEntityB, otherEntity));
 
         // when
         Flux<SortingEntity> actual = given.thenMany(repository.findAll(
@@ -86,12 +86,12 @@ public class SortingEntityPagingRepositoryTest extends TestBase {
     @Test
     void shouldSortUsingSortCombinedWithPredicate() {
         // given
-        SortingEntity givenEntityA = new SortingEntity(null, "1A");
-        SortingEntity givenEntityC = new SortingEntity(null, "1C");
-        SortingEntity givenEntityB = new SortingEntity(null, "1B");
-        SortingEntity otherEntity = new SortingEntity(null, "2");
+        var givenEntityA = new SortingEntity(null, "1A");
+        var givenEntityC = new SortingEntity(null, "1C");
+        var givenEntityB = new SortingEntity(null, "1B");
+        var otherEntity = new SortingEntity(null, "2");
 
-        Flux<SortingEntity> given = repository.saveAll(Arrays.asList(givenEntityA, givenEntityC, givenEntityB, otherEntity));
+        var given = repository.saveAll(Arrays.asList(givenEntityA, givenEntityC, givenEntityB, otherEntity));
 
         // when
         Flux<SortingEntity> actual = given.thenMany(repository.findAll(

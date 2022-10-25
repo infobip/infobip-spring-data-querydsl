@@ -42,7 +42,7 @@ public class QSet extends FactoryExpressionBase<Set<?>> {
     protected QSet(Expression<?>[]... args) {
         super((Class) Set.class);
         List<Expression<?>> builder = new ArrayList<>();
-        for (Expression<?>[] exprs: args) {
+        for (var exprs: args) {
             Collections.addAll(builder, exprs);
         }
         this.args = CollectionUtils.unmodifiableList(builder);
@@ -64,7 +64,7 @@ public class QSet extends FactoryExpressionBase<Set<?>> {
         if (obj == this) {
             return true;
         } else if (obj instanceof FactoryExpression) {
-            FactoryExpression<?> c = (FactoryExpression<?>) obj;
+            var c = (FactoryExpression<?>) obj;
             return args.equals(c.getArgs()) && getType().equals(c.getType());
         } else {
             return false;

@@ -2,7 +2,6 @@ package com.infobip.spring.data.r2dbc;
 
 import static com.infobip.spring.data.r2dbc.QPerson.person;
 import static com.infobip.spring.data.r2dbc.QPersonSettings.personSettings;
-import static com.querydsl.core.types.Projections.constructor;
 import static org.assertj.core.api.BDDAssertions.then;
 
 import java.util.function.Predicate;
@@ -26,11 +25,11 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
     void shouldSaveWithVarArgs() {
 
         // given
-        Person johnDoe = new Person(null, "John", "Doe");
-        Person johnyRoe = new Person(null, "Johny", "Roe");
+        var johnDoe = new Person(null, "John", "Doe");
+        var johnyRoe = new Person(null, "Johny", "Roe");
 
         // when
-        Flux<Person> actual = repository.save(johnDoe, johnyRoe);
+        var actual = repository.save(johnDoe, johnyRoe);
 
         // then
         StepVerifier.create(actual)
@@ -43,21 +42,21 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
     void shouldQuery() {
 
         // given
-        Mono<Void> given = given(givenSavedPerson("John", "Doe"),
-                                 givenSavedPerson("Johny", "Roe"),
-                                 givenSavedPerson("Jane", "Doe"),
-                                 givenSavedPerson("John", "Roe"),
-                                 givenSavedPerson("Janie", "Doe"));
+        var given = given(givenSavedPerson("John", "Doe"),
+                          givenSavedPerson("Johny", "Roe"),
+                          givenSavedPerson("Jane", "Doe"),
+                          givenSavedPerson("John", "Roe"),
+                          givenSavedPerson("Janie", "Doe"));
 
         // when
-        Flux<Person> actual = given.thenMany(repository.query(query -> query.select(repository.entityProjection())
-                                                                            .from(person)
-                                                                            .where(person.firstName.in("John", "Jane"))
-                                                                            .orderBy(person.firstName.asc(),
+        var actual = given.thenMany(repository.query(query -> query.select(repository.entityProjection())
+                                                                   .from(person)
+                                                                   .where(person.firstName.in("John", "Jane"))
+                                                                   .orderBy(person.firstName.asc(),
                                                                                      person.lastName.asc())
-                                                                            .limit(1)
-                                                                            .offset(1))
-                                                       .all());
+                                                                   .limit(1)
+                                                                   .offset(1))
+                                              .all());
 
         // then
         StepVerifier.create(actual)
@@ -69,7 +68,7 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
     void shouldProject() {
 
         // given
-        Mono<Void> given = given(givenSavedPerson("John", "Doe"));
+        var given = given(givenSavedPerson("John", "Doe"));
 
         // when
         Flux<PersonProjection> actual = given.thenMany(repository.query(
@@ -87,9 +86,9 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
     void shouldUpdate() {
 
         // given
-        Mono<Void> given = given(givenSavedPerson("John", "Doe"),
-                                 givenSavedPerson("Johny", "Roe"),
-                                 givenSavedPerson("Jane", "Doe"));
+        var given = given(givenSavedPerson("John", "Doe"),
+                          givenSavedPerson("Johny", "Roe"),
+                          givenSavedPerson("Jane", "Doe"));
 
         // when
         var actual = given.then(repository.update(query -> query.set(person.firstName, "John")
@@ -105,10 +104,10 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
     void shouldDelete() {
 
         // given
-        Mono<Void> given = given(givenSavedPerson("John", "Doe"),
-                                 givenSavedPerson("Johny", "Roe"),
-                                 givenSavedPerson("Jane", "Doe"),
-                                 givenSavedPerson("John", "Roe"));
+        var given = given(givenSavedPerson("John", "Doe"),
+                          givenSavedPerson("Johny", "Roe"),
+                          givenSavedPerson("Jane", "Doe"),
+                          givenSavedPerson("John", "Roe"));
 
         // when
         var actual = given.then(repository.deleteWhere(person.firstName.like("John%")));
@@ -123,9 +122,9 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
     void shouldBeAbleToJoin() {
 
         // given
-        Mono<PersonSettings> givenJohnDoeSettings = given(givenSavedPersonAndSettings("Johny", "Roe"),
-                                                          givenSavedPerson("Jane", "Doe"),
-                                                          givenSavedPerson("John", "Roe"))
+        var givenJohnDoeSettings = given(givenSavedPersonAndSettings("Johny", "Roe"),
+                                         givenSavedPerson("Jane", "Doe"),
+                                         givenSavedPerson("John", "Roe"))
             .then(givenSavedPersonAndSettings("John", "Doe"));
 
         // when
@@ -147,10 +146,10 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
     @Test
     void shouldSupportMultipleConstructors() {
         // given
-        Mono<Void> given = given(giveNoArgsEntity("value"));
+        var given = given(giveNoArgsEntity("value"));
 
         // when
-        Flux<NoArgsEntity> actual = given.thenMany(
+        var actual = given.thenMany(
             noArgsRepository.query(query -> query.select(noArgsRepository.entityProjection())
                                                  .from(QNoArgsEntity.noArgsEntity)
                                                  .limit(1))

@@ -4,7 +4,6 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
-import javax.lang.model.util.Types;
 import java.lang.annotation.Annotation;
 import java.util.Objects;
 import java.util.Optional;
@@ -84,21 +83,21 @@ public abstract class SpringDataJdbcAnnotationProcessorBase extends AbstractQuer
     protected Configuration createConfiguration(RoundEnvironment roundEnv) {
         Class<? extends Annotation> entity = Id.class;
         this.roundEnv = roundEnv;
-        CodegenModule codegenModule = new CodegenModule();
-        JavaTypeMappings typeMappings = new JavaTypeMappings();
+        var codegenModule = new CodegenModule();
+        var typeMappings = new JavaTypeMappings();
         codegenModule.bind(TypeMappings.class, typeMappings);
         codegenModule.bind(QueryTypeFactory.class, new QueryTypeFactoryImpl("Q", "", ""));
-        SpringDataJdbcConfiguration springDataJdbcConfiguration = new SpringDataJdbcConfiguration(roundEnv,
-                                                                                                  processingEnv,
-                                                                                                  projectColumnCaseFormat,
-                                                                                                  entity,
-                                                                                                  null,
-                                                                                                  null,
-                                                                                                  Embedded.class,
-                                                                                                  Transient.class,
-                                                                                                  typeMappings,
-                                                                                                  codegenModule,
-                                                                                                  namingStrategy);
+        var springDataJdbcConfiguration = new SpringDataJdbcConfiguration(roundEnv,
+                                                                          processingEnv,
+                                                                          projectColumnCaseFormat,
+                                                                          entity,
+                                                                          null,
+                                                                          null,
+                                                                          Embedded.class,
+                                                                          Transient.class,
+                                                                          typeMappings,
+                                                                          codegenModule,
+                                                                          namingStrategy);
         this.conf = springDataJdbcConfiguration;
         return springDataJdbcConfiguration;
     }
@@ -114,25 +113,25 @@ public abstract class SpringDataJdbcAnnotationProcessorBase extends AbstractQuer
     protected CustomExtendedTypeFactory createTypeFactory(Set<Class<? extends Annotation>> entityAnnotations,
                                                           TypeMappings typeMappings,
                                                           QueryTypeFactory queryTypeFactory) {
-        CustomExtendedTypeFactory customExtendedTypeFactory = new CustomExtendedTypeFactory(roundEnv,
-                                                                                            processingEnv,
-                                                                                            entityAnnotations,
-                                                                                            typeMappings,
-                                                                                            queryTypeFactory,
-                                                                                            conf,
-                                                                                            processingEnv.getElementUtils(),
-                                                                                            projectTableCaseFormat);
+        var customExtendedTypeFactory = new CustomExtendedTypeFactory(roundEnv,
+                                                                      processingEnv,
+                                                                      entityAnnotations,
+                                                                      typeMappings,
+                                                                      queryTypeFactory,
+                                                                      conf,
+                                                                      processingEnv.getElementUtils(),
+                                                                      projectTableCaseFormat);
         this.typeFactory = customExtendedTypeFactory;
         return customExtendedTypeFactory;
     }
 
     protected Set<TypeElement> collectElements() {
-        Set<TypeElement> entityElements = roundEnv.getElementsAnnotatedWith(conf.getEntityAnnotation())
-                                                  .stream()
-                                                  .map(Element::getEnclosingElement)
-                                                  .filter(element -> element instanceof TypeElement)
-                                                  .map(element -> (TypeElement) element)
-                                                  .collect(Collectors.toSet());
+        var entityElements = roundEnv.getElementsAnnotatedWith(conf.getEntityAnnotation())
+                                     .stream()
+                                     .map(Element::getEnclosingElement)
+                                     .filter(element -> element instanceof TypeElement)
+                                     .map(element -> (TypeElement) element)
+                                     .collect(Collectors.toSet());
 
         return entityElements.stream()
                              .flatMap(this::getEntityElementWithEmbeddedEntities)
@@ -140,16 +139,16 @@ public abstract class SpringDataJdbcAnnotationProcessorBase extends AbstractQuer
     }
 
     private Stream<TypeElement> getEntityElementWithEmbeddedEntities(TypeElement entityElement) {
-        Types types = processingEnv.getTypeUtils();
-        Set<TypeElement> embeddedElements = ElementFilter.fieldsIn(entityElement.getEnclosedElements())
-                                                            .stream()
-                                                            .filter(enclosedElement -> Objects.nonNull(
+        var types = processingEnv.getTypeUtils();
+        var embeddedElements = ElementFilter.fieldsIn(entityElement.getEnclosedElements())
+                                            .stream()
+                                            .filter(enclosedElement -> Objects.nonNull(
                                                                     enclosedElement.getAnnotation(
                                                                             conf.getEmbeddedAnnotation())))
-                                                            .map(element -> types.asElement(element.asType()))
-                                                            .filter(element -> element instanceof TypeElement)
-                                                            .map(element -> (TypeElement) element)
-                                                            .collect(Collectors.toSet());
+                                            .map(element -> types.asElement(element.asType()))
+                                            .filter(element -> element instanceof TypeElement)
+                                            .map(element -> (TypeElement) element)
+                                            .collect(Collectors.toSet());
         return Stream.concat(Stream.of(entityElement), embeddedElements.stream());
     }
 }

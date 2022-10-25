@@ -33,7 +33,7 @@ public class QuerydslSqlQueryConfiguration {
     @ConditionalOnMissingBean
     @Bean
     public com.querydsl.sql.Configuration querydslSqlConfiguration(SQLTemplates sqlTemplates) {
-        com.querydsl.sql.Configuration configuration = new com.querydsl.sql.Configuration(sqlTemplates);
+        var configuration = new com.querydsl.sql.Configuration(sqlTemplates);
         configuration.setExceptionTranslator(new SpringExceptionTranslator());
         return configuration;
     }

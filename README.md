@@ -227,7 +227,9 @@ repository.findAll(personWithEmbeddedFirstAndLastName.firstName.in("John", "John
 #### <a name="MappedCollection"></a> @MappedCollection support
 
 Model:
+
 ```java
+
 @Value
 public class Student {
 
@@ -240,9 +242,10 @@ public class Student {
    Set<StudentCourse> courses;
 
    void addItem(Course course) {
-      StudentCourse studentCourse = new StudentCourse(null, AggregateReference.to(course.getId()), null);
+      var studentCourse = new StudentCourse(null, AggregateReference.to(course.getId()), null);
       courses.add(studentCourse);
    }
+
 }
 ```
 

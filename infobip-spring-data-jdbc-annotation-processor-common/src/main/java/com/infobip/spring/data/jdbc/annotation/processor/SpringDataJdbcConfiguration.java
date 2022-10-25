@@ -39,7 +39,7 @@ class SpringDataJdbcConfiguration extends DefaultConfiguration {
               superTypeAnn, embeddableAnn, embeddedAnn, skipAnn, codegenModule);
         setStrictMode(true);
         sqlCodegenModule = new SQLCodegenModule();
-        Class<? extends Annotation> generatedAnnotationClass = GeneratedAnnotationResolver.resolve(processingEnv.getOptions().get(QUERYDSL_GENERATED_ANNOTATION_CLASS));
+        var generatedAnnotationClass = GeneratedAnnotationResolver.resolve(processingEnv.getOptions().get(QUERYDSL_GENERATED_ANNOTATION_CLASS));
         sqlCodegenModule.bindInstance(CodegenModule.GENERATED_ANNOTATION_CLASS, generatedAnnotationClass);
         sqlCodegenModule.bind(NamingStrategy.class, namingStrategy);
         sqlCodegenModule.bind(TypeMappings.class, typeMappings);

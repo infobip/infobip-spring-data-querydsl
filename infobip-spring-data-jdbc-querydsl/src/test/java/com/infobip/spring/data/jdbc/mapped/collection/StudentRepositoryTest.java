@@ -6,7 +6,6 @@ import static org.assertj.core.api.BDDAssertions.then;
 
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 
 import com.infobip.spring.data.jdbc.TestBase;
 import lombok.AllArgsConstructor;
@@ -30,17 +29,17 @@ public class StudentRepositoryTest extends TestBase {
     void shouldFindAll() {
 
         // given
-        Course givenCourse = givenCourse();
-        Student givenStudent = givenStudentAttendingCourse(givenCourse);
+        var givenCourse = givenCourse();
+        var givenStudent = givenStudentAttendingCourse(givenCourse);
 
         // when
-        List<Student> actual = studentRepository.findAll();
+        var actual = studentRepository.findAll();
 
         // then
-        StudentCourse givenStudentCourse = givenStudent.getCourses()
-                                                       .stream()
-                                                       .findFirst()
-                                                       .orElseThrow(NullPointerException::new);
+        var givenStudentCourse = givenStudent.getCourses()
+                                             .stream()
+                                             .findFirst()
+                                             .orElseThrow(NullPointerException::new);
         then(actual).containsExactly(new Student(givenStudent.getId(),
                                                  givenStudent.getName(),
                                                  Collections.singleton(new StudentCourse(givenStudentCourse.getId(),
@@ -52,21 +51,21 @@ public class StudentRepositoryTest extends TestBase {
     void shouldQueryManyToMany() {
 
         // given
-        Course givenCourse = givenCourse();
-        Student givenStudent = givenStudentAttendingCourse(givenCourse);
+        var givenCourse = givenCourse();
+        var givenStudent = givenStudentAttendingCourse(givenCourse);
 
         // when
-        List<Student> actual = studentRepository.query(query -> query.select(studentRepository.entityProjection())
-                                                                     .from(student)
-                                                                     .innerJoin(studentCourse)
-                                                                     .on(student.id.eq(studentCourse.studentId))
-                                                                     .fetch());
+        var actual = studentRepository.query(query -> query.select(studentRepository.entityProjection())
+                                                           .from(student)
+                                                           .innerJoin(studentCourse)
+                                                           .on(student.id.eq(studentCourse.studentId))
+                                                           .fetch());
 
         // then
-        StudentCourse givenStudentCourse = givenStudent.getCourses()
-                                                       .stream()
-                                                       .findFirst()
-                                                       .orElseThrow(NullPointerException::new);
+        var givenStudentCourse = givenStudent.getCourses()
+                                             .stream()
+                                             .findFirst()
+                                             .orElseThrow(NullPointerException::new);
         then(actual).containsExactly(new Student(givenStudent.getId(),
                                                  givenStudent.getName(),
                                                  Collections.singleton(new StudentCourse(givenStudentCourse.getId(),
@@ -79,7 +78,7 @@ public class StudentRepositoryTest extends TestBase {
     }
 
     private Student givenStudentAttendingCourse(Course givenCourse) {
-        Student givenStudent = new Student(null, "givenStudent", new HashSet<>());
+        var givenStudent = new Student(null, "givenStudent", new HashSet<>());
         givenStudent.addItem(givenCourse);
         return studentRepository.save(givenStudent);
     }

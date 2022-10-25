@@ -1,12 +1,14 @@
 package com.infobip.spring.data.jpa.fragment;
 
-import com.infobip.spring.data.jpa.*;
+import static org.assertj.core.api.BDDAssertions.then;
+
+import com.infobip.spring.data.jpa.Person;
+import com.infobip.spring.data.jpa.QuerydslJpaFragment;
+import com.infobip.spring.data.jpa.TestBase;
 import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.ResolvableType;
-
-import static org.assertj.core.api.BDDAssertions.then;
 
 @AllArgsConstructor
 public class FragmentTest extends TestBase {
@@ -17,7 +19,7 @@ public class FragmentTest extends TestBase {
     void shouldInjectFragmentIntoContext() {
 
         // when
-        String[] actual = context.getBeanNamesForType(CustomFragmentPersonRepository.class);
+        var actual = context.getBeanNamesForType(CustomFragmentPersonRepository.class);
 
         // then
         then(actual).isNotEmpty();
@@ -27,7 +29,7 @@ public class FragmentTest extends TestBase {
     void shouldInjectRepositoryIntoContext() {
 
         // when
-        String[] actual = context.getBeanNamesForType(
+        var actual = context.getBeanNamesForType(
                 ResolvableType.forClassWithGenerics(QuerydslJpaFragment.class, Person.class));
 
         // then

@@ -15,10 +15,14 @@
  */
 package com.infobip.spring.data.jdbc;
 
+import static org.springframework.data.repository.core.support.RepositoryFragment.implemented;
+
 import com.infobip.spring.data.common.Querydsl;
 import com.infobip.spring.data.common.QuerydslExpressionFactory;
 import com.querydsl.core.types.ConstructorExpression;
-import com.querydsl.sql.*;
+import com.querydsl.sql.RelationalPath;
+import com.querydsl.sql.RelationalPathBase;
+import com.querydsl.sql.SQLQueryFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.jdbc.core.convert.DataAccessStrategy;
 import org.springframework.data.jdbc.core.convert.JdbcConverter;
@@ -26,12 +30,9 @@ import org.springframework.data.jdbc.repository.support.JdbcRepositoryFactory;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.relational.core.dialect.Dialect;
 import org.springframework.data.relational.core.mapping.RelationalMappingContext;
-import org.springframework.data.relational.core.mapping.RelationalPersistentEntity;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.core.support.RepositoryComposition;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
-
-import static org.springframework.data.repository.core.support.RepositoryFragment.implemented;
 
 public class QuerydslJdbcRepositoryFactory extends JdbcRepositoryFactory {
 
@@ -59,26 +60,26 @@ public class QuerydslJdbcRepositoryFactory extends JdbcRepositoryFactory {
     @Override
     protected RepositoryComposition.RepositoryFragments getRepositoryFragments(RepositoryMetadata metadata) {
 
-        RepositoryComposition.RepositoryFragments fragments = super.getRepositoryFragments(metadata);
+        var fragments = super.getRepositoryFragments(metadata);
 
-        Class<?> repositoryInterface = metadata.getRepositoryInterface();
+        var repositoryInterface = metadata.getRepositoryInterface();
 
         if (!REPOSITORY_TARGET_TYPE.isAssignableFrom(repositoryInterface)) {
             return fragments;
         }
 
-        RelationalPathBase<?> path = querydslExpressionFactory.getRelationalPathBaseFromQueryRepositoryClass(
+        var path = querydslExpressionFactory.getRelationalPathBaseFromQueryRepositoryClass(
                 repositoryInterface);
-        Class<?> type = metadata.getDomainType();
-        ConstructorExpression<?> constructorExpression = querydslExpressionFactory.getConstructorExpression(type, path);
+        var type = metadata.getDomainType();
+        var constructorExpression = querydslExpressionFactory.getConstructorExpression(type, path);
         QuerydslPredicateExecutor<?> querydslJdbcPredicateExecutor = createQuerydslJdbcPredicateExecutor(metadata,
                                                                                                          constructorExpression,
                                                                                                          path);
-        SimpleQuerydslJdbcFragment<?> simpleQuerydslJdbcFragment = createSimpleQuerydslJdbcFragment(
+        var simpleQuerydslJdbcFragment = createSimpleQuerydslJdbcFragment(
                 constructorExpression,
                 path,
                 querydslJdbcPredicateExecutor
-        );
+                                                                         );
         return fragments.append(implemented(simpleQuerydslJdbcFragment))
                         .append(implemented(querydslJdbcPredicateExecutor));
     }
@@ -86,8 +87,8 @@ public class QuerydslJdbcRepositoryFactory extends JdbcRepositoryFactory {
     private QuerydslJdbcPredicateExecutor<?> createQuerydslJdbcPredicateExecutor(RepositoryMetadata metadata,
                                                                                  ConstructorExpression<?> constructorExpression,
                                                                                  RelationalPathBase<?> path) {
-        RelationalPersistentEntity<?> entity = context.getRequiredPersistentEntity(metadata.getDomainType());
-        Querydsl querydsl = new Querydsl(sqlQueryFactory, entity);
+        var entity = context.getRequiredPersistentEntity(metadata.getDomainType());
+        var querydsl = new Querydsl(sqlQueryFactory, entity);
         return getTargetRepositoryViaReflection(QuerydslJdbcPredicateExecutor.class,
                                                 entity,
                                                 converter,

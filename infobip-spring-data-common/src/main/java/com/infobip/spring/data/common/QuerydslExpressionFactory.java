@@ -30,7 +30,7 @@ public class QuerydslExpressionFactory {
     }
 
     public ConstructorExpression<?> getConstructorExpression(Class<?> type, RelationalPath<?> pathBase) {
-        Constructor<?> constructor = getConstructor(type);
+        var constructor = getConstructor(type);
 
         if (constructor == null) {
             throw new IllegalArgumentException(
@@ -42,20 +42,20 @@ public class QuerydslExpressionFactory {
                                                                     .collect(Collectors.toMap(
                                                                         column -> column.getMetadata().getName(),
                                                                         Function.identity()));
-        Parameter[] parameters = constructor.getParameters();
+        var parameters = constructor.getParameters();
 
-        Map<String, Expression<?>> embeddedConstructorParameterNameToPath = getEmbeddedConstructorParameterNameToPath(
+        var embeddedConstructorParameterNameToPath = getEmbeddedConstructorParameterNameToPath(
             type,
             pathBase,
             columnNameToExpression,
             parameters);
 
-        List<ParameterAndExpressionPair> pairs = Stream.of(constructor.getParameters())
-                                                       .map(parameter -> getExpression(type,
+        var pairs = Stream.of(constructor.getParameters())
+                          .map(parameter -> getExpression(type,
                                                                                        columnNameToExpression,
                                                                                        embeddedConstructorParameterNameToPath,
                                                                                        parameter))
-                                                       .collect(Collectors.toList());
+                          .collect(Collectors.toList());
 
         Class<?>[] paramTypes = pairs.stream().map(ParameterAndExpressionPair::getParameterType).toArray(Class[]::new);
         Expression<?>[] expressions = pairs.stream().map(ParameterAndExpressionPair::getExpression).toArray(Expression[]::new);
@@ -67,7 +67,7 @@ public class QuerydslExpressionFactory {
                                                      Map<String, Expression<?>> columnNameToPath,
                                                      Map<String, Expression<?>> embeddedConstructorParameterNameToPath,
                                                      Parameter parameter) {
-        Expression<?> path = columnNameToPath.get(parameter.getName());
+        var path = columnNameToPath.get(parameter.getName());
 
         if (Objects.isNull(path)) {
             return resolveNonColumnParameter(type, embeddedConstructorParameterNameToPath, parameter);
@@ -80,13 +80,13 @@ public class QuerydslExpressionFactory {
                                                                  Map<String, Expression<?>> embeddedConstructorParameterNameToPath,
                                                                  Parameter parameter) {
 
-        String name = parameter.getName();
+        var name = parameter.getName();
 
         if (embeddedConstructorParameterNameToPath.containsKey(name)) {
             return new ParameterAndExpressionPair(parameter.getType(), embeddedConstructorParameterNameToPath.get(name));
         }
 
-        Field field = ReflectionUtils.findField(type, name);
+        var field = ReflectionUtils.findField(type, name);
 
         if (Objects.nonNull(field) && Objects.nonNull(AnnotationUtils.getAnnotation(field, MappedCollection.class))) {
             return resolveMappedCollectionParameter(parameter);
@@ -96,11 +96,11 @@ public class QuerydslExpressionFactory {
     }
 
     private ParameterAndExpressionPair resolveMappedCollectionParameter(Parameter parameter) {
-        Class<?> collectionType = parameter.getType();
+        var collectionType = parameter.getType();
 
         if (Set.class.isAssignableFrom(collectionType)) {
-            ResolvableType resolvableType = ResolvableType.forType(parameter.getParameterizedType()).as(Set.class).getGeneric(0);
-            Class<?> target = Objects.requireNonNull(resolvableType.resolve());
+            var resolvableType = ResolvableType.forType(parameter.getParameterizedType()).as(Set.class).getGeneric(0);
+            var target = Objects.requireNonNull(resolvableType.resolve());
             Expression<?> qClass = getRelationalPathBaseFromQueryClass(getQueryClass(target));
             return new ParameterAndExpressionPair(collectionType, new QSet(qClass));
         }
@@ -144,10 +144,10 @@ public class QuerydslExpressionFactory {
 
     public RelationalPathBase<?> getRelationalPathBaseFromQueryRepositoryClass(Class<?> repositoryInterface) {
 
-        Class<?> entityType = ResolvableType.forClass(repositoryInterface)
-                                            .as(repositoryTargetType)
-                                            .getGeneric(0)
-                                            .resolve();
+        var entityType = ResolvableType.forClass(repositoryInterface)
+                                       .as(repositoryTargetType)
+                                       .getGeneric(0)
+                                       .resolve();
         if (entityType == null) {
             throw new IllegalArgumentException("Could not resolve query class for " + repositoryInterface);
         }
@@ -156,7 +156,7 @@ public class QuerydslExpressionFactory {
     }
 
     private Class<?> getQueryClass(Class<?> entityType) {
-        String fullName = entityType.getPackage().getName() + ".Q" + entityType.getSimpleName();
+        var fullName = entityType.getPackage().getName() + ".Q" + entityType.getSimpleName();
         try {
             return entityType.getClassLoader().loadClass(fullName);
         } catch (ClassNotFoundException e) {
@@ -165,8 +165,8 @@ public class QuerydslExpressionFactory {
     }
 
     private RelationalPathBase<?> getRelationalPathBaseFromQueryClass(Class<?> queryClass) {
-        String fieldName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, queryClass.getSimpleName().substring(1));
-        Field field = ReflectionUtils.findField(queryClass, fieldName);
+        var fieldName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, queryClass.getSimpleName().substring(1));
+        var field = ReflectionUtils.findField(queryClass, fieldName);
 
         if (field == null) {
             throw new IllegalArgumentException("Did not find a static field of the same type in " + queryClass);

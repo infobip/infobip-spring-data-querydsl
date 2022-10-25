@@ -19,7 +19,7 @@ public class Student {
     Set<StudentCourse> courses;
 
     void addItem(Course course) {
-        StudentCourse studentCourse = new StudentCourse(null, AggregateReference.to(course.getId()), null);
+        var studentCourse = new StudentCourse(null, AggregateReference.to(course.getId()), null);
         courses.add(studentCourse);
     }
 

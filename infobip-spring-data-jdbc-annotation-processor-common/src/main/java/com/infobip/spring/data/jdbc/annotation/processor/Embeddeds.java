@@ -1,13 +1,11 @@
 package com.infobip.spring.data.jdbc.annotation.processor;
 
+import javax.lang.model.element.Element;
+import javax.lang.model.util.ElementFilter;
+import java.util.Objects;
+
 import com.querydsl.apt.Configuration;
 import com.querydsl.codegen.Property;
-
-import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.util.ElementFilter;
-import java.lang.annotation.Annotation;
-import java.util.Objects;
 
 class Embeddeds {
 
@@ -15,7 +13,7 @@ class Embeddeds {
                               Element element,
                               Property property) {
 
-        Class<? extends Annotation> embeddedAnnotation = configuration.getEmbeddedAnnotation();
+        var embeddedAnnotation = configuration.getEmbeddedAnnotation();
 
         if (Objects.isNull(embeddedAnnotation)) {
             return false;
@@ -32,7 +30,7 @@ class Embeddeds {
 
     static boolean isEmbedded(Configuration configuration, Element element) {
 
-        Class<? extends Annotation> embeddedAnnotation = configuration.getEmbeddedAnnotation();
+        var embeddedAnnotation = configuration.getEmbeddedAnnotation();
 
         if (Objects.isNull(embeddedAnnotation)) {
             return false;
