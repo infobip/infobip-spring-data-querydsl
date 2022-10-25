@@ -1,5 +1,11 @@
 package com.infobip.spring.data.r2dbc;
 
+import static com.infobip.spring.data.r2dbc.QPerson.person;
+import static com.infobip.spring.data.r2dbc.QPersonSettings.personSettings;
+import static org.assertj.core.api.BDDAssertions.then;
+
+import java.util.function.Predicate;
+
 import lombok.AllArgsConstructor;
 import lombok.Value;
 import org.assertj.core.api.BDDAssertions;
@@ -7,13 +13,6 @@ import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
-import java.util.function.Predicate;
-
-import static com.infobip.spring.data.r2dbc.QPerson.person;
-import static com.infobip.spring.data.r2dbc.QPersonSettings.personSettings;
-import static com.querydsl.core.types.Projections.constructor;
-import static org.assertj.core.api.BDDAssertions.then;
 
 @AllArgsConstructor
 public class QuerydslR2dbcRepositoryTest extends TestBase {
@@ -92,12 +91,12 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
                                  givenSavedPerson("Jane", "Doe"));
 
         // when
-        Mono<Integer> actual = given.then(repository.update(query -> query.set(person.firstName, "John")
+        var actual = given.then(repository.update(query -> query.set(person.firstName, "John")
                                                                           .where(person.firstName.eq("Johny"))));
 
         // then
         StepVerifier.create(actual)
-                    .expectNext(1)
+                    .expectNext(1L)
                     .verifyComplete();
     }
 
@@ -111,11 +110,11 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
                                  givenSavedPerson("John", "Roe"));
 
         // when
-        Mono<Integer> actual = given.then(repository.deleteWhere(person.firstName.like("John%")));
+        var actual = given.then(repository.deleteWhere(person.firstName.like("John%")));
 
         // then
         StepVerifier.create(actual)
-                    .expectNext(3)
+                    .expectNext(3L)
                     .verifyComplete();
     }
 
