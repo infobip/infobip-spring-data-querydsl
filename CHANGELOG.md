@@ -1,3 +1,8 @@
+### 8.0.0
+
+* upgraded to Spring Boot 3.0.0 (not backwards compatible with previous versions of Spring Data)
+* switched over to Jakarta dependencies with jakarta packages (e.g. jakarta.persistence-api 3.0.0)
+
 ### 7.2.0
 * added basic support for `@MappedCollections`
 * changed order of columns in generated Q class to match the field order in source class
