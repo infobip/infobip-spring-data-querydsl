@@ -3,7 +3,8 @@ package com.infobip.spring.data.common
 import org.assertj.core.api.BDDAssertions.then
 import org.junit.jupiter.api.Test
 import org.springframework.data.annotation.Id
-import org.springframework.data.annotation.PersistenceConstructor
+import org.springframework.data.annotation.PersistenceCreator
+
 import org.springframework.data.mapping.PersistentProperty
 
 class PreferredConstructorTest {
@@ -11,7 +12,7 @@ class PreferredConstructorTest {
     @Test
     internal fun `it should prefer persistence constructors`() {
         val preferredConstructor = PreferredConstructorDiscoverer
-                .discover<EntityWithPersistenceConstructor, PersistentProperty<*>>(EntityWithPersistenceConstructor::class.java)
+                .discover<EntityWithPersistenceCreator, PersistentProperty<*>>(EntityWithPersistenceCreator::class.java)
 
         then(preferredConstructor.parameters).hasSize(3)
         then(preferredConstructor.parameters.map { it.name }).containsExactly("id", "firstName", "lastName")
@@ -29,7 +30,7 @@ class PreferredConstructorTest {
     @Test
     internal fun `if no primary constructor, it should take constructor with most arguments`() {
         val preferredConstructor = PreferredConstructorDiscoverer
-                .discover<EntityWithoutPersistenceConstructor, PersistentProperty<*>>(EntityWithoutPersistenceConstructor::class.java)
+                .discover<EntityWithoutPersistenceCreator, PersistentProperty<*>>(EntityWithoutPersistenceCreator::class.java)
 
         then(preferredConstructor.parameters).hasSize(3)
         then(preferredConstructor.parameters.map { it.name }).containsExactly("id", "firstName", "lastName")
@@ -42,15 +43,15 @@ data class DataClass(
         val lastName: String
 )
 
-data class EntityWithPersistenceConstructor(
+data class EntityWithPersistenceCreator(
         @Id private val id: String,
         private val nameInformation: NameInformation
 ) {
-    @PersistenceConstructor
+    @PersistenceCreator
     constructor(id: String, firstName: String, lastName: String): this(id, NameInformation(firstName, lastName))
 }
 
-class EntityWithoutPersistenceConstructor {
+class EntityWithoutPersistenceCreator {
     val id: String
     val nameInformation: NameInformation
 

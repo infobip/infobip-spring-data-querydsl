@@ -1,8 +1,13 @@
 package com.infobip.spring.data.r2dbc;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
+import lombok.With;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceConstructor;
+import org.springframework.data.annotation.PersistenceCreator;
+
+;
 
 @ToString
 @Getter
@@ -19,7 +24,7 @@ public class NoArgsEntity {
         this.value = null;
     }
 
-    @PersistenceConstructor
+    @PersistenceCreator
     public NoArgsEntity(Long id, String value) {
         this.id = id;
         this.value = value;

@@ -12,7 +12,7 @@ import kotlin.reflect.full.KClasses;
 import kotlin.reflect.jvm.ReflectJvmMapping;
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
-import org.springframework.data.annotation.PersistenceConstructor;
+import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.mapping.Parameter;
 import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.mapping.PersistentProperty;
@@ -21,6 +21,8 @@ import org.springframework.data.util.ClassTypeInformation;
 import org.springframework.data.util.KotlinReflectionUtils;
 import org.springframework.data.util.TypeInformation;
 import org.springframework.lang.Nullable;
+
+;
 
 /**
  * Utility class to find the preferred constructor which is compatible with both Spring Data JDBC and QueryDSL.
@@ -44,7 +46,7 @@ interface PreferredConstructorDiscoverer {
 
                 return Arrays.stream(type.getType().getDeclaredConstructors())
                         .filter(it -> !it.isSynthetic())
-                        .filter(it -> it.isAnnotationPresent(PersistenceConstructor.class))
+                        .filter(it -> it.isAnnotationPresent(PersistenceCreator.class))
                         .map(it -> buildPreferredConstructor(it, type, entity))
                         .findFirst()
                         .orElseGet(() -> Arrays.stream(type.getType().getDeclaredConstructors())
@@ -64,7 +66,7 @@ interface PreferredConstructorDiscoverer {
 
                 return Arrays.stream(type.getType().getDeclaredConstructors())
                         .filter(it -> !it.isSynthetic())
-                        .filter(it -> it.isAnnotationPresent(PersistenceConstructor.class))
+                        .filter(it -> it.isAnnotationPresent(PersistenceCreator.class))
                         .map(it -> buildPreferredConstructor(it, type, entity))
                         .findFirst()
                         .orElseGet(() -> {
