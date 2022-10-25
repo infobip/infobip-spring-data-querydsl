@@ -4,6 +4,7 @@ import static com.google.testing.compile.CompilationSubject.assertThat;
 import static com.google.testing.compile.Compiler.javac;
 import static org.assertj.core.api.BDDAssertions.then;
 
+import javax.tools.JavaFileObject;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -12,7 +13,6 @@ import java.nio.file.Paths;
 
 import com.google.testing.compile.Compilation;
 import com.google.testing.compile.JavaFileObjects;
-import jakarta.tools.JavaFileObject;
 import org.junit.jupiter.api.Test;
 
 @DefaultSchema("dbo")
