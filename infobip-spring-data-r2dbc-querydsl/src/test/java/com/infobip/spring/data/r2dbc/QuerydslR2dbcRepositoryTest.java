@@ -2,6 +2,7 @@ package com.infobip.spring.data.r2dbc;
 
 import static com.infobip.spring.data.r2dbc.QPerson.person;
 import static com.infobip.spring.data.r2dbc.QPersonSettings.personSettings;
+import static com.querydsl.core.types.Projections.constructor;
 import static org.assertj.core.api.BDDAssertions.then;
 
 import java.util.function.Predicate;
