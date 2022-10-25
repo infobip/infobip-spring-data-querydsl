@@ -19,7 +19,8 @@
 		<dependency>
 			<groupId>com.querydsl</groupId>
 			<artifactId>querydsl-apt</artifactId>
-<!--			<classifier>jpa</classifier>-->
+			<version>${querydsl.version}</version>
+			<classifier>jakarta</classifier>
 			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.jdt</groupId>
