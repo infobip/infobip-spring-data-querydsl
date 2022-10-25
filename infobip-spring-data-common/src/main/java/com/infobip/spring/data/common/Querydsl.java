@@ -116,18 +116,11 @@ public class Querydsl {
 
 		Assert.notNull(nullHandling, "NullHandling must not be null!");
 
-		switch (nullHandling) {
-
-			case NULLS_FIRST:
-				return NullHandling.NullsFirst;
-
-			case NULLS_LAST:
-				return NullHandling.NullsLast;
-
-			case NATIVE:
-			default:
-				return NullHandling.Default;
-		}
+		return switch (nullHandling) {
+			case NULLS_FIRST -> NullHandling.NullsFirst;
+			case NULLS_LAST -> NullHandling.NullsLast;
+			case NATIVE -> NullHandling.Default;
+		};
 	}
 
 	private Expression<?> buildOrderPropertyPathFrom(Order order) {
