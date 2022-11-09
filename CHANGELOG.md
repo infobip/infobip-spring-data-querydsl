@@ -1,6 +1,6 @@
 ### 7.2.1
 
-* added support for `Table#name` (#72)
+* added support for `Table#name` [#72](/../../issues/72)
 
 ### 7.2.0
 * added basic support for `@MappedCollections`
