@@ -1,4 +1,4 @@
-### 7.2.1
+### 7.2.4
 
 * added support for `Table#name` [#72](/../../issues/72)
 
