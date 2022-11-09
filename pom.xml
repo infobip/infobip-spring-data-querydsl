@@ -4,7 +4,7 @@
 
 	<groupId>com.infobip</groupId>
 	<artifactId>infobip-spring-data-querydsl</artifactId>
-	<version>7.2.3-SNAPSHOT</version>
+	<version>7.2.3</version>
 	<packaging>pom</packaging>
 
 	<name>Infobip Spring Data Querydsl</name>
@@ -33,7 +33,7 @@
 		<url>https://github.com/infobip/infobip-spring-data-querydsl.git</url>
 		<connection>scm:git:git://github.com:infobip/infobip-spring-data-querydsl.git</connection>
 		<developerConnection>scm:git:git@github.com:infobip/infobip-spring-data-querydsl.git</developerConnection>
-	  <tag>HEAD</tag>
+	  <tag>infobip-spring-data-querydsl-7.2.3</tag>
   </scm>
 
 	<modules>
