@@ -1,3 +1,7 @@
+### 7.2.1
+
+* added support for `Table#name` (#72)
+
 ### 7.2.0
 * added basic support for `@MappedCollections`
 * changed order of columns in generated Q class to match the field order in source class
