@@ -1,18 +1,17 @@
 package com.infobip.spring.data.jpa;
 
+import static com.infobip.spring.data.jpa.QPerson.person;
+import static com.infobip.spring.data.jpa.QPersonSettings.personSettings;
+import static org.assertj.core.api.BDDAssertions.then;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.querydsl.core.types.Projections;
 import lombok.AllArgsConstructor;
 import lombok.Value;
 import org.junit.jupiter.api.Test;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static com.infobip.spring.data.jpa.QPerson.person;
-import static com.infobip.spring.data.jpa.QPersonSettings.personSettings;
-import static org.assertj.core.api.BDDAssertions.then;
 
 @AllArgsConstructor
 public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
@@ -25,13 +24,13 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
     void shouldStreamAll() {
 
         // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
-        Person johnyRoe = givenSavedPerson("Johny", "Roe");
-        Person janeDoe = givenSavedPerson("Jane", "Doe");
+        var johnDoe = givenSavedPerson("John", "Doe");
+        var johnyRoe = givenSavedPerson("Johny", "Roe");
+        var janeDoe = givenSavedPerson("Jane", "Doe");
         List<Person> actual = null;
 
         // when
-        try (Stream<Person> stream = repository.streamAll()) {
+        try (var stream = repository.streamAll()) {
             actual = stream.collect(Collectors.toList());
         }
 
@@ -42,8 +41,8 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
     void shouldFindAllWithPredicate() {
 
         // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
-        Person johnyRoe = givenSavedPerson("Johny", "Roe");
+        var johnDoe = givenSavedPerson("John", "Doe");
+        var johnyRoe = givenSavedPerson("Johny", "Roe");
         givenSavedPerson("Jane", "Doe");
 
         // when
@@ -56,7 +55,7 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
     void shouldQuery() {
 
         // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
+        var johnDoe = givenSavedPerson("John", "Doe");
         givenSavedPerson("Johny", "Roe");
         givenSavedPerson("Jane", "Doe");
         givenSavedPerson("John", "Roe");
@@ -79,7 +78,7 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
     void shouldProject() {
 
         // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
+        var johnDoe = givenSavedPerson("John", "Doe");
 
         // when
         List<PersonProjection> actual = repository.query(query -> query
@@ -118,11 +117,11 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
         // given
         givenSavedPerson("John", "Doe");
         givenSavedPerson("Johny", "Roe");
-        Person janeDoe = givenSavedPerson("Jane", "Doe");
+        var janeDoe = givenSavedPerson("Jane", "Doe");
         givenSavedPerson("John", "Roe");
 
         // when
-        long numberOfAffectedRows = repository.deleteWhere(person.firstName.like("John%"));
+        var numberOfAffectedRows = repository.deleteWhere(person.firstName.like("John%"));
 
         then(repository.findAll()).usingRecursiveFieldByFieldElementComparator().containsExactly(janeDoe);
         then(numberOfAffectedRows).isEqualTo(3L);
@@ -132,14 +131,14 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
     void shouldJpaSqlQuery() {
 
         // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
+        var johnDoe = givenSavedPerson("John", "Doe");
         givenSavedPerson("Johny", "Roe");
-        Person janeDoe = givenSavedPerson("Jane", "Doe");
-        Person johnRoe = givenSavedPerson("John", "Roe");
-        Person janieDoe = givenSavedPerson("Janie", "Doe");
+        var janeDoe = givenSavedPerson("Jane", "Doe");
+        var johnRoe = givenSavedPerson("John", "Roe");
+        var janieDoe = givenSavedPerson("Janie", "Doe");
 
         // when
-        List<Person> actual = repository.jpaSqlQuery(query -> query
+        var actual = repository.jpaSqlQuery(query -> query
                 .union(
                         repository.jpaSqlSubQuery(subQuery ->
                                                           subQuery.select(person)
@@ -152,7 +151,7 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
                 )
                 .orderBy(person.firstName.asc(), person.lastName.asc())
                 .fetch()
-        );
+                                           );
 
         then(actual).usingRecursiveFieldByFieldElementComparator().containsExactly(janeDoe, janieDoe, johnDoe, johnRoe);
     }
@@ -161,9 +160,9 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
     void shouldBeAbleToJoin() {
 
         // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
-        Person johnyRoe = givenSavedPerson("Johny", "Roe");
-        PersonSettings johnDoeSettings = givenSavedPersonSettings(johnDoe);
+        var johnDoe = givenSavedPerson("John", "Doe");
+        var johnyRoe = givenSavedPerson("Johny", "Roe");
+        var johnDoeSettings = givenSavedPersonSettings(johnDoe);
         givenSavedPersonSettings(johnyRoe);
 
         // when
@@ -182,11 +181,11 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
     void shouldExecuteStoredProcedure() {
 
         // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
-        Person johnyRoe = givenSavedPerson("Johny", "Roe");
-        Person janeDoe = givenSavedPerson("Jane", "Doe");
-        Person johnRoe = givenSavedPerson("John", "Roe");
-        Person janieDoe = givenSavedPerson("Janie", "Doe");
+        var johnDoe = givenSavedPerson("John", "Doe");
+        var johnyRoe = givenSavedPerson("Johny", "Roe");
+        var janeDoe = givenSavedPerson("Jane", "Doe");
+        var johnRoe = givenSavedPerson("John", "Roe");
+        var janieDoe = givenSavedPerson("Janie", "Doe");
 
         // when
         List<String> actual = repository.executeStoredProcedure("Person_DeleteAndGetFirstNames", builder ->
@@ -202,11 +201,11 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
     void shouldExecuteStoredProcedureWithResultClasses() {
 
         // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
-        Person johnyRoe = givenSavedPerson("Johny", "Roe");
-        Person janeDoe = givenSavedPerson("Jane", "Doe");
-        Person johnRoe = givenSavedPerson("John", "Roe");
-        Person janieDoe = givenSavedPerson("Janie", "Doe");
+        var johnDoe = givenSavedPerson("John", "Doe");
+        var johnyRoe = givenSavedPerson("Johny", "Roe");
+        var janeDoe = givenSavedPerson("Jane", "Doe");
+        var johnRoe = givenSavedPerson("John", "Roe");
+        var janieDoe = givenSavedPerson("Janie", "Doe");
 
         // when
         List<Person> actual = repository.executeStoredProcedure(

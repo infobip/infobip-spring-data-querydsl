@@ -1,9 +1,13 @@
 package com.infobip.spring.data.jpa;
 
-import com.querydsl.core.types.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
-import javax.persistence.*;
-import java.util.*;
+import com.querydsl.core.types.Path;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.ParameterMode;
+import jakarta.persistence.StoredProcedureQuery;
 
 public class StoredProcedureQueryBuilder {
 
@@ -25,7 +29,7 @@ public class StoredProcedureQueryBuilder {
     }
 
     public StoredProcedureQuery build() {
-        StoredProcedureQuery storedProcedureQuery = createStoredProcedureQuery();
+        var storedProcedureQuery = createStoredProcedureQuery();
         inParameters.forEach(parameter -> {
             storedProcedureQuery.registerStoredProcedureParameter(parameter.name, parameter.type, ParameterMode.IN);
             storedProcedureQuery.setParameter(parameter.name, parameter.value);
@@ -77,7 +81,7 @@ public class StoredProcedureQueryBuilder {
             if (o == null || getClass() != o.getClass()) {
                 return false;
             }
-            Parameter parameter = (Parameter) o;
+            var parameter = (Parameter) o;
             return Objects.equals(type, parameter.type) &&
                     Objects.equals(name, parameter.name) &&
                     Objects.equals(value, parameter.value);

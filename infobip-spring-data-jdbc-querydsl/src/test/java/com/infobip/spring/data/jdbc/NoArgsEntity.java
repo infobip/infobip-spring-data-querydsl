@@ -1,8 +1,11 @@
 package com.infobip.spring.data.jdbc;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.With;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceConstructor;
+
+;
 
 @Getter
 @EqualsAndHashCode

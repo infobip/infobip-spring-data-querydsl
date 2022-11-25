@@ -2,13 +2,13 @@ package com.infobip.spring.data.jpa;
 
 import static org.hibernate.jpa.QueryHints.HINT_FETCH_SIZE;
 
-import javax.persistence.QueryHint;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
+import jakarta.persistence.QueryHint;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

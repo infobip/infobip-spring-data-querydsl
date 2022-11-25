@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.infobip</groupId>
 		<artifactId>infobip-spring-data-querydsl</artifactId>
-		<version>7.2.5-SNAPSHOT</version>
+		<version>8.0.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>infobip-spring-data-jdbc-annotation-processor</artifactId>
@@ -33,4 +33,17 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <argLine>--add-opens=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</argLine>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

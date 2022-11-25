@@ -1,6 +1,5 @@
 package com.infobip.spring.data.r2dbc;
 
-import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 
 import com.querydsl.sql.SQLServer2012Templates;
@@ -21,13 +20,13 @@ public class R2dbcSQLTemplatesConfiguration {
     @ConditionalOnBean(Flyway.class)
     @Bean
     public SQLTemplates sqlTemplates(Flyway flyway) throws SQLException {
-        JdbcConnectionFactory jdbcConnectionFactory = new JdbcConnectionFactory(flyway.getConfiguration().getDataSource(),
-                                                                                flyway.getConfiguration(),
-                                                                                null);
-        SQLTemplatesRegistry sqlTemplatesRegistry = new SQLTemplatesRegistry();
-        DatabaseMetaData metaData = jdbcConnectionFactory.openConnection().getMetaData();
+        var jdbcConnectionFactory = new JdbcConnectionFactory(flyway.getConfiguration().getDataSource(),
+                                                              flyway.getConfiguration(),
+                                                              null);
+        var sqlTemplatesRegistry = new SQLTemplatesRegistry();
+        var metaData = jdbcConnectionFactory.openConnection().getMetaData();
 
-        SQLTemplates templates = sqlTemplatesRegistry.getTemplates(metaData);
+        var templates = sqlTemplatesRegistry.getTemplates(metaData);
 
         if (templates instanceof SQLServerTemplates || metaData.getDatabaseMajorVersion() > 11) {
             return new SQLServer2012Templates();

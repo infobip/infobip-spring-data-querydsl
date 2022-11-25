@@ -1,6 +1,5 @@
 package com.infobip.spring.data.jpa;
 
-import javax.persistence.EntityManager;
 import java.util.function.Function;
 
 import com.querydsl.core.types.EntityPath;
@@ -10,6 +9,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.querydsl.jpa.impl.JPAUpdateClause;
 import com.querydsl.jpa.sql.JPASQLQuery;
+import jakarta.persistence.EntityManager;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)

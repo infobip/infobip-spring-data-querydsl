@@ -15,9 +15,16 @@
  */
 package com.infobip.spring.data.r2dbc;
 
-import com.querydsl.core.types.*;
-import com.querydsl.sql.*;
-import com.querydsl.sql.dml.SQLDeleteClause;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import com.querydsl.core.types.ConstructorExpression;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.sql.RelationalPath;
+import com.querydsl.sql.SQLBindings;
+import com.querydsl.sql.SQLQuery;
+import com.querydsl.sql.SQLQueryFactory;
 import com.querydsl.sql.dml.SQLUpdateClause;
 import org.springframework.data.r2dbc.convert.EntityRowMapper;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
@@ -27,9 +34,6 @@ import org.springframework.transaction.ReactiveTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Mono;
-
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> {
 
@@ -62,13 +66,13 @@ public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> 
 
     @Override
     @Transactional
-    public Mono<Integer> update(Function<SQLUpdateClause, SQLUpdateClause> update) {
-        SQLUpdateClause clause = sqlQueryFactory.update(path);
+    public Mono<Long> update(Function<SQLUpdateClause, SQLUpdateClause> update) {
+        var clause = sqlQueryFactory.update(path);
         clause.setUseLiterals(true);
-        String sql = update.apply(clause).getSQL()
-                           .stream()
-                           .map(SQLBindings::getSQL)
-                           .collect(Collectors.joining("\n"));
+        var sql = update.apply(clause).getSQL()
+                        .stream()
+                        .map(SQLBindings::getSQL)
+                        .collect(Collectors.joining("\n"));
         return databaseClient.sql(sql)
                              .fetch()
                              .rowsUpdated()
@@ -77,14 +81,14 @@ public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> 
 
     @Override
     @Transactional
-    public Mono<Integer> deleteWhere(Predicate predicate) {
-        SQLDeleteClause clause = sqlQueryFactory.delete(path)
-                                                .where(predicate);
+    public Mono<Long> deleteWhere(Predicate predicate) {
+        var clause = sqlQueryFactory.delete(path)
+                                    .where(predicate);
         clause.setUseLiterals(true);
-        String sql = clause.getSQL()
-                           .stream()
-                           .map(SQLBindings::getSQL)
-                           .collect(Collectors.joining("\n"));
+        var sql = clause.getSQL()
+                        .stream()
+                        .map(SQLBindings::getSQL)
+                        .collect(Collectors.joining("\n"));
         return databaseClient.sql(sql)
                              .fetch()
                              .rowsUpdated()
@@ -97,10 +101,10 @@ public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> 
     }
 
     private <O> RowsFetchSpec<O> createQuery(Function<SQLQuery<?>, SQLQuery<O>> query) {
-        SQLQuery<O> result = query.apply(sqlQueryFactory.query());
+        var result = query.apply(sqlQueryFactory.query());
         result.setUseLiterals(true);
-        String sql = result.getSQL().getSQL();
-        EntityRowMapper<O> mapper = new EntityRowMapper<>(result.getType(), converter);
+        var sql = result.getSQL().getSQL();
+        var mapper = new EntityRowMapper<O>(result.getType(), converter);
         return new TransactionalRowsFetchSpec<>(databaseClient.sql(sql)
                                                               .map(mapper),
                                                 TransactionalOperator.create(reactiveTransactionManager));

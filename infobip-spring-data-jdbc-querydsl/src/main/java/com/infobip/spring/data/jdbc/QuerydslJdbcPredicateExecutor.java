@@ -1,6 +1,5 @@
 package com.infobip.spring.data.jdbc;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
@@ -109,9 +108,9 @@ public class QuerydslJdbcPredicateExecutor<T> implements QuerydslPredicateExecut
         Assert.notNull(predicate, "Predicate must not be null!");
         Assert.notNull(pageable, "Pageable must not be null!");
 
-        final SQLQuery<?> countQuery = createCountQuery(predicate);
+        final var countQuery = createCountQuery(predicate);
 
-        List<T> content = queryMany(
+        var content = queryMany(
                 querydsl.applyPagination(pageable, createQuery(predicate).select(constructorExpression)));
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
     }
@@ -144,7 +143,7 @@ public class QuerydslJdbcPredicateExecutor<T> implements QuerydslPredicateExecut
 
     private SQLQuery<?> doCreateQuery(@Nullable Predicate... predicate) {
 
-        SQLQuery<?> query = querydsl.createQuery(path);
+        var query = querydsl.createQuery(path);
 
         if (predicate != null) {
             query = query.where(predicate);
@@ -163,20 +162,20 @@ public class QuerydslJdbcPredicateExecutor<T> implements QuerydslPredicateExecut
 
     @Nullable
     private T query(Predicate predicate) {
-        SQLQuery<T> query = createQuery(predicate).select(constructorExpression);
+        var query = createQuery(predicate).select(constructorExpression);
         return queryOne(query);
     }
 
     @Nullable
     T queryOne(SQLQuery<T> query) {
-        List<T> results = queryMany(query);
+        var results = queryMany(query);
         return DataAccessUtils.singleResult(results);
     }
 
     List<T> queryMany(SQLQuery<T> query) {
         RowMapper<T> rowMapper = new EntityRowMapper<>(entity, converter);
-        RowMapperResultSetExtractor<T> rowMapperResultSetExtractor = new RowMapperResultSetExtractor<>(rowMapper);
-        List<T> result = query(query, rowMapperResultSetExtractor);
+        var rowMapperResultSetExtractor = new RowMapperResultSetExtractor<T>(rowMapper);
+        var result = query(query, rowMapperResultSetExtractor);
 
         if (Objects.isNull(result)) {
             return Collections.emptyList();
@@ -188,7 +187,7 @@ public class QuerydslJdbcPredicateExecutor<T> implements QuerydslPredicateExecut
     @Nullable
     private List<T> query(SQLQuery<T> query,
                   RowMapperResultSetExtractor<T> rowMapperResultSetExtractor) {
-        ResultSet resultSet = query.getResults();
+        var resultSet = query.getResults();
         try {
             return rowMapperResultSetExtractor.extractData(resultSet);
         } catch (SQLException e) {
@@ -199,9 +198,9 @@ public class QuerydslJdbcPredicateExecutor<T> implements QuerydslPredicateExecut
     }
 
     private DataAccessException translateException(SQLException ex) {
-        String task = "";
+        var task = "";
         String sql = null;
-        DataAccessException dae = new SQLStateSQLExceptionTranslator().translate("", sql, ex);
+        var dae = new SQLStateSQLExceptionTranslator().translate("", sql, ex);
         return (dae != null ? dae : new UncategorizedSQLException(task, sql, ex));
     }
 }

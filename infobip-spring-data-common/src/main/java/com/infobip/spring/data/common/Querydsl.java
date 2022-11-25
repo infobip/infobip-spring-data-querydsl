@@ -15,7 +15,9 @@
  */
 package com.infobip.spring.data.common;
 
-import com.querydsl.core.types.*;
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.OrderSpecifier.NullHandling;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.sql.SQLQuery;
@@ -25,10 +27,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.querydsl.QSort;
 import org.springframework.data.relational.core.mapping.RelationalPersistentEntity;
-import org.springframework.data.relational.core.mapping.RelationalPersistentProperty;
 import org.springframework.util.Assert;
-
-import java.util.List;
 
 /**
  * // @see org.springframework.data.jpa.repository.support.Querydsl
@@ -88,7 +87,7 @@ public class Querydsl {
 
 	private <T> SQLQuery<T> addOrderByFrom(QSort qsort, SQLQuery<T> query) {
 
-		List<OrderSpecifier<?>> orderSpecifiers = qsort.getOrderSpecifiers();
+		var orderSpecifiers = qsort.getOrderSpecifiers();
 
 		return query.orderBy(orderSpecifiers.toArray(new OrderSpecifier[0]));
 	}
@@ -98,7 +97,7 @@ public class Querydsl {
 		Assert.notNull(sort, "Sort must not be null!");
 		Assert.notNull(query, "Query must not be null!");
 
-		for (Order order : sort) {
+		for (var order : sort) {
 			query.orderBy(toOrderSpecifier(order));
 		}
 
@@ -117,26 +116,19 @@ public class Querydsl {
 
 		Assert.notNull(nullHandling, "NullHandling must not be null!");
 
-		switch (nullHandling) {
-
-			case NULLS_FIRST:
-				return NullHandling.NullsFirst;
-
-			case NULLS_LAST:
-				return NullHandling.NullsLast;
-
-			case NATIVE:
-			default:
-				return NullHandling.Default;
-		}
+		return switch (nullHandling) {
+			case NULLS_FIRST -> NullHandling.NullsFirst;
+			case NULLS_LAST -> NullHandling.NullsLast;
+			case NATIVE -> NullHandling.Default;
+		};
 	}
 
 	private Expression<?> buildOrderPropertyPathFrom(Order order) {
 
 		Assert.notNull(order, "Order must not be null!");
 
-		RelationalPersistentProperty persistentProperty = entity.getRequiredPersistentProperty(order.getProperty());
-		String columnName = persistentProperty.getColumnName().getReference();
+		var persistentProperty = entity.getRequiredPersistentProperty(order.getProperty());
+		var columnName = persistentProperty.getColumnName().getReference();
 
 		return Expressions.stringPath(columnName);
 	}

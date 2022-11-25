@@ -1,13 +1,15 @@
 package com.infobip.spring.data.jdbc.fragment;
 
-import com.infobip.spring.data.jdbc.*;
+import static org.assertj.core.api.BDDAssertions.then;
+
+import com.infobip.spring.data.jdbc.Person;
+import com.infobip.spring.data.jdbc.QuerydslJdbcFragment;
+import com.infobip.spring.data.jdbc.TestBase;
 import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.ResolvableType;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
-
-import static org.assertj.core.api.BDDAssertions.then;
 
 @AllArgsConstructor
 public class FragmentTest extends TestBase {
@@ -18,7 +20,7 @@ public class FragmentTest extends TestBase {
     void shouldInjectFragmentIntoContext() {
 
         // when
-        String[] actual = context.getBeanNamesForType(CustomFragmentPersonRepository.class);
+        var actual = context.getBeanNamesForType(CustomFragmentPersonRepository.class);
 
         // then
         then(actual).isNotEmpty();
@@ -28,7 +30,7 @@ public class FragmentTest extends TestBase {
     void shouldInjectRepositoryIntoContext() {
 
         // when
-        String[] actual = context.getBeanNamesForType(
+        var actual = context.getBeanNamesForType(
                 ResolvableType.forClassWithGenerics(QuerydslJdbcFragment.class, Person.class));
 
         // then
@@ -39,7 +41,7 @@ public class FragmentTest extends TestBase {
     void repositoryShouldImplementQuerydslPredicateExecutor() {
 
         // when
-        String[] actual = context.getBeanNamesForType(
+        var actual = context.getBeanNamesForType(
                 ResolvableType.forClassWithGenerics(QuerydslPredicateExecutor.class, Person.class));
 
         // then

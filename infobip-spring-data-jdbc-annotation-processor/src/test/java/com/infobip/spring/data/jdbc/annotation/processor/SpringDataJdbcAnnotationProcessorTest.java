@@ -21,8 +21,8 @@ public class SpringDataJdbcAnnotationProcessorTest {
     @Test
     void shouldCreateQClass() {
 
-        Path actual = Paths.get("src/test/resources/expected/QPascalCaseFooBar.java");
-        Path expected = Paths.get(
+        var actual = Paths.get("src/test/resources/expected/QPascalCaseFooBar.java");
+        var expected = Paths.get(
                 "target/generated-test-sources/test-annotations/com/infobip/spring/data/jdbc/annotation/processor/QPascalCaseFooBar.java");
         then(actual).hasSameTextualContentAs(expected);
     }
@@ -31,10 +31,10 @@ public class SpringDataJdbcAnnotationProcessorTest {
     void shouldCreateQClassWithCompileTesting() {
 
         // given
-        JavaFileObject givenSource = givenSource(PascalCaseFooBar.class);
+        var givenSource = givenSource(PascalCaseFooBar.class);
 
         // when
-        Compilation actual = whenCompile(givenSource);
+        var actual = whenCompile(givenSource);
 
         // then
         thenShouldGenerateSourceFile(actual, QPascalCaseFooBar.class);
@@ -43,8 +43,8 @@ public class SpringDataJdbcAnnotationProcessorTest {
     @Test
     void shouldCreateQClassWithTableAndColumnAnnotations() {
 
-        Path actual = Paths.get("src/test/resources/expected/QCamelCaseFooBar.java");
-        Path expected = Paths.get(
+        var actual = Paths.get("src/test/resources/expected/QCamelCaseFooBar.java");
+        var expected = Paths.get(
                 "target/generated-test-sources/test-annotations/com/infobip/spring/data/jdbc/annotation/processor/QCamelCaseFooBar.java");
         then(actual).hasSameContentAs(expected);
     }
@@ -53,10 +53,10 @@ public class SpringDataJdbcAnnotationProcessorTest {
     void shouldCreateQClassWithTableAndColumnAnnotationsWithCompileTesting() {
 
         // given
-        JavaFileObject givenSource = givenSource(CamelCaseFooBar.class);
+        var givenSource = givenSource(CamelCaseFooBar.class);
 
         // when
-        Compilation actual = whenCompile(givenSource);
+        var actual = whenCompile(givenSource);
 
         // then
         thenShouldGenerateSourceFile(actual, QCamelCaseFooBar.class);
@@ -66,10 +66,10 @@ public class SpringDataJdbcAnnotationProcessorTest {
     void shouldCreateSimpleQClassWithTableAndColumnAnnotationsWithCompileTesting() {
 
         // given
-        JavaFileObject givenSource = givenSource(Foo.class);
+        var givenSource = givenSource(Foo.class);
 
         // when
-        Compilation actual = whenCompile(givenSource);
+        var actual = whenCompile(givenSource);
 
         // then
         thenShouldGenerateSourceFile(actual, QFoo.class);
@@ -79,10 +79,10 @@ public class SpringDataJdbcAnnotationProcessorTest {
     void shouldCreateSimpleQClassWithTableNameAndColumnAnnotationsWithCompileTesting() {
 
         // given
-        JavaFileObject givenSource = givenSource(FooWithTableName.class);
+        var givenSource = givenSource(FooWithTableName.class);
 
         // when
-        Compilation actual = whenCompile(givenSource);
+        var actual = whenCompile(givenSource);
 
         // then
         thenShouldGenerateSourceFile(actual, QFooWithTableName.class);
@@ -91,8 +91,8 @@ public class SpringDataJdbcAnnotationProcessorTest {
     @Test
     void shouldCreateQClassWithSchema() {
 
-        Path actual = Paths.get("src/test/resources/expected/QEntityWithSchema.java");
-        Path expected = Paths.get(
+        var actual = Paths.get("src/test/resources/expected/QEntityWithSchema.java");
+        var expected = Paths.get(
                 "target/generated-test-sources/test-annotations/com/infobip/spring/data/jdbc/annotation/processor/QEntityWithSchema.java");
 
         then(actual).hasSameContentAs(expected);
@@ -102,10 +102,10 @@ public class SpringDataJdbcAnnotationProcessorTest {
     void shouldCreateQClassWithSchemaWithCompileTesting() {
 
         // given
-        JavaFileObject givenSource = givenSource(EntityWithSchema.class);
+        var givenSource = givenSource(EntityWithSchema.class);
 
         // when
-        Compilation actual = whenCompile(givenSource);
+        var actual = whenCompile(givenSource);
 
         // then
         thenShouldGenerateSourceFile(actual, QEntityWithSchema.class);
@@ -114,10 +114,10 @@ public class SpringDataJdbcAnnotationProcessorTest {
     @Test
     void shouldCreateSnakeCaseAndTransientType() {
         // given
-        JavaFileObject givenSource = givenSource(SnakeCaseAndTransientType.class);
+        var givenSource = givenSource(SnakeCaseAndTransientType.class);
 
         // when
-        Compilation actual = whenCompile(givenSource);
+        var actual = whenCompile(givenSource);
 
         // then
         thenShouldGenerateSourceFile(actual, QSnakeCaseAndTransientType.class);
@@ -126,12 +126,12 @@ public class SpringDataJdbcAnnotationProcessorTest {
     @Test
     void shouldApplyCustomCaseFormatToColumns() {
         // given
-        JavaFileObject givenEntitySource = givenSource(LowerUnderScoreColumnFooBar.class);
-        JavaFileObject givenConfigurationSource = givenSource(
+        var givenEntitySource = givenSource(LowerUnderScoreColumnFooBar.class);
+        var givenConfigurationSource = givenSource(
                 Paths.get("src", "test", "resources", "given", "CustomCaseFormatColumnConfiguration.java"));
 
         // when
-        Compilation actual = whenCompile(givenConfigurationSource, givenEntitySource);
+        var actual = whenCompile(givenConfigurationSource, givenEntitySource);
 
         // then
         thenShouldGenerateSourceFile(actual, QLowerUnderScoreColumnFooBar.class);
@@ -140,12 +140,12 @@ public class SpringDataJdbcAnnotationProcessorTest {
     @Test
     void shouldApplyCustomCaseFormatToTable() {
         // given
-        JavaFileObject givenEntitySource = givenSource(LowerUnderScoreTableFooBar.class);
-        JavaFileObject givenConfigurationSource = givenSource(
+        var givenEntitySource = givenSource(LowerUnderScoreTableFooBar.class);
+        var givenConfigurationSource = givenSource(
                 Paths.get("src", "test", "resources", "given", "CustomCaseFormatTableConfiguration.java"));
 
         // when
-        Compilation actual = whenCompile(givenConfigurationSource, givenEntitySource);
+        var actual = whenCompile(givenConfigurationSource, givenEntitySource);
 
         // then
         thenShouldGenerateSourceFile(actual, QLowerUnderScoreTableFooBar.class);
@@ -154,10 +154,10 @@ public class SpringDataJdbcAnnotationProcessorTest {
     @Test
     void shouldGenerateEmbeddedQClass() {
         // given
-        JavaFileObject givenSource = givenSource(EntityWithEmbedded.class);
+        var givenSource = givenSource(EntityWithEmbedded.class);
 
         // when
-        Compilation actual = whenCompile(givenSource);
+        var actual = whenCompile(givenSource);
 
         // then
         thenShouldGenerateSourceFile(actual, QEntityWithEmbedded.class);
@@ -167,10 +167,10 @@ public class SpringDataJdbcAnnotationProcessorTest {
     @Test
     void shouldIgnoreMappedCollectionAnnotatedFields() {
         // given
-        JavaFileObject givenSource = givenSource(EntityWithMappedCollection.class);
+        var givenSource = givenSource(EntityWithMappedCollection.class);
 
         // when
-        Compilation actual = whenCompile(givenSource);
+        var actual = whenCompile(givenSource);
 
         // then
        thenShouldGenerateSourceFile(actual, QEntityWithMappedCollection.class);

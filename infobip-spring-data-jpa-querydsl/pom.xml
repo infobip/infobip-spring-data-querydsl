@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.infobip</groupId>
 		<artifactId>infobip-spring-data-querydsl</artifactId>
-		<version>7.2.5-SNAPSHOT</version>
+		<version>8.0.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>infobip-spring-data-jpa-querydsl</artifactId>
@@ -19,7 +19,8 @@
 		<dependency>
 			<groupId>com.querydsl</groupId>
 			<artifactId>querydsl-apt</artifactId>
-			<classifier>jpa</classifier>
+			<version>${querydsl.version}</version>
+			<classifier>jakarta</classifier>
 			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.jdt</groupId>
@@ -41,6 +42,8 @@
 		<dependency>
 			<groupId>com.querydsl</groupId>
 			<artifactId>querydsl-jpa</artifactId>
+			<version>${querydsl.version}</version>
+			<classifier>jakarta</classifier>
 		</dependency>
 
 		<dependency>
@@ -48,21 +51,4 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>${maven-jar-plugin.version}</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>test-jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
 </project>

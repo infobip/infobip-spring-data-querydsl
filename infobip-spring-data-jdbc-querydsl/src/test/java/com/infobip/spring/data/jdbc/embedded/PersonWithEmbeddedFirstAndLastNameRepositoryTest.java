@@ -1,16 +1,19 @@
 package com.infobip.spring.data.jdbc.embedded;
 
+import static com.infobip.spring.data.jdbc.embedded.QPersonWithEmbeddedFirstAndLastName.personWithEmbeddedFirstAndLastName;
+import static org.assertj.core.api.BDDAssertions.then;
+
+import java.time.ZoneOffset;
+import java.util.List;
+import java.util.TimeZone;
+
 import com.infobip.spring.data.jdbc.TestBase;
 import com.querydsl.core.types.Projections;
 import lombok.AllArgsConstructor;
 import lombok.Value;
-import org.junit.jupiter.api.*;
-
-import java.time.ZoneOffset;
-import java.util.*;
-
-import static com.infobip.spring.data.jdbc.embedded.QPersonWithEmbeddedFirstAndLastName.personWithEmbeddedFirstAndLastName;
-import static org.assertj.core.api.BDDAssertions.then;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 @AllArgsConstructor
 public class PersonWithEmbeddedFirstAndLastNameRepositoryTest extends TestBase {
@@ -33,12 +36,12 @@ public class PersonWithEmbeddedFirstAndLastNameRepositoryTest extends TestBase {
     void shouldFindAll() {
 
         // given
-        PersonWithEmbeddedFirstAndLastName johnDoe = givenSavedPerson("John", "Doe");
-        PersonWithEmbeddedFirstAndLastName johnyRoe = givenSavedPerson("Johny", "Roe");
-        PersonWithEmbeddedFirstAndLastName janeDoe = givenSavedPerson("Jane", "Doe");
+        var johnDoe = givenSavedPerson("John", "Doe");
+        var johnyRoe = givenSavedPerson("Johny", "Roe");
+        var janeDoe = givenSavedPerson("Jane", "Doe");
 
         // when
-        List<PersonWithEmbeddedFirstAndLastName> actual = repository.findAll();
+        var actual = repository.findAll();
 
         then(actual).containsExactlyInAnyOrder(johnDoe, johnyRoe, janeDoe);
     }
@@ -47,8 +50,8 @@ public class PersonWithEmbeddedFirstAndLastNameRepositoryTest extends TestBase {
     void shouldFindAllWithPredicate() {
 
         // given
-        PersonWithEmbeddedFirstAndLastName johnDoe = givenSavedPerson("John", "Doe");
-        PersonWithEmbeddedFirstAndLastName johnyRoe = givenSavedPerson("Johny", "Roe");
+        var johnDoe = givenSavedPerson("John", "Doe");
+        var johnyRoe = givenSavedPerson("Johny", "Roe");
         givenSavedPerson("Jane", "Doe");
 
         // when
@@ -62,14 +65,14 @@ public class PersonWithEmbeddedFirstAndLastNameRepositoryTest extends TestBase {
     void shouldQuery() {
 
         // given
-        PersonWithEmbeddedFirstAndLastName johnDoe = givenSavedPerson("John", "Doe");
+        var johnDoe = givenSavedPerson("John", "Doe");
         givenSavedPerson("Johny", "Roe");
         givenSavedPerson("Jane", "Doe");
         givenSavedPerson("John", "Roe");
         givenSavedPerson("Janie", "Doe");
 
         // when
-        List<PersonWithEmbeddedFirstAndLastName> actual = repository.query(query -> query
+        var actual = repository.query(query -> query
                 .select(repository.entityProjection())
                 .from(personWithEmbeddedFirstAndLastName)
                 .where(personWithEmbeddedFirstAndLastName.firstName.in("John", "Jane"))
@@ -86,14 +89,14 @@ public class PersonWithEmbeddedFirstAndLastNameRepositoryTest extends TestBase {
     void shouldQueryOne() {
 
         // given
-        PersonWithEmbeddedFirstAndLastName johnDoe = givenSavedPerson("John", "Doe");
+        var johnDoe = givenSavedPerson("John", "Doe");
         givenSavedPerson("Johny", "Roe");
         givenSavedPerson("Jane", "Doe");
         givenSavedPerson("John", "Roe");
         givenSavedPerson("Janie", "Doe");
 
         // when
-        Optional<PersonWithEmbeddedFirstAndLastName> actual = repository.queryOne(query -> query
+        var actual = repository.queryOne(query -> query
                 .select(repository.entityProjection())
                 .from(personWithEmbeddedFirstAndLastName)
                 .where(personWithEmbeddedFirstAndLastName.firstName.in("John", "Jane"))
@@ -109,14 +112,14 @@ public class PersonWithEmbeddedFirstAndLastNameRepositoryTest extends TestBase {
     void shouldQueryMany() {
 
         // given
-        PersonWithEmbeddedFirstAndLastName johnDoe = givenSavedPerson("John", "Doe");
+        var johnDoe = givenSavedPerson("John", "Doe");
         givenSavedPerson("Johny", "Roe");
         givenSavedPerson("Jane", "Doe");
         givenSavedPerson("John", "Roe");
         givenSavedPerson("Janie", "Doe");
 
         // when
-        List<PersonWithEmbeddedFirstAndLastName> actual = repository.queryMany(query -> query
+        var actual = repository.queryMany(query -> query
                 .select(repository.entityProjection())
                 .from(personWithEmbeddedFirstAndLastName)
                 .where(personWithEmbeddedFirstAndLastName.firstName.in("John", "Jane"))
@@ -132,7 +135,7 @@ public class PersonWithEmbeddedFirstAndLastNameRepositoryTest extends TestBase {
     void shouldProject() {
 
         // given
-        PersonWithEmbeddedFirstAndLastName johnDoe = givenSavedPerson("John", "Doe");
+        var johnDoe = givenSavedPerson("John", "Doe");
 
         // when
         List<PersonProjection> actual = repository.query(query -> query
@@ -173,11 +176,11 @@ public class PersonWithEmbeddedFirstAndLastNameRepositoryTest extends TestBase {
         // given
         givenSavedPerson("John", "Doe");
         givenSavedPerson("Johny", "Roe");
-        PersonWithEmbeddedFirstAndLastName janeDoe = givenSavedPerson("Jane", "Doe");
+        var janeDoe = givenSavedPerson("Jane", "Doe");
         givenSavedPerson("John", "Roe");
 
         // when
-        long actual = repository.deleteWhere(personWithEmbeddedFirstAndLastName.firstName.like("John%"));
+        var actual = repository.deleteWhere(personWithEmbeddedFirstAndLastName.firstName.like("John%"));
 
         then(repository.findAll()).containsExactly(janeDoe);
         then(actual).isEqualTo(3L);

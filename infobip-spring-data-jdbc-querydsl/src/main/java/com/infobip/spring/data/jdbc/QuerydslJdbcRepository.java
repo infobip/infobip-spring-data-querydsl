@@ -8,12 +8,13 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 @NoRepositoryBean
 public interface QuerydslJdbcRepository<T, ID>
-        extends PagingAndSortingRepository<T, ID>, QuerydslPredicateExecutor<T>, QuerydslJdbcFragment<T> {
+        extends PagingAndSortingRepository<T, ID>, CrudRepository<T, ID>, QuerydslPredicateExecutor<T>, QuerydslJdbcFragment<T> {
 
     default List<T> save(T... entities) {
         return this.saveAll(Arrays.asList(entities));

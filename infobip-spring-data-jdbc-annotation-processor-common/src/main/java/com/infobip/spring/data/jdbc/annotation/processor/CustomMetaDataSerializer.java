@@ -3,7 +3,6 @@ package com.infobip.spring.data.jdbc.annotation.processor;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.ElementFilter;
 import java.io.IOException;
@@ -48,29 +47,29 @@ public class CustomMetaDataSerializer extends MetaDataSerializer {
     @Override
     protected void serializeProperties(EntityType model, SerializerConfig config,
                                        CodeWriter writer) throws IOException {
-        CustomPropertiesEntityType newModel = withFieldOrderedProperties(model);
+        var newModel = withFieldOrderedProperties(model);
         super.serializeProperties(newModel, config, writer);
     }
 
     @Override
     protected void outro(EntityType model, CodeWriter writer) throws IOException {
-        CustomPropertiesEntityType newModel = withFieldOrderedProperties(model);
+        var newModel = withFieldOrderedProperties(model);
         super.outro(newModel, writer);
     }
 
     public CustomPropertiesEntityType withFieldOrderedProperties(EntityType entityType) {
-        Set<Property> properties = entityType.getProperties();
-        Map<String, Property> propertyNameToProperty = properties
+        var properties = entityType.getProperties();
+        var propertyNameToProperty = properties
             .stream()
             .collect(Collectors.toMap(Property::getName, Function.identity()));
 
-        TypeElement typeElement = processingEnvironment.getElementUtils().getTypeElement(entityType.getFullName());
-        LinkedHashSet<Property> orderedProperties = ElementFilter.fieldsIn(new ArrayList<>(typeElement.getEnclosedElements()))
-                                                                 .stream()
-                                                                 .map(field -> propertyNameToProperty.get(field.getSimpleName()
+        var typeElement = processingEnvironment.getElementUtils().getTypeElement(entityType.getFullName());
+        var orderedProperties = ElementFilter.fieldsIn(new ArrayList<>(typeElement.getEnclosedElements()))
+                                             .stream()
+                                             .map(field -> propertyNameToProperty.get(field.getSimpleName()
                                                                                                                .toString()))
-                                                                 .filter(Objects::nonNull)
-                                                                 .collect(Collectors.toCollection(LinkedHashSet::new));
+                                             .filter(Objects::nonNull)
+                                             .collect(Collectors.toCollection(LinkedHashSet::new));
 
         properties.stream()
                   .filter(property -> !orderedProperties.contains(property))
@@ -83,8 +82,8 @@ public class CustomMetaDataSerializer extends MetaDataSerializer {
 
     private void addMetaData(LinkedHashSet<Property> orderedProperties) {
         List<Property> orderedPropertiesList = new ArrayList<>(orderedProperties);
-        for (int i = 0; i < orderedPropertiesList.size(); i++) {
-            Property property = orderedPropertiesList.get(i);
+        for (var i = 0; i < orderedPropertiesList.size(); i++) {
+            var property = orderedPropertiesList.get(i);
             property.getData().put("COLUMN", ColumnMetadata.named(getColumnName(property))
                                                            .withIndex(i));
 
@@ -92,8 +91,8 @@ public class CustomMetaDataSerializer extends MetaDataSerializer {
     }
 
     protected String getColumnName(Property property) {
-        TypeElement parentType = processingEnvironment.getElementUtils()
-                                                      .getTypeElement(property.getDeclaringType().getFullName());
+        var parentType = processingEnvironment.getElementUtils()
+                                              .getTypeElement(property.getDeclaringType().getFullName());
         return parentType.getEnclosedElements()
                          .stream()
                          .filter(element -> element instanceof VariableElement)

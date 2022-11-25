@@ -3,10 +3,13 @@ package com.infobip.spring.data.r2dbc;
 import java.util.function.Function;
 
 import com.infobip.spring.data.common.Querydsl;
-import com.querydsl.core.types.*;
-import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.ConstructorExpression;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.SimpleExpression;
-import com.querydsl.sql.*;
+import com.querydsl.sql.RelationalPath;
+import com.querydsl.sql.SQLQuery;
+import com.querydsl.sql.SQLQueryFactory;
 import org.reactivestreams.Publisher;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.querydsl.QSort;
@@ -48,16 +51,16 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
 
     @Override
     public Mono<T> findOne(Predicate predicate) {
-        SQLQuery<T> sqlQuery = sqlQueryFactory.query()
-                                              .select(constructorExpression)
-                                              .where(predicate)
-                                              .from(path);
+        var sqlQuery = sqlQueryFactory.query()
+                                      .select(constructorExpression)
+                                      .where(predicate)
+                                      .from(path);
         return query(sqlQuery).one();
     }
 
     @Override
     public Flux<T> findAll(Predicate predicate) {
-        SQLQuery<T> query = sqlQueryFactory.query().select(constructorExpression).from(path).where(predicate);
+        var query = sqlQueryFactory.query().select(constructorExpression).from(path).where(predicate);
         return query(query).all();
     }
 
@@ -89,11 +92,11 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
 
     @Override
     public Mono<Long> count(Predicate predicate) {
-        NumberExpression<Long> count = ((SimpleExpression<?>) constructorExpression.getArgs().get(0)).count();
-        SQLQuery<Long> sqlQuery = sqlQueryFactory.query()
-                                                 .select(count)
-                                                 .where(predicate)
-                                                 .from(path);
+        var count = ((SimpleExpression<?>) constructorExpression.getArgs().get(0)).count();
+        var sqlQuery = sqlQueryFactory.query()
+                                      .select(count)
+                                      .where(predicate)
+                                      .from(path);
         return query(sqlQuery).one();
     }
 
@@ -116,7 +119,7 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
 
     private SQLQuery<?> doCreateQuery(@Nullable Predicate... predicate) {
 
-        SQLQuery<?> query = querydsl.createQuery(path);
+        var query = querydsl.createQuery(path);
 
         if (predicate != null) {
             query = query.where(predicate);
@@ -130,14 +133,14 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
     }
 
     private Flux<T> executeSorted(SQLQuery<T> query, Sort sort) {
-        SQLQuery<T> sqlQuery = querydsl.applySorting(sort, query);
+        var sqlQuery = querydsl.applySorting(sort, query);
         return query(sqlQuery).all();
     }
 
     private <O> RowsFetchSpec<O> query(SQLQuery<O> query) {
         query.setUseLiterals(true);
-        String sql = query.getSQL().getSQL();
-        EntityRowMapper<O> mapper = new EntityRowMapper<>(query.getType(), converter);
+        var sql = query.getSQL().getSQL();
+        var mapper = new EntityRowMapper<O>(query.getType(), converter);
         return databaseClient.sql(sql)
                              .map(mapper);
     }

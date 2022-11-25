@@ -1,14 +1,14 @@
 package com.infobip.spring.data.jpa;
 
+import java.lang.annotation.Annotation;
+import java.util.Locale;
+
 import org.springframework.boot.autoconfigure.data.AbstractRepositoryConfigurationSourceSupport;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.repository.config.BootstrapMode;
 import org.springframework.data.repository.config.RepositoryConfigurationExtension;
 import org.springframework.util.StringUtils;
-
-import java.lang.annotation.Annotation;
-import java.util.Locale;
 
 class QuerydslJpaRepositoriesRegistrar extends AbstractRepositoryConfigurationSourceSupport {
 
@@ -41,7 +41,7 @@ class QuerydslJpaRepositoriesRegistrar extends AbstractRepositoryConfigurationSo
     }
 
     private void configureBootstrapMode(Environment environment) {
-        String property = environment.getProperty("spring.data.jpa.repositories.bootstrap-mode");
+        var property = environment.getProperty("spring.data.jpa.repositories.bootstrap-mode");
         if (StringUtils.hasText(property)) {
             this.bootstrapMode = BootstrapMode.valueOf(property.toUpperCase(Locale.ENGLISH));
         }

@@ -60,13 +60,13 @@ public class QuerydslJdbcRepositoryFactoryBean<T extends Repository<S, ID>, S, I
     @Override
     protected RepositoryFactorySupport doCreateRepositoryFactory() {
 
-        QuerydslJdbcRepositoryFactory jdbcRepositoryFactory = new QuerydslJdbcRepositoryFactory(dataAccessStrategy,
-                                                                                                mappingContext,
-                                                                                                converter,
-                                                                                                dialect,
-                                                                                                publisher,
-                                                                                                operations,
-                                                                                                sqlQueryFactory);
+        var jdbcRepositoryFactory = new QuerydslJdbcRepositoryFactory(dataAccessStrategy,
+                                                                      mappingContext,
+                                                                      converter,
+                                                                      dialect,
+                                                                      publisher,
+                                                                      operations,
+                                                                      sqlQueryFactory);
         jdbcRepositoryFactory.setQueryMappingConfiguration(queryMappingConfiguration);
         jdbcRepositoryFactory.setEntityCallbacks(entityCallbacks);
 
@@ -143,12 +143,12 @@ public class QuerydslJdbcRepositoryFactoryBean<T extends Repository<S, ID>, S, I
 
                                                           Assert.state(this.dialect != null, "Dialect is required and must not be null!");
 
-                                                          SqlGeneratorSource sqlGeneratorSource = new SqlGeneratorSource(this.mappingContext, this.converter,
-                                                                                                                         this.dialect);
-                                                          SqlParametersFactory sqlParametersFactory = new SqlParametersFactory(this.mappingContext, this.converter,
-                                                                                                                               this.dialect);
-                                                          InsertStrategyFactory insertStrategyFactory = new InsertStrategyFactory(this.operations,
-                                                                                                                                  new BatchJdbcOperations(this.operations.getJdbcOperations()), this.dialect);
+                                                          var sqlGeneratorSource = new SqlGeneratorSource(this.mappingContext, this.converter,
+                                                                                                          this.dialect);
+                                                          var sqlParametersFactory = new SqlParametersFactory(this.mappingContext, this.converter,
+                                                                                                              this.dialect);
+                                                          var insertStrategyFactory = new InsertStrategyFactory(this.operations,
+                                                                                                                new BatchJdbcOperations(this.operations.getJdbcOperations()), this.dialect);
                                                           return new DefaultDataAccessStrategy(sqlGeneratorSource, this.mappingContext, this.converter,
                                                                                                this.operations, sqlParametersFactory, insertStrategyFactory);
                                                       });

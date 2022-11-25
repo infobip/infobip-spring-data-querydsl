@@ -1,3 +1,8 @@
+### 8.0.0
+
+* upgraded to Spring Boot 3.0.0
+* switched over to Jakarta dependencies with jakarta packages (e.g. jakarta.persistence-api 3.0.0)
+
 ### 7.2.4
 
 * added support for `Table#name` [#72](/../../issues/72)

@@ -1,18 +1,15 @@
 package com.infobip.spring.data.common;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.List;
 
 import kotlin.jvm.JvmClassMappingKt;
-import kotlin.reflect.KFunction;
 import kotlin.reflect.full.KClasses;
 import kotlin.reflect.jvm.ReflectJvmMapping;
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
-import org.springframework.data.annotation.PersistenceConstructor;
+import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.mapping.Parameter;
 import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.mapping.PersistentProperty;
@@ -21,6 +18,8 @@ import org.springframework.data.util.ClassTypeInformation;
 import org.springframework.data.util.KotlinReflectionUtils;
 import org.springframework.data.util.TypeInformation;
 import org.springframework.lang.Nullable;
+
+;
 
 /**
  * Utility class to find the preferred constructor which is compatible with both Spring Data JDBC and QueryDSL.
@@ -44,7 +43,7 @@ interface PreferredConstructorDiscoverer {
 
                 return Arrays.stream(type.getType().getDeclaredConstructors())
                         .filter(it -> !it.isSynthetic())
-                        .filter(it -> it.isAnnotationPresent(PersistenceConstructor.class))
+                        .filter(it -> it.isAnnotationPresent(PersistenceCreator.class))
                         .map(it -> buildPreferredConstructor(it, type, entity))
                         .findFirst()
                         .orElseGet(() -> Arrays.stream(type.getType().getDeclaredConstructors())
@@ -64,18 +63,18 @@ interface PreferredConstructorDiscoverer {
 
                 return Arrays.stream(type.getType().getDeclaredConstructors())
                         .filter(it -> !it.isSynthetic())
-                        .filter(it -> it.isAnnotationPresent(PersistenceConstructor.class))
+                        .filter(it -> it.isAnnotationPresent(PersistenceCreator.class))
                         .map(it -> buildPreferredConstructor(it, type, entity))
                         .findFirst()
                         .orElseGet(() -> {
-                            KFunction<T> primaryConstructor = KClasses
+                            var primaryConstructor = KClasses
                                     .getPrimaryConstructor(JvmClassMappingKt.getKotlinClass(type.getType()));
 
                             if (primaryConstructor == null) {
                                 return DEFAULT.discover(type, entity);
                             }
 
-                            Constructor<T> javaConstructor = ReflectJvmMapping.getJavaConstructor(primaryConstructor);
+                            var javaConstructor = ReflectJvmMapping.getJavaConstructor(primaryConstructor);
 
                             return javaConstructor != null ? buildPreferredConstructor(javaConstructor, type, entity) : null;
                         });
@@ -100,17 +99,17 @@ interface PreferredConstructorDiscoverer {
                 return new PreferredConstructor<>((Constructor<T>) constructor);
             }
 
-            List<TypeInformation<?>> parameterTypes = typeInformation.getParameterTypes(constructor);
-            String[] parameterNames = PARAMETER_NAME_DISCOVERER.getParameterNames(constructor);
+            var parameterTypes = typeInformation.getParameterTypes(constructor);
+            var parameterNames = PARAMETER_NAME_DISCOVERER.getParameterNames(constructor);
 
             Parameter<Object, P>[] parameters = new Parameter[parameterTypes.size()];
-            Annotation[][] parameterAnnotations = constructor.getParameterAnnotations();
+            var parameterAnnotations = constructor.getParameterAnnotations();
 
-            for (int i = 0; i < parameterTypes.size(); i++) {
+            for (var i = 0; i < parameterTypes.size(); i++) {
 
-                String name = parameterNames == null || parameterNames.length <= i ? null : parameterNames[i];
-                TypeInformation<?> type = parameterTypes.get(i);
-                Annotation[] annotations = parameterAnnotations[i];
+                var name = parameterNames == null || parameterNames.length <= i ? null : parameterNames[i];
+                var type = parameterTypes.get(i);
+                var annotations = parameterAnnotations[i];
 
                 parameters[i] = new Parameter(name, type, annotations, entity);
             }

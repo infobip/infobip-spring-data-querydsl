@@ -1,17 +1,15 @@
 package com.infobip.spring.data.r2dbc;
 
+import static com.infobip.spring.data.r2dbc.QPerson.person;
+
+import java.util.function.Predicate;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.querydsl.ReactiveQuerydslPredicateExecutor;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static com.infobip.spring.data.r2dbc.QPerson.person;
 
 public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
 
@@ -27,11 +25,11 @@ public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
     @Test
     void shouldFindOne() {
         // given
-        Mono<Void> given = given(givenSavedPerson("John", "Doe"),
-                                 givenSavedPerson("Johny", "Roe"));
+        var given = given(givenSavedPerson("John", "Doe"),
+                          givenSavedPerson("Johny", "Roe"));
 
         // when
-        Mono<Person> actual = given.then(executor.findOne(person.firstName.eq("John")));
+        var actual = given.then(executor.findOne(person.firstName.eq("John")));
 
         // then
         StepVerifier.create(actual)
@@ -42,9 +40,9 @@ public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
     @Test
     void shouldFindAllWithPredicate() {
         // given
-        Mono<Void> given = given(givenSavedPerson("John", "Doe"),
-                                 givenSavedPerson("Johny", "Roe"),
-                                 givenSavedPerson("Jane", "Doe"));
+        var given = given(givenSavedPerson("John", "Doe"),
+                          givenSavedPerson("Johny", "Roe"),
+                          givenSavedPerson("Jane", "Doe"));
 
         // when
         Flux<Person> actual = given.thenMany(executor.findAll(person.lastName.eq("Doe")));
@@ -59,9 +57,9 @@ public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
     @Test
     void shouldFindAllWithPredicateAndSort() {
         // given
-        Mono<Void> given = given(givenSavedPerson("John", "Doe"),
-                                 givenSavedPerson("Johny", "Roe"),
-                                 givenSavedPerson("Jane", "Doe"));
+        var given = given(givenSavedPerson("John", "Doe"),
+                          givenSavedPerson("Johny", "Roe"),
+                          givenSavedPerson("Jane", "Doe"));
 
         // when
         Flux<Person> actual = given.thenMany(executor.findAll(person.lastName.eq("Doe"), Sort.by(Sort.Order.asc("firstName"))));
@@ -76,9 +74,9 @@ public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
     @Test
     void shouldFindAllWithPredicateAndOrderSpecifier() {
         // given
-        Mono<Void> given = given(givenSavedPerson("John", "Doe"),
-                                 givenSavedPerson("Johny", "Roe"),
-                                 givenSavedPerson("Jane", "Doe"));
+        var given = given(givenSavedPerson("John", "Doe"),
+                          givenSavedPerson("Johny", "Roe"),
+                          givenSavedPerson("Jane", "Doe"));
 
         // when
         Flux<Person> actual = given.thenMany(executor.findAll(person.lastName.eq("Doe"), person.firstName.asc()));
@@ -93,9 +91,9 @@ public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
     @Test
     void shouldFindAllWithOrderSpecifier() {
         // given
-        Mono<Void> given = given(givenSavedPerson("John", "Doe"),
-                                 givenSavedPerson("Johny", "Roe"),
-                                 givenSavedPerson("Jane", "Doe"));
+        var given = given(givenSavedPerson("John", "Doe"),
+                          givenSavedPerson("Johny", "Roe"),
+                          givenSavedPerson("Jane", "Doe"));
 
         // when
         Flux<Person> actual = given.thenMany(executor.findAll(person.firstName.asc()));
@@ -111,12 +109,12 @@ public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
     @Test
     void shouldCount() {
         // given
-        Mono<Void> given = given(givenSavedPerson("John", "Doe"),
-                                 givenSavedPerson("Johny", "Roe"),
-                                 givenSavedPerson("Jane", "Doe"));
+        var given = given(givenSavedPerson("John", "Doe"),
+                          givenSavedPerson("Johny", "Roe"),
+                          givenSavedPerson("Jane", "Doe"));
 
         // when
-        Mono<Long> actual = given.then(executor.count(person.lastName.eq("Doe")));
+        var actual = given.then(executor.count(person.lastName.eq("Doe")));
 
         // then
         StepVerifier.create(actual)
@@ -127,12 +125,12 @@ public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
     @Test
     void shouldExist() {
         // given
-        Mono<Void> given = given(givenSavedPerson("John", "Doe"),
-                                 givenSavedPerson("Johny", "Roe"),
-                                 givenSavedPerson("Jane", "Doe"));
+        var given = given(givenSavedPerson("John", "Doe"),
+                          givenSavedPerson("Johny", "Roe"),
+                          givenSavedPerson("Jane", "Doe"));
 
         // when
-        Mono<Boolean> actual = given.then(executor.exists(person.lastName.eq("Roe")));
+        var actual = given.then(executor.exists(person.lastName.eq("Roe")));
 
         // then
         StepVerifier.create(actual)

@@ -22,7 +22,7 @@ public class AutoConfigurationTest {
     void shouldCreateCustomBaseRepository() {
 
         // when
-        PersonRepository actual = context.getBean(PersonRepository.class);
+        var actual = context.getBean(PersonRepository.class);
 
         // then
         then(actual).isInstanceOf(ExtendedQuerydslJpaRepository.class);

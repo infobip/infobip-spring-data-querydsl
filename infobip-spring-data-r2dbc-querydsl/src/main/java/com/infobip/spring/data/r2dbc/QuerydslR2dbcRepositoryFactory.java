@@ -18,13 +18,12 @@ package com.infobip.spring.data.r2dbc;
 import com.infobip.spring.data.common.Querydsl;
 import com.infobip.spring.data.common.QuerydslExpressionFactory;
 import com.querydsl.core.types.ConstructorExpression;
-import com.querydsl.sql.*;
-import org.springframework.data.mapping.context.MappingContext;
+import com.querydsl.sql.RelationalPath;
+import com.querydsl.sql.RelationalPathBase;
+import com.querydsl.sql.SQLQueryFactory;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
 import org.springframework.data.r2dbc.repository.support.R2dbcRepositoryFactory;
-import org.springframework.data.relational.core.mapping.RelationalPersistentEntity;
-import org.springframework.data.relational.core.mapping.RelationalPersistentProperty;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.core.support.RepositoryComposition;
 import org.springframework.data.repository.core.support.RepositoryFragment;
@@ -56,47 +55,46 @@ public class QuerydslR2dbcRepositoryFactory extends R2dbcRepositoryFactory {
     @Override
     protected RepositoryComposition.RepositoryFragments getRepositoryFragments(RepositoryMetadata metadata) {
 
-        RepositoryComposition.RepositoryFragments fragments = super.getRepositoryFragments(metadata);
+        var fragments = super.getRepositoryFragments(metadata);
 
-        Class<?> repositoryInterface = metadata.getRepositoryInterface();
+        var repositoryInterface = metadata.getRepositoryInterface();
 
         if (!REPOSITORY_TARGET_TYPE.isAssignableFrom(repositoryInterface)) {
             return fragments;
         }
 
-        RelationalPathBase<?> path = querydslExpressionFactory.getRelationalPathBaseFromQueryRepositoryClass(
+        var path = querydslExpressionFactory.getRelationalPathBaseFromQueryRepositoryClass(
                 repositoryInterface);
-        Class<?> type = metadata.getDomainType();
-        ConstructorExpression<?> constructorExpression = querydslExpressionFactory.getConstructorExpression(type, path);
-        RepositoryFragment<Object> simpleQuerydslJdbcFragment = createSimpleQuerydslR2dbcFragment(path,
-                                                                                                  constructorExpression);
-        RepositoryFragment<Object> querydslJdbcPredicateExecutor = createQuerydslJdbcPredicateExecutor(
+        var type = metadata.getDomainType();
+        var constructorExpression = querydslExpressionFactory.getConstructorExpression(type, path);
+        var simpleQuerydslJdbcFragment = createSimpleQuerydslR2dbcFragment(path,
+                                                                           constructorExpression);
+        var querydslJdbcPredicateExecutor = createQuerydslJdbcPredicateExecutor(
                 constructorExpression, path);
         return fragments.append(simpleQuerydslJdbcFragment).append(querydslJdbcPredicateExecutor);
     }
 
     private RepositoryFragment<Object> createSimpleQuerydslR2dbcFragment(RelationalPath<?> path,
                                                                          ConstructorExpression<?> constructor) {
-        Object simpleJPAQuerydslFragment = getTargetRepositoryViaReflection(SimpleQuerydslR2dbcFragment.class,
-                                                                            sqlQueryFactory,
-                                                                            constructor,
-                                                                            path,
-                                                                            reactiveTransactionManager,
-                                                                            databaseClient,
-                                                                            converter);
+        var simpleJPAQuerydslFragment = getTargetRepositoryViaReflection(SimpleQuerydslR2dbcFragment.class,
+                                                                         sqlQueryFactory,
+                                                                         constructor,
+                                                                         path,
+                                                                         reactiveTransactionManager,
+                                                                         databaseClient,
+                                                                         converter);
         return RepositoryFragment.implemented(simpleJPAQuerydslFragment);
     }
 
     private RepositoryFragment<Object> createQuerydslJdbcPredicateExecutor(ConstructorExpression<?> constructorExpression,
                                                                            RelationalPathBase<?> path) {
 
-
-        MappingContext<? extends RelationalPersistentEntity<?>, ? extends RelationalPersistentProperty> context = converter.getMappingContext();
+        var context = converter.getMappingContext();
         @SuppressWarnings("unchecked")
-        RelationalPersistentEntity<?> entity = context.getRequiredPersistentEntity(constructorExpression.getType());
+        var entity = context.getRequiredPersistentEntity(constructorExpression.getType());
 
-        Querydsl querydsl = new Querydsl(sqlQueryFactory, entity);
-        Object querydslJdbcPredicateExecutor = getTargetRepositoryViaReflection(
+        var querydsl = new Querydsl(sqlQueryFactory, entity);
+        var querydslJdbcPredicateExecutor = getTargetRepositoryViaReflection(
                 ReactiveQuerydslR2dbcPredicateExecutor.class,
                 constructorExpression,
                 path,

@@ -1,21 +1,23 @@
 package com.infobip.spring.data.jdbc;
 
+import static com.infobip.spring.data.jdbc.QPerson.person;
+import static com.infobip.spring.data.jdbc.QPersonSettings.personSettings;
+import static org.assertj.core.api.BDDAssertions.then;
+
+import java.time.ZoneOffset;
+import java.util.List;
+import java.util.TimeZone;
+import java.util.stream.Collectors;
+
 import com.infobip.spring.data.jdbc.extension.CustomQuerydslJdbcRepository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.sql.SQLQueryFactory;
 import lombok.AllArgsConstructor;
 import lombok.Value;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.ZoneOffset;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static com.infobip.spring.data.jdbc.QPerson.person;
-import static com.infobip.spring.data.jdbc.QPersonSettings.personSettings;
-import static org.assertj.core.api.BDDAssertions.then;
 
 @AllArgsConstructor
 public class QuerydslJdbcRepositoryTest extends TestBase {
@@ -42,13 +44,13 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
     void shouldStreamAll() {
 
         // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
-        Person johnyRoe = givenSavedPerson("Johny", "Roe");
-        Person janeDoe = givenSavedPerson("Jane", "Doe");
+        var johnDoe = givenSavedPerson("John", "Doe");
+        var johnyRoe = givenSavedPerson("Johny", "Roe");
+        var janeDoe = givenSavedPerson("Jane", "Doe");
         List<Person> actual = null;
 
         // when
-        try (Stream<Person> stream = repository.streamAll()) {
+        try (var stream = repository.streamAll()) {
             actual = stream.collect(Collectors.toList());
         }
 
@@ -59,12 +61,12 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
     void shouldFindAll() {
 
         // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
-        Person johnyRoe = givenSavedPerson("Johny", "Roe");
-        Person janeDoe = givenSavedPerson("Jane", "Doe");
+        var johnDoe = givenSavedPerson("John", "Doe");
+        var johnyRoe = givenSavedPerson("Johny", "Roe");
+        var janeDoe = givenSavedPerson("Jane", "Doe");
 
         // when
-        List<Person> actual = repository.findAll();
+        var actual = repository.findAll();
 
         then(actual).containsExactlyInAnyOrder(johnDoe, johnyRoe, janeDoe);
     }
@@ -73,8 +75,8 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
     void shouldFindAllWithPredicate() {
 
         // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
-        Person johnyRoe = givenSavedPerson("Johny", "Roe");
+        var johnDoe = givenSavedPerson("John", "Doe");
+        var johnyRoe = givenSavedPerson("Johny", "Roe");
         givenSavedPerson("Jane", "Doe");
 
         // when
@@ -87,14 +89,14 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
     void shouldQuery() {
 
         // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
+        var johnDoe = givenSavedPerson("John", "Doe");
         givenSavedPerson("Johny", "Roe");
         givenSavedPerson("Jane", "Doe");
         givenSavedPerson("John", "Roe");
         givenSavedPerson("Janie", "Doe");
 
         // when
-        List<Person> actual = repository.query(query -> query
+        var actual = repository.query(query -> query
                 .select(repository.entityProjection())
                 .from(person)
                 .where(person.firstName.in("John", "Jane"))
@@ -110,14 +112,14 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
     void shouldQueryOne() {
 
         // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
+        var johnDoe = givenSavedPerson("John", "Doe");
         givenSavedPerson("Johny", "Roe");
         givenSavedPerson("Jane", "Doe");
         givenSavedPerson("John", "Roe");
         givenSavedPerson("Janie", "Doe");
 
         // when
-        Optional<Person> actual = repository.queryOne(query -> query
+        var actual = repository.queryOne(query -> query
                 .select(repository.entityProjection())
                 .from(person)
                 .where(person.firstName.in("John", "Jane"))
@@ -132,14 +134,14 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
     void shouldQueryMany() {
 
         // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
+        var johnDoe = givenSavedPerson("John", "Doe");
         givenSavedPerson("Johny", "Roe");
         givenSavedPerson("Jane", "Doe");
         givenSavedPerson("John", "Roe");
         givenSavedPerson("Janie", "Doe");
 
         // when
-        List<Person> actual = repository.queryMany(query -> query
+        var actual = repository.queryMany(query -> query
                 .select(repository.entityProjection())
                 .from(person)
                 .where(person.firstName.in("John", "Jane"))
@@ -154,7 +156,7 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
     void shouldProject() {
 
         // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
+        var johnDoe = givenSavedPerson("John", "Doe");
 
         // when
         List<PersonProjection> actual = repository.query(query -> query
@@ -193,11 +195,11 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
         // given
         givenSavedPerson("John", "Doe");
         givenSavedPerson("Johny", "Roe");
-        Person janeDoe = givenSavedPerson("Jane", "Doe");
+        var janeDoe = givenSavedPerson("Jane", "Doe");
         givenSavedPerson("John", "Roe");
 
         // when
-        long actual = repository.deleteWhere(person.firstName.like("John%"));
+        var actual = repository.deleteWhere(person.firstName.like("John%"));
 
         then(repository.findAll()).containsExactly(janeDoe);
         then(actual).isEqualTo(3L);
@@ -207,13 +209,13 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
     void shouldBeAbleToJoin() {
 
         // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
-        Person johnyRoe = givenSavedPerson("Johny", "Roe");
-        PersonSettings johnDoeSettings = givenSavedPersonSettings(johnDoe);
+        var johnDoe = givenSavedPerson("John", "Doe");
+        var johnyRoe = givenSavedPerson("Johny", "Roe");
+        var johnDoeSettings = givenSavedPersonSettings(johnDoe);
         givenSavedPersonSettings(johnyRoe);
 
         // when
-        List<Person> actual = repository.query(query -> query
+        var actual = repository.query(query -> query
                 .select(repository.entityProjection())
                 .from(person)
                 .innerJoin(personSettings)
@@ -227,10 +229,10 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
     @Test
     void shouldSupportMultipleConstructorsWithEntityProjection() {
         // given
-        NoArgsEntity givenNoArgsEntity = giveNoArgsEntity();
+        var givenNoArgsEntity = giveNoArgsEntity();
 
         // when
-        List<NoArgsEntity> actual = noArgsRepository.query(query -> query
+        var actual = noArgsRepository.query(query -> query
                 .select(noArgsRepository.entityProjection())
                 .from(QNoArgsEntity.noArgsEntity)
                 .limit(1)
@@ -242,7 +244,7 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
     @Test
     void shouldSupportMultipleConstructors() {
         // given
-        NoArgsEntity givenNoArgsEntity = giveNoArgsEntity();
+        var givenNoArgsEntity = giveNoArgsEntity();
 
         // when
         List<NoArgsEntity> actual = noArgsRepository.query(query -> query
@@ -265,7 +267,7 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
     @Test
     void springDataAndQuerydslShouldHandleTimeZoneTheSameForSameTimeZone() {
         // given
-        Person givenPerson = new Person(null, "givenFirstName", "givenLastName", BEGINNING_OF_2021);
+        var givenPerson = new Person(null, "givenFirstName", "givenLastName", BEGINNING_OF_2021);
 
         // when
         sqlQueryFactory.insert(person)
@@ -275,8 +277,8 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
         repository.save(givenPerson);
 
         // then
-        List<Person> querydslResults = sqlQueryFactory.select(repository.entityProjection()).from(person).fetch();
-        List<Person> springDataResults = repository.findAll();
+        var querydslResults = sqlQueryFactory.select(repository.entityProjection()).from(person).fetch();
+        var springDataResults = repository.findAll();
         then(querydslResults).isEqualTo(springDataResults);
     }
 
@@ -284,10 +286,10 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
     @Test
     void shouldSupportTransactionalAnnotatedTests() {
         // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
+        var johnDoe = givenSavedPerson("John", "Doe");
 
         // when
-        List<Person> actual = repository.query(query -> query
+        var actual = repository.query(query -> query
             .select(repository.entityProjection())
             .from(person)
             .fetch());

@@ -1,13 +1,13 @@
 package com.infobip.spring.data.jdbc;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.data.domain.*;
-import org.springframework.data.querydsl.QuerydslPredicateExecutor;
-
-import java.util.Optional;
-
 import static com.infobip.spring.data.jdbc.QPerson.person;
 import static org.assertj.core.api.BDDAssertions.then;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 public class QuerydslPredicateExecutorTest extends TestBase {
 
@@ -23,11 +23,11 @@ public class QuerydslPredicateExecutorTest extends TestBase {
     @Test
     void shouldFindOne() {
         // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
-        Person johnyRoe = givenSavedPerson("Johny", "Roe");
+        var johnDoe = givenSavedPerson("John", "Doe");
+        var johnyRoe = givenSavedPerson("Johny", "Roe");
 
         // when
-        Optional<Person> actual = executor.findOne(person.firstName.eq("John"));
+        var actual = executor.findOne(person.firstName.eq("John"));
 
         then(actual).contains(johnDoe);
     }
@@ -35,12 +35,12 @@ public class QuerydslPredicateExecutorTest extends TestBase {
     @Test
     void shouldFindAllWithPredicate() {
         // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
-        Person johnyRoe = givenSavedPerson("Johny", "Roe");
-        Person janeDoe = givenSavedPerson("Jane", "Doe");
+        var johnDoe = givenSavedPerson("John", "Doe");
+        var johnyRoe = givenSavedPerson("Johny", "Roe");
+        var janeDoe = givenSavedPerson("Jane", "Doe");
 
         // when
-        Iterable<Person> actual = executor.findAll(person.lastName.eq("Doe"));
+        var actual = executor.findAll(person.lastName.eq("Doe"));
 
         then(actual).containsExactlyInAnyOrder(johnDoe, janeDoe);
     }
@@ -48,9 +48,9 @@ public class QuerydslPredicateExecutorTest extends TestBase {
     @Test
     void shouldFindAllWithPredicateAndSort() {
         // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
-        Person johnyRoe = givenSavedPerson("Johny", "Roe");
-        Person janeDoe = givenSavedPerson("Jane", "Doe");
+        var johnDoe = givenSavedPerson("John", "Doe");
+        var johnyRoe = givenSavedPerson("Johny", "Roe");
+        var janeDoe = givenSavedPerson("Jane", "Doe");
 
         // when
         Iterable<Person> actual = executor.findAll(person.lastName.eq("Doe"), Sort.by(Sort.Order.asc("firstName")));
@@ -61,9 +61,9 @@ public class QuerydslPredicateExecutorTest extends TestBase {
     @Test
     void shouldFindAllWithPredicateAndOrderSpecifier() {
         // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
-        Person johnyRoe = givenSavedPerson("Johny", "Roe");
-        Person janeDoe = givenSavedPerson("Jane", "Doe");
+        var johnDoe = givenSavedPerson("John", "Doe");
+        var johnyRoe = givenSavedPerson("Johny", "Roe");
+        var janeDoe = givenSavedPerson("Jane", "Doe");
 
         // when
         Iterable<Person> actual = executor.findAll(person.lastName.eq("Doe"), person.firstName.asc());
@@ -74,12 +74,12 @@ public class QuerydslPredicateExecutorTest extends TestBase {
     @Test
     void shouldFindAllWithOrderSpecifier() {
         // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
-        Person johnyRoe = givenSavedPerson("Johny", "Roe");
-        Person janeDoe = givenSavedPerson("Jane", "Doe");
+        var johnDoe = givenSavedPerson("John", "Doe");
+        var johnyRoe = givenSavedPerson("Johny", "Roe");
+        var janeDoe = givenSavedPerson("Jane", "Doe");
 
         // when
-        Iterable<Person> actual = executor.findAll(person.firstName.asc());
+        var actual = executor.findAll(person.firstName.asc());
 
         then(actual).containsExactlyInAnyOrder(janeDoe, johnDoe, johnyRoe);
     }
@@ -87,9 +87,9 @@ public class QuerydslPredicateExecutorTest extends TestBase {
     @Test
     void shouldFindAllWithPredicateAndPageable() {
         // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
-        Person johnyRoe = givenSavedPerson("Johny", "Roe");
-        Person janeDoe = givenSavedPerson("Jane", "Doe");
+        var johnDoe = givenSavedPerson("John", "Doe");
+        var johnyRoe = givenSavedPerson("Johny", "Roe");
+        var janeDoe = givenSavedPerson("Jane", "Doe");
 
         // when
         Page<Person> actual = executor.findAll(person.lastName.eq("Doe"),
@@ -104,12 +104,12 @@ public class QuerydslPredicateExecutorTest extends TestBase {
     @Test
     void shouldCount() {
         // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
-        Person johnyRoe = givenSavedPerson("Johny", "Roe");
-        Person janeDoe = givenSavedPerson("Jane", "Doe");
+        var johnDoe = givenSavedPerson("John", "Doe");
+        var johnyRoe = givenSavedPerson("Johny", "Roe");
+        var janeDoe = givenSavedPerson("Jane", "Doe");
 
         // when
-        long actual = executor.count(person.lastName.eq("Doe"));
+        var actual = executor.count(person.lastName.eq("Doe"));
 
         then(actual).isEqualTo(2);
     }
@@ -117,12 +117,12 @@ public class QuerydslPredicateExecutorTest extends TestBase {
     @Test
     void shouldExist() {
         // given
-        Person johnDoe = givenSavedPerson("John", "Doe");
-        Person johnyRoe = givenSavedPerson("Johny", "Roe");
-        Person janeDoe = givenSavedPerson("Jane", "Doe");
+        var johnDoe = givenSavedPerson("John", "Doe");
+        var johnyRoe = givenSavedPerson("Johny", "Roe");
+        var janeDoe = givenSavedPerson("Jane", "Doe");
 
         // when
-        boolean actual = executor.exists(person.lastName.eq("Roe"));
+        var actual = executor.exists(person.lastName.eq("Roe"));
 
         then(actual).isTrue();
     }
@@ -130,7 +130,7 @@ public class QuerydslPredicateExecutorTest extends TestBase {
     @Test
     void findOneShouldNotThrowAnExceptionForNoResult() {
         // when
-        Optional<Person> actual = executor.findOne(person.firstName.eq("John"));
+        var actual = executor.findOne(person.firstName.eq("John"));
 
         then(actual).isEmpty();
     }
