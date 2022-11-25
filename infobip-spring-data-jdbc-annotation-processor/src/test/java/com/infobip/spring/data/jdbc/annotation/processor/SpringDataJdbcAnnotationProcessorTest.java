@@ -76,6 +76,19 @@ public class SpringDataJdbcAnnotationProcessorTest {
     }
 
     @Test
+    void shouldCreateSimpleQClassWithTableNameAndColumnAnnotationsWithCompileTesting() {
+
+        // given
+        var givenSource = givenSource(FooWithTableName.class);
+
+        // when
+        var actual = whenCompile(givenSource);
+
+        // then
+        thenShouldGenerateSourceFile(actual, QFooWithTableName.class);
+    }
+
+    @Test
     void shouldCreateQClassWithSchema() {
 
         var actual = Paths.get("src/test/resources/expected/QEntityWithSchema.java");

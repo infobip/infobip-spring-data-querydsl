@@ -142,8 +142,17 @@ class CustomExtendedTypeFactory extends ExtendedTypeFactory {
         var tableName = CaseFormat.UPPER_CAMEL.to(tableCaseFormat, simpleName);
         return Optional.ofNullable(elements.getTypeElement(className)
                                            .getAnnotation(Table.class))
-                       .map(Table::value)
+                       .map(this::getTableName)
                        .orElse(tableName);
+    }
+
+    private String getTableName(Table table) {
+
+        if(table.value().isEmpty()) {
+            return table.name();
+        }
+
+        return table.value();
     }
 
     private Stream<? extends Element> getFields(Element element) {

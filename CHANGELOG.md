@@ -1,8 +1,11 @@
 ### 8.0.0
 
-* upgraded to Spring Boot 3.0.0 (not backwards compatible with previous versions of Spring Data)
+* upgraded to Spring Boot 3.0.0
 * switched over to Jakarta dependencies with jakarta packages (e.g. jakarta.persistence-api 3.0.0)
-* replaced use of `PersistenceConstructor` with `PersistenceCreator` (`PersistenceConstructor` is no longer supported!)
+
+### 7.2.4
+
+* added support for `Table#name` [#72](/../../issues/72)
 
 ### 7.2.0
 * added basic support for `@MappedCollections`
