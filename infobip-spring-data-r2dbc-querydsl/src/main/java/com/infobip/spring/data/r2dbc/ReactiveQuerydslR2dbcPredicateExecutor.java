@@ -92,11 +92,17 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
 
     @Override
     public Mono<Long> count(Predicate predicate) {
+        
         var count = ((SimpleExpression<?>) constructorExpression.getArgs().get(0)).count();
+
         var sqlQuery = sqlQueryFactory.query()
                                       .select(count)
-                                      .where(predicate)
                                       .from(path);
+
+        if (predicate != null) {
+            sqlQuery.where(predicate);
+        }
+
         return query(sqlQuery).one();
     }
 
