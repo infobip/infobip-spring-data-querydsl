@@ -59,7 +59,7 @@ public class QuerydslExpressionFactory {
 
         Class<?>[] paramTypes = pairs.stream().map(ParameterAndExpressionPair::parameterType).toArray(Class[]::new);
         Expression<?>[] expressions = pairs.stream().map(ParameterAndExpressionPair::expression).toArray(Expression[]::new);
-        ;
+
         return Projections.constructor(type, paramTypes, expressions);
     }
 
