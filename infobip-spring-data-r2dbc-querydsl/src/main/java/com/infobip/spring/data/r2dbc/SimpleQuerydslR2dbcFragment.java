@@ -105,8 +105,7 @@ public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> 
         result.setUseLiterals(true);
         var sql = result.getSQL().getSQL();
         var mapper = new EntityRowMapper<O>(result.getType(), converter);
-        return new TransactionalRowsFetchSpec<>(databaseClient.sql(sql)
-                                                              .map(mapper),
-                                                TransactionalOperator.create(reactiveTransactionManager));
+        return new SimpleRowsFetchSpec<>(databaseClient.sql(sql)
+                                                       .map(mapper));
     }
 }
