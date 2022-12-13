@@ -1,3 +1,7 @@
+### 8.0.1
+
+* removed manual creation of transaction from QuerydslR2dbcFragment#query
+
 ### 8.0.0
 
 * upgraded to Spring Boot 3.0.0
