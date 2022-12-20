@@ -56,27 +56,32 @@ Infobip Spring Data Querydsl provides new functionality that enables the user to
 1. [Contributing](#Contributing)
 1. [License](#License)
 
-## <a id="Changelog"></a> Changelog
+<a id="Changelog"></a>
+##  Changelog
 
 For changes check the [changelog](CHANGELOG.md).
 
-## <a id="NoteOnGeneralUsage"></a> Note on general usage
+<a id="NoteOnGeneralUsage"></a>
+##  Note on general usage
 
 For the sake of brevity, all examples use repository methods directly.
 
 In production code persistence layer (SQL) shouldn't leak to service layer.
 See [this answer](https://stackoverflow.com/a/26563841/607767) by Oliver Drotbohm (Spring Data Project Lead @ Pivotal) on how to approach encapsulating persistence logic.
 
-## <a id="JDBC"></a> JDBC module:
+<a id="JDBC"></a>
+##  JDBC module:
 
-### <a id="JDBCRequirements"></a> Requirements:
+<a id="JDBCRequirements"></a>
+###  Requirements:
 
 - Java 8 with [parameter names preserved in byte code](https://stackoverflow.com/a/20594685/607767) (used to map columns to constructor parameters)
 - Spring Data JDBC
 - entities must have an all argument constructor (`@AllArgsConstructor`), can have others as well
 - entity class and all argument constructor must be public (limitation of Querydsl)
 
-### <a id="JDBCSetup"></a> Setup:
+<a id="JDBCSetup"></a>
+###  Setup:
 
 1. Dependency:
 
@@ -106,11 +111,13 @@ interface TRepository extends PagingAndSortingRepository<T, ID>, QuerydslPredica
 
 3. Done
 
-### <a id="JDBCFeaturesAndExamples"></a> Features and examples:
+<a id="JDBCFeaturesAndExamples"></a>
+###  Features and examples:
 
 All examples have corresponding tests in the project and can be found [here](infobip-spring-data-jdbc-querydsl/src/test/java/com/infobip/spring/data/jdbc).
 
-#### <a id="JDBCInnerJoin"></a> Inner Join:
+#<a id="JDBCInnerJoin"></a>
+###  Inner Join:
 
 Inner join example:
 
@@ -125,7 +132,8 @@ List<Person> actual = repository.query(query -> query
 );
 ```
 
-#### <a id="JDBCProjections"></a> Projections
+#<a id="JDBCProjections"></a>
+###  Projections
 
 For examples how to construct projections refer to the official documentation - [section result handling](http://www.querydsl.com/static/querydsl/latest/reference/html_single/#result_handling).
 
@@ -146,7 +154,8 @@ List<PersonProjection> actual = repository.query(query -> query
         .fetch());
 ```
 
-#### <a id="JDBCQuery"></a> Query
+#<a id="JDBCQuery"></a>
+###  Query
 
 ```
 Optional<Person> actual = repository.queryOne(query -> query
@@ -168,7 +177,8 @@ List<Person> actual = repository.queryMany(query -> query
         .offset(1));
 ```
 
-#### <a id="JDBCUpdate"></a> Update
+#<a id="JDBCUpdate"></a>
+###  Update
 
 ```
 repository.update(query -> query
@@ -177,18 +187,21 @@ repository.update(query -> query
         .execute());
 ```
 
-#### <a id="JDBCDelete"></a> Delete
+#<a id="JDBCDelete"></a>
+###  Delete
 
 ```
 long numberOfAffectedRows = repository.deleteWhere(person.firstName.like("John%"));
 ```
 
-#### <a id="JDBCTransactionalSupport"></a> Transactional support
+#<a id="JDBCTransactionalSupport"></a>
+###  Transactional support
 
 Queries execution is always done inside the repository implementation (loan pattern) in a transaction so transactions don't have to be 
 handled manually (like they do if you are manually managing SQLQuery and other Querydsl constructs).
 
-#### <a id="JDBCEmbeddedSupport"></a> Embedded support
+#<a id="JDBCEmbeddedSupport"></a>
+###  Embedded support
 
 Entity fields marked with `@org.springframework.data.relational.core.mapping.Embedded` are inlined in Q classes:
 
@@ -224,7 +237,8 @@ Query (note the missing .personWithEmbeddedFirstAndLastName field in Q instance)
 repository.findAll(personWithEmbeddedFirstAndLastName.firstName.in("John", "Johny"));
 ```
 
-#### <a id="MappedCollection"></a> @MappedCollection support
+#<a id="MappedCollection"></a>
+###  @MappedCollection support
 
 Model:
 
@@ -283,7 +297,8 @@ List<Student> actual = studentRepository.query(query -> query.select(studentRepo
                                                              .fetch());
 ```
 
-#### <a id="JDBCStreaming"></a> Streaming
+#<a id="JDBCStreaming"></a>
+###  Streaming
 
 `streamAll` is a new method added to repository for more convenient use.
 
@@ -296,7 +311,8 @@ public void transactionalAnnotatedMethodRequiredForConsumingStream() {
 }
 ```
 
-### <a id="JDBCExtension"></a> Extension:
+<a id="JDBCExtension"></a>
+###  Extension:
 
 To create a custom base repository interface you'll need to create:
 *  custom base interface
@@ -305,9 +321,11 @@ To create a custom base repository interface you'll need to create:
 
 Take a look at [extension package in tests](infobip-spring-data-jdbc-querydsl/src/test/java/com/infobip/spring/data/jdbc/extension) as an example on how this can be achieved.
 
-## <a id="R2DBC"></a> R2DBC module:
+<a id="R2DBC"></a>
+##  R2DBC module:
 
-### <a id="R2DBCRequirements"></a> Requirements:
+<a id="R2DBCRequirements"></a>
+###  Requirements:
 
 - Java 8 with [parameter names preserved in byte code](https://stackoverflow.com/a/20594685/607767) (used to map columns to constructor parameters)
 - Spring Data R2DBC
@@ -315,7 +333,8 @@ Take a look at [extension package in tests](infobip-spring-data-jdbc-querydsl/sr
 - entity class and all argument constructor must be public (limitation of Querydsl)
 - if you're not using Flyway, you need to provide a SQLTemplates bean
 
-### <a id="R2DBCSetup"></a> Setup:
+<a id="R2DBCSetup"></a>
+###  Setup:
 
 1. Dependency:
 
@@ -345,11 +364,13 @@ interface TRepository extends ReactiveSortingRepository<T, ID>, ReactiveQuerydsl
 
 3. Done
 
-### <a id="R2DBCFeaturesAndExamples"></a> Features and examples:
+<a id="R2DBCFeaturesAndExamples"></a>
+###  Features and examples:
 
 All examples have corresponding tests in the project and can be found [here](infobip-spring-data-r2dbc-querydsl/src/test/java/com/infobip/spring/data/r2dbc).
 
-#### <a id="R2DBCInnerJoin"></a> Inner Join:
+#<a id="R2DBCInnerJoin"></a>
+###  Inner Join:
 
 Inner join example:
 
@@ -362,7 +383,8 @@ Flux<Person> actual = repository.query(query -> query.select(repository.entityPr
                                      .all();
 ```
 
-#### <a id="R2DBCProjections"></a> Projections
+#<a id="R2DBCProjections"></a>
+###  Projections
 
 For examples how to construct projections refer to the official documentation - [section result handling](http://www.querydsl.com/static/querydsl/latest/reference/html_single/#result_handling).
 
@@ -382,7 +404,8 @@ Flux<PersonProjection> actual = repository.query(query -> query
                                           .all();
 ```
 
-#### <a id="R2DBCQuery"></a> Query
+#<a id="R2DBCQuery"></a>
+###  Query
 
 ```
 Flux<Person> actual = repository.query(query -> query.select(repository.entityProjection())
@@ -395,25 +418,29 @@ Flux<Person> actual = repository.query(query -> query.select(repository.entityPr
                                 .all();
 ```
 
-#### <a id="R2DBCUpdate"></a> Update
+#<a id="R2DBCUpdate"></a>
+###  Update
 
 ```
 Mono<Integer> numberOfAffectedRows = repository.update(query -> query.set(person.firstName, "John")
                                                                      .where(person.firstName.eq("Johny")));
 ```
 
-#### <a id="R2DBCDelete"></a> Delete
+#<a id="R2DBCDelete"></a>
+###  Delete
 
 ```
 Mono<Integer> numberOfAffectedRows = repository.deleteWhere(person.firstName.like("John%"));
 ```
 
-#### <a id="R2DBCTransactionalSupport"></a> Transactional support
+#<a id="R2DBCTransactionalSupport"></a>
+###  Transactional support
 
 Queries execution is always done inside the repository implementation (loan pattern) in a transaction so transactions don't have to be
 handled manually (like they do if you are manually managing SQLQuery and other Querydsl constructs).
 
-### <a id="R2DBCExtension"></a> Extension:
+<a id="R2DBCExtension"></a>
+###  Extension:
 
 To create a custom base repository interface you'll need to create:
 *  custom base interface
@@ -423,14 +450,17 @@ To create a custom base repository interface you'll need to create:
 Take a look at [extension package in tests](infobip-spring-data-r2dbc-querydsl/src/test/java/com/infobip/spring/data/r2dbc/extension) as an example on how this can be achieved.
 
 
-## <a id="JPA"></a> JPA module:
+<a id="JPA"></a>
+##  JPA module:
 
-### <a id="JPARequirements"></a> Requirements:
+<a id="JPARequirements"></a>
+###  Requirements:
 
 - Java 8
 - Spring Data JPA
 
-### <a id="JPASetup"></a> Setup:
+<a id="JPASetup"></a>
+###  Setup:
 
 1. Dependency:
 
@@ -469,11 +499,13 @@ If you need other features from `@EnableJpaRepositories` you can use:
 @EnableJpaRepositories(repositoryFactoryBeanClass = ExtendedQuerydslJpaRepositoryFactoryBean.class)
 ```
 
-### <a id="JPAFeaturesAndExamples"></a> Features and examples:
+<a id="JPAFeaturesAndExamples"></a>
+###  Features and examples:
 
 All examples have corresponding tests in the project and can be found [here](infobip-spring-data-jpa-querydsl/src/test/java/com/infobip/spring/data/jpa).
 
-#### <a id="JPANativeQueriesWithQuerydsl"></a> Native queries with Querydsl:
+#<a id="JPANativeQueriesWithQuerydsl"></a>
+###  Native queries with Querydsl:
 
 Example which uses union clause (unions aren't available in JPA):
 
@@ -494,7 +526,8 @@ List<Person> actual = repository.jpaSqlQuery(query -> query
 );
 ```
 
-#### <a id="JPAProjections"></a> Projections
+#<a id="JPAProjections"></a>
+###  Projections
 
 For examples how to construct projections refer to the official documentation - [section result handling](http://www.querydsl.com/static/querydsl/latest/reference/html_single/#result_handling).
 
@@ -514,7 +547,8 @@ List<PersonProjection> actual = repository.query(query -> query
                                           .fetch());
 ```
 
-#### <a id="JPAQuery"></a> Query
+#<a id="JPAQuery"></a>
+###  Query
 
 Query exposes full API of JPAQuery ([QueryDslPredicateExecutor](https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/querydsl/QuerydslPredicateExecutor.html) 
 only exposes where clause (Predicate) and order clause (OrderSpecifier)).
@@ -532,7 +566,8 @@ List<Person> actual = repository.query(query -> query
         .fetch());
 ```
 
-#### <a id="JPAUpdate"></a> Update
+#<a id="JPAUpdate"></a>
+###  Update
 
 ```
 repository.update(query -> query
@@ -541,23 +576,27 @@ repository.update(query -> query
         .execute());
 ```
 
-#### <a id="JPADelete"></a> Delete
+#<a id="JPADelete"></a>
+###  Delete
 
 ```
 long numberOfAffectedRows = repository.deleteWhere(person.firstName.like("John%"));
 ```
 
-#### <a id="JPAListInsteadOfIterableReturnType"></a> List instead of Iterable return type
+#<a id="JPAListInsteadOfIterableReturnType"></a>
+###  List instead of Iterable return type
 
 [QueryDslPredicateExecutor](https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/querydsl/QuerydslPredicateExecutor.html)#findAll methods return Iterable which can be cumbersome to use. 
 Those methods were overridden and now return a List which is easier to use and is easier to convert to Stream.
 
-#### <a id="JPATransactionalSupport"></a> Transactional support
+#<a id="JPATransactionalSupport"></a>
+###  Transactional support
 
 Query execution is always done inside the repository implementation (loan pattern) in a transaction so transactions don't have to be 
 handled manually (like they do if you are manually managing JPAQuery and other Querydsl constructs).
 
-#### <a id="JPAStoredProcedureBuilder"></a> Stored procedure builder
+#<a id="JPAStoredProcedureBuilder"></a>
+###  Stored procedure builder
 
 JPA support for stored procedures is quite cumbersome and it also requires a reference to EntityManager which leads to code like this:
 
@@ -590,7 +629,8 @@ public List<Person> delete(Person personToDelete) {
 }
 ```
 
-#### <a id="JPAStreaming"></a> Streaming
+#<a id="JPAStreaming"></a>
+###  Streaming
 
 `streamAll` is a new method added to repository for more convenient use.
 
@@ -603,7 +643,8 @@ public void transactionalAnnotatedMethodRequiredForConsumingStream() {
 }
 ```
 
-### <a id="JPAExtension"></a> Extension:
+<a id="JPAExtension"></a>
+###  Extension:
 
 To create a custom base repository interface you'll need to create:
 *  custom base interface
@@ -612,7 +653,8 @@ To create a custom base repository interface you'll need to create:
 
 Take a look at [extension package in tests](infobip-spring-data-jpa-querydsl/src/test/java/com/infobip/spring/data/jpa/extension) as an example on how this can be achieved.
 
-## <a id="AnnotationProcessor"></a> Annotation processor
+<a id="AnnotationProcessor"></a>
+##  Annotation processor
 
 Annotation processor [infobip-spring-data-jdbc-annotation-processor](infobip-spring-data-jdbc-annotation-processor) is used by R2DBC and JDBC modules to generate Querydsl Q classes.
 Without annotation processor this process can be quite cumbersome as connecting to database would be required during the build phase.
@@ -673,7 +715,8 @@ It includes tests that can be used for custom annotation processor as well.
 In case you want to manually generate Q classes you can still exclude `infobip-spring-data-jdbc-annotation-processor` and do the process manually (e.g. like [this](https://github.com/infobip/infobip-spring-data-querydsl/commit/9b41403bdea38672caa5a4c57427cdcc2ef8c2a7#diff-ca2587b532ca6c66340cb5032feded4e6b090942f295556d27b480a81d417ba2)).
 
 
-## <a id="FurtherReading"></a> Further reading
+<a id="FurtherReading"></a>
+##  Further reading
 
 - [Querydsl documentation](http://www.querydsl.com/static/querydsl/latest/reference/html_single/)
 - [Atlassian Querydsl examples](https://bitbucket.org/atlassian/querydsl-examples)
@@ -681,17 +724,20 @@ In case you want to manually generate Q classes you can still exclude `infobip-s
 - [Spring Data JPA documentation](http://docs.spring.io/spring-data/jpa/docs/current/reference/html/)
 - [QueryDSL-EntityQL](https://github.com/eXsio/querydsl-entityql)
 
-## <a id="RunningTests"></a> Running tests
+<a id="RunningTests"></a>
+##  Running tests
 
 To run tests you need to have docker installed.
 Containers are automatically started using [testcontainers](https://github.com/infobip/infobip-testcontainers-spring-boot-starter).
 
-## <a id="Contributing"></a> Contributing
+<a id="Contributing"></a>
+##  Contributing
 
 If you have an idea for a new feature or want to report a bug please use the issue tracker.
 
 Pull requests are welcome!
 
-## <a id="License"></a> License
+<a id="License"></a>
+##  License
 
 This library is licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
