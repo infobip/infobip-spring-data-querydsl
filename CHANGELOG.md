@@ -1,3 +1,7 @@
+### 8.1.0
+
+* made CustomExtendedTypeFactory class public in order to allow customization [#80](/../../issues/80)
+
 ### 8.0.1
 
 * removed manual creation of transaction from QuerydslR2dbcFragment#query
