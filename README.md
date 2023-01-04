@@ -116,7 +116,7 @@ interface TRepository extends PagingAndSortingRepository<T, ID>, QuerydslPredica
 
 All examples have corresponding tests in the project and can be found [here](infobip-spring-data-jdbc-querydsl/src/test/java/com/infobip/spring/data/jdbc).
 
-#<a id="JDBCInnerJoin"></a>
+<a id="JDBCInnerJoin"></a>
 ###  Inner Join:
 
 Inner join example:
@@ -132,7 +132,7 @@ List<Person> actual = repository.query(query -> query
 );
 ```
 
-#<a id="JDBCProjections"></a>
+<a id="JDBCProjections"></a>
 ###  Projections
 
 For examples how to construct projections refer to the official documentation - [section result handling](http://www.querydsl.com/static/querydsl/latest/reference/html_single/#result_handling).
@@ -155,7 +155,7 @@ List<PersonProjection> actual = repository.query(query -> query
         .fetch());
 ```
 
-#<a id="JDBCQuery"></a>
+<a id="JDBCQuery"></a>
 ###  Query
 
 ```
@@ -178,7 +178,7 @@ List<Person> actual = repository.queryMany(query -> query
         .offset(1));
 ```
 
-#<a id="JDBCUpdate"></a>
+<a id="JDBCUpdate"></a>
 ###  Update
 
 ```
@@ -188,20 +188,20 @@ repository.update(query -> query
         .execute());
 ```
 
-#<a id="JDBCDelete"></a>
+<a id="JDBCDelete"></a>
 ###  Delete
 
 ```
 long numberOfAffectedRows = repository.deleteWhere(person.firstName.like("John%"));
 ```
 
-#<a id="JDBCTransactionalSupport"></a>
+<a id="JDBCTransactionalSupport"></a>
 ###  Transactional support
 
 Queries execution is always done inside the repository implementation (loan pattern) in a transaction so transactions don't have to be 
 handled manually (like they do if you are manually managing SQLQuery and other Querydsl constructs).
 
-#<a id="JDBCEmbeddedSupport"></a>
+<a id="JDBCEmbeddedSupport"></a>
 ###  Embedded support
 
 Entity fields marked with `@org.springframework.data.relational.core.mapping.Embedded` are inlined in Q classes:
@@ -238,7 +238,7 @@ Query (note the missing .personWithEmbeddedFirstAndLastName field in Q instance)
 repository.findAll(personWithEmbeddedFirstAndLastName.firstName.in("John", "Johny"));
 ```
 
-#<a id="MappedCollection"></a>
+<a id="MappedCollection"></a>
 ###  @MappedCollection support
 
 Model:
@@ -295,7 +295,7 @@ List<Student> actual = studentRepository.query(query -> query.select(studentRepo
                                                              .fetch());
 ```
 
-#<a id="JDBCStreaming"></a>
+<a id="JDBCStreaming"></a>
 ###  Streaming
 
 `streamAll` is a new method added to repository for more convenient use.
@@ -367,7 +367,7 @@ interface TRepository extends ReactiveSortingRepository<T, ID>, ReactiveQuerydsl
 
 All examples have corresponding tests in the project and can be found [here](infobip-spring-data-r2dbc-querydsl/src/test/java/com/infobip/spring/data/r2dbc).
 
-#<a id="R2DBCInnerJoin"></a>
+<a id="R2DBCInnerJoin"></a>
 ###  Inner Join:
 
 Inner join example:
@@ -381,7 +381,7 @@ Flux<Person> actual = repository.query(query -> query.select(repository.entityPr
                                      .all();
 ```
 
-#<a id="R2DBCProjections"></a>
+<a id="R2DBCProjections"></a>
 ###  Projections
 
 For examples how to construct projections refer to the official documentation - [section result handling](http://www.querydsl.com/static/querydsl/latest/reference/html_single/#result_handling).
@@ -403,7 +403,7 @@ Flux<PersonProjection> actual = repository.query(query -> query
                                           .all();
 ```
 
-#<a id="R2DBCQuery"></a>
+<a id="R2DBCQuery"></a>
 ###  Query
 
 ```
@@ -417,7 +417,7 @@ Flux<Person> actual = repository.query(query -> query.select(repository.entityPr
                                 .all();
 ```
 
-#<a id="R2DBCUpdate"></a>
+<a id="R2DBCUpdate"></a>
 ###  Update
 
 ```
@@ -425,14 +425,14 @@ Mono<Integer> numberOfAffectedRows = repository.update(query -> query.set(person
                                                                      .where(person.firstName.eq("Johny")));
 ```
 
-#<a id="R2DBCDelete"></a>
+<a id="R2DBCDelete"></a>
 ###  Delete
 
 ```
 Mono<Integer> numberOfAffectedRows = repository.deleteWhere(person.firstName.like("John%"));
 ```
 
-#<a id="R2DBCTransactionalSupport"></a>
+<a id="R2DBCTransactionalSupport"></a>
 ###  Transactional support
 
 Queries execution is always done inside the repository implementation (loan pattern) in a transaction so transactions don't have to be
@@ -503,7 +503,7 @@ If you need other features from `@EnableJpaRepositories` you can use:
 
 All examples have corresponding tests in the project and can be found [here](infobip-spring-data-jpa-querydsl/src/test/java/com/infobip/spring/data/jpa).
 
-#<a id="JPANativeQueriesWithQuerydsl"></a>
+<a id="JPANativeQueriesWithQuerydsl"></a>
 ###  Native queries with Querydsl:
 
 Example which uses union clause (unions aren't available in JPA):
@@ -525,7 +525,7 @@ List<Person> actual = repository.jpaSqlQuery(query -> query
 );
 ```
 
-#<a id="JPAProjections"></a>
+<a id="JPAProjections"></a>
 ###  Projections
 
 For examples how to construct projections refer to the official documentation - [section result handling](http://www.querydsl.com/static/querydsl/latest/reference/html_single/#result_handling).
@@ -547,7 +547,7 @@ List<PersonProjection> actual = repository.query(query -> query
                                           .fetch());
 ```
 
-#<a id="JPAQuery"></a>
+<a id="JPAQuery"></a>
 ###  Query
 
 Query exposes full API of JPAQuery ([QueryDslPredicateExecutor](https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/querydsl/QuerydslPredicateExecutor.html) 
@@ -566,7 +566,7 @@ List<Person> actual = repository.query(query -> query
         .fetch());
 ```
 
-#<a id="JPAUpdate"></a>
+<a id="JPAUpdate"></a>
 ###  Update
 
 ```
@@ -576,26 +576,26 @@ repository.update(query -> query
         .execute());
 ```
 
-#<a id="JPADelete"></a>
+<a id="JPADelete"></a>
 ###  Delete
 
 ```
 long numberOfAffectedRows = repository.deleteWhere(person.firstName.like("John%"));
 ```
 
-#<a id="JPAListInsteadOfIterableReturnType"></a>
+<a id="JPAListInsteadOfIterableReturnType"></a>
 ###  List instead of Iterable return type
 
 [QueryDslPredicateExecutor](https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/querydsl/QuerydslPredicateExecutor.html)#findAll methods return Iterable which can be cumbersome to use. 
 Those methods were overridden and now return a List which is easier to use and is easier to convert to Stream.
 
-#<a id="JPATransactionalSupport"></a>
+<a id="JPATransactionalSupport"></a>
 ###  Transactional support
 
 Query execution is always done inside the repository implementation (loan pattern) in a transaction so transactions don't have to be 
 handled manually (like they do if you are manually managing JPAQuery and other Querydsl constructs).
 
-#<a id="JPAStoredProcedureBuilder"></a>
+<a id="JPAStoredProcedureBuilder"></a>
 ###  Stored procedure builder
 
 JPA support for stored procedures is quite cumbersome and it also requires a reference to EntityManager which leads to code like this:
@@ -629,7 +629,7 @@ public List<Person> delete(Person personToDelete) {
 }
 ```
 
-#<a id="JPAStreaming"></a>
+<a id="JPAStreaming"></a>
 ###  Streaming
 
 `streamAll` is a new method added to repository for more convenient use.
