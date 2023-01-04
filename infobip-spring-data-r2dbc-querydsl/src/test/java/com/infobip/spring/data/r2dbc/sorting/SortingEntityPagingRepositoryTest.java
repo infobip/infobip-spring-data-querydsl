@@ -33,9 +33,9 @@ public class SortingEntityPagingRepositoryTest extends TestBase {
 
         // then
         StepVerifier.create(actual)
-                .expectNextMatches(sortingEntity(givenEntityC.getFooBar()))
-                .expectNextMatches(sortingEntity(givenEntityB.getFooBar()))
-                .expectNextMatches(sortingEntity(givenEntityA.getFooBar()))
+                .expectNextMatches(sortingEntity(givenEntityC.fooBar()))
+                .expectNextMatches(sortingEntity(givenEntityB.fooBar()))
+                .expectNextMatches(sortingEntity(givenEntityA.fooBar()))
                 .verifyComplete();
     }
 
@@ -53,9 +53,9 @@ public class SortingEntityPagingRepositoryTest extends TestBase {
 
         // then
         StepVerifier.create(actual)
-                .expectNextMatches(sortingEntity(givenEntityC.getFooBar()))
-                .expectNextMatches(sortingEntity(givenEntityB.getFooBar()))
-                .expectNextMatches(sortingEntity(givenEntityA.getFooBar()))
+                .expectNextMatches(sortingEntity(givenEntityC.fooBar()))
+                .expectNextMatches(sortingEntity(givenEntityB.fooBar()))
+                .expectNextMatches(sortingEntity(givenEntityA.fooBar()))
                 .verifyComplete();
     }
 
@@ -77,9 +77,9 @@ public class SortingEntityPagingRepositoryTest extends TestBase {
 
         // then
         StepVerifier.create(actual)
-                .expectNextMatches(sortingEntity(givenEntityC.getFooBar()))
-                .expectNextMatches(sortingEntity(givenEntityB.getFooBar()))
-                .expectNextMatches(sortingEntity(givenEntityA.getFooBar()))
+                .expectNextMatches(sortingEntity(givenEntityC.fooBar()))
+                .expectNextMatches(sortingEntity(givenEntityB.fooBar()))
+                .expectNextMatches(sortingEntity(givenEntityA.fooBar()))
                 .verifyComplete();
     }
 
@@ -101,15 +101,15 @@ public class SortingEntityPagingRepositoryTest extends TestBase {
 
         // then
         StepVerifier.create(actual)
-                .expectNextMatches(sortingEntity(givenEntityC.getFooBar()))
-                .expectNextMatches(sortingEntity(givenEntityB.getFooBar()))
-                .expectNextMatches(sortingEntity(givenEntityA.getFooBar()))
+                .expectNextMatches(sortingEntity(givenEntityC.fooBar()))
+                .expectNextMatches(sortingEntity(givenEntityB.fooBar()))
+                .expectNextMatches(sortingEntity(givenEntityA.fooBar()))
                 .verifyComplete();
     }
 
     private Predicate<SortingEntity> sortingEntity(String fooBarValue) {
         return entity -> {
-            BDDAssertions.then(entity).isEqualTo(new SortingEntity(entity.getId(), fooBarValue));
+            BDDAssertions.then(entity).isEqualTo(new SortingEntity(entity.id(), fooBarValue));
             return true;
         };
     }

@@ -1,14 +1,11 @@
 package com.infobip.spring.data.r2dbc.paging;
 
-import lombok.Value;
 import lombok.With;
 import org.springframework.data.annotation.Id;
 
-@Value
-public class PagingEntity {
+public record PagingEntity(
+    @With @Id Long id,
+    String value
+) {
 
-    @With
-    @Id
-    private final Long id;
-    private final String value;
 }

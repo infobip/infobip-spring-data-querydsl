@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 
 import com.querydsl.core.types.Projections;
 import lombok.AllArgsConstructor;
-import lombok.Value;
 import org.junit.jupiter.api.Test;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,13 +62,13 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
 
         // when
         List<Person> actual = repository.query(query -> query
-                .select(person)
-                .from(person)
-                .where(person.firstName.in("John", "Jane"))
-                .orderBy(person.firstName.asc(), person.lastName.asc())
-                .limit(1)
-                .offset(1)
-                .fetch());
+            .select(person)
+            .from(person)
+            .where(person.firstName.in("John", "Jane"))
+            .orderBy(person.firstName.asc(), person.lastName.asc())
+            .limit(1)
+            .offset(1)
+            .fetch());
 
         then(actual).usingRecursiveFieldByFieldElementComparator().containsOnly(johnDoe);
     }
@@ -82,10 +81,10 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
 
         // when
         List<PersonProjection> actual = repository.query(query -> query
-                .select(Projections.constructor(PersonProjection.class, person.firstName,
-                                                person.lastName))
-                .from(person)
-                .fetch());
+            .select(Projections.constructor(PersonProjection.class, person.firstName,
+                                            person.lastName))
+            .from(person)
+            .fetch());
 
         // then
         then(actual).containsExactly(new PersonProjection(johnDoe.getFirstName(), johnDoe.getLastName()));
@@ -101,9 +100,9 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
 
         // when
         Long actual = repository.update(query -> query
-                .set(person.firstName, "John")
-                .where(person.firstName.eq("Johny"))
-                .execute());
+            .set(person.firstName, "John")
+            .where(person.firstName.eq("Johny"))
+            .execute());
 
         then(actual).isEqualTo(1);
         then(repository.findAll()).extracting(Person::getFirstName)
@@ -139,18 +138,18 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
 
         // when
         var actual = repository.jpaSqlQuery(query -> query
-                .union(
-                        repository.jpaSqlSubQuery(subQuery ->
-                                                          subQuery.select(person)
-                                                                  .from(person)
-                                                                  .where(person.firstName.like("John"))),
-                        repository.jpaSqlSubQuery(subQuery ->
-                                                          subQuery.select(person)
-                                                                  .from(person)
-                                                                  .where(person.firstName.like("Jan%")))
-                )
-                .orderBy(person.firstName.asc(), person.lastName.asc())
-                .fetch()
+                                                .union(
+                                                    repository.jpaSqlSubQuery(subQuery ->
+                                                                                  subQuery.select(person)
+                                                                                          .from(person)
+                                                                                          .where(person.firstName.like("John"))),
+                                                    repository.jpaSqlSubQuery(subQuery ->
+                                                                                  subQuery.select(person)
+                                                                                          .from(person)
+                                                                                          .where(person.firstName.like("Jan%")))
+                                                      )
+                                                .orderBy(person.firstName.asc(), person.lastName.asc())
+                                                .fetch()
                                            );
 
         then(actual).usingRecursiveFieldByFieldElementComparator().containsExactly(janeDoe, janieDoe, johnDoe, johnRoe);
@@ -167,12 +166,12 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
 
         // when
         List<Person> actual = repository.jpaSqlQuery(query -> query
-                .select(person)
-                .from(person)
-                .innerJoin(personSettings)
-                .on(person.id.eq(personSettings.personId))
-                .where(personSettings.id.eq(johnDoeSettings.getId()))
-                .fetch());
+            .select(person)
+            .from(person)
+            .innerJoin(personSettings)
+            .on(person.id.eq(personSettings.personId))
+            .where(personSettings.id.eq(johnDoeSettings.getId()))
+            .fetch());
 
         then(actual).extracting(Person::getFirstName).containsExactly(johnDoe.getFirstName());
     }
@@ -189,7 +188,7 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
 
         // when
         List<String> actual = repository.executeStoredProcedure("Person_DeleteAndGetFirstNames", builder ->
-                builder.addInParameter(person.lastName, johnyRoe.getLastName()).getResultList());
+            builder.addInParameter(person.lastName, johnyRoe.getLastName()).getResultList());
 
         // then
         then(actual).containsExactlyInAnyOrder(johnyRoe.getFirstName(), johnRoe.getFirstName());
@@ -209,11 +208,11 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
 
         // when
         List<Person> actual = repository.executeStoredProcedure(
-                "Person_Delete",
-                builder -> builder.addInParameter(person.firstName, johnyRoe.getFirstName())
-                                  .addInParameter(person.lastName, johnyRoe.getLastName())
-                                  .setResultClasses(Person.class)
-                                  .getResultList());
+            "Person_Delete",
+            builder -> builder.addInParameter(person.firstName, johnyRoe.getFirstName())
+                              .addInParameter(person.lastName, johnyRoe.getLastName())
+                              .setResultClasses(Person.class)
+                              .getResultList());
 
         // then
         then(actual).usingRecursiveFieldByFieldElementComparator().containsExactlyInAnyOrder(johnyRoe);
@@ -221,10 +220,11 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
                                   .containsExactlyInAnyOrder(johnDoe, janeDoe, johnRoe, janieDoe);
     }
 
-    @Value
-    public static class PersonProjection {
-        private final String firstName;
-        private final String lastName;
+    public record PersonProjection(
+        String firstName,
+        String lastName
+    ) {
+
     }
 
     private Person givenSavedPerson(String firstName, String lastName) {
@@ -234,4 +234,5 @@ public class ExtendedQuerydslJpaRepositoryTest extends TestBase {
     private PersonSettings givenSavedPersonSettings(Person person) {
         return settingsRepository.save(new PersonSettings(person.getId()));
     }
+
 }

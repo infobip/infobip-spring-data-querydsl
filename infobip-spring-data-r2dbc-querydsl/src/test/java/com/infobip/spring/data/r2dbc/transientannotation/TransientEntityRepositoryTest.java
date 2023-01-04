@@ -30,7 +30,7 @@ public class TransientEntityRepositoryTest extends TestBase {
 
     private Predicate<TransientEntity> transientEntity(String value) {
         return entity -> {
-            BDDAssertions.then(entity).isEqualTo(new TransientEntity(entity.getId(), value, null));
+            BDDAssertions.then(entity).isEqualTo(new TransientEntity(entity.id(), value, null));
             return true;
         };
     }

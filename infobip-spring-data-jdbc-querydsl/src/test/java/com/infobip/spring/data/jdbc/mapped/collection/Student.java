@@ -2,24 +2,22 @@ package com.infobip.spring.data.jdbc.mapped.collection;
 
 import java.util.Set;
 
-import lombok.Value;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
 import org.springframework.data.relational.core.mapping.MappedCollection;
 
-@Value
-public class Student {
-
+public record Student(
     @Id
-    Long id;
+    Long id,
 
-    String name;
+    String name,
 
     @MappedCollection(idColumn = "StudentId", keyColumn = "CourseId")
-    Set<StudentCourse> courses;
+    Set<StudentCourse> courses
+) {
 
     void addItem(Course course) {
-        var studentCourse = new StudentCourse(null, AggregateReference.to(course.getId()), null);
+        var studentCourse = new StudentCourse(null, AggregateReference.to(course.id()), null);
         courses.add(studentCourse);
     }
 

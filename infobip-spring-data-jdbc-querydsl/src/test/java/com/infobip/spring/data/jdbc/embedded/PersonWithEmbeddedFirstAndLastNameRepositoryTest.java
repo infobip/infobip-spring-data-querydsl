@@ -10,7 +10,6 @@ import java.util.TimeZone;
 import com.infobip.spring.data.jdbc.TestBase;
 import com.querydsl.core.types.Projections;
 import lombok.AllArgsConstructor;
-import lombok.Value;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -56,7 +55,7 @@ public class PersonWithEmbeddedFirstAndLastNameRepositoryTest extends TestBase {
 
         // when
         List<PersonWithEmbeddedFirstAndLastName> actual = repository.findAll(
-                personWithEmbeddedFirstAndLastName.firstName.in("John", "Johny"));
+            personWithEmbeddedFirstAndLastName.firstName.in("John", "Johny"));
 
         then(actual).containsOnly(johnDoe, johnyRoe);
     }
@@ -73,14 +72,14 @@ public class PersonWithEmbeddedFirstAndLastNameRepositoryTest extends TestBase {
 
         // when
         var actual = repository.query(query -> query
-                .select(repository.entityProjection())
-                .from(personWithEmbeddedFirstAndLastName)
-                .where(personWithEmbeddedFirstAndLastName.firstName.in("John", "Jane"))
-                .orderBy(personWithEmbeddedFirstAndLastName.firstName.asc(),
-                         personWithEmbeddedFirstAndLastName.lastName.asc())
-                .limit(1)
-                .offset(1)
-                .fetch());
+            .select(repository.entityProjection())
+            .from(personWithEmbeddedFirstAndLastName)
+            .where(personWithEmbeddedFirstAndLastName.firstName.in("John", "Jane"))
+            .orderBy(personWithEmbeddedFirstAndLastName.firstName.asc(),
+                     personWithEmbeddedFirstAndLastName.lastName.asc())
+            .limit(1)
+            .offset(1)
+            .fetch());
 
         then(actual).containsOnly(johnDoe);
     }
@@ -97,13 +96,13 @@ public class PersonWithEmbeddedFirstAndLastNameRepositoryTest extends TestBase {
 
         // when
         var actual = repository.queryOne(query -> query
-                .select(repository.entityProjection())
-                .from(personWithEmbeddedFirstAndLastName)
-                .where(personWithEmbeddedFirstAndLastName.firstName.in("John", "Jane"))
-                .orderBy(personWithEmbeddedFirstAndLastName.firstName.asc(),
-                         personWithEmbeddedFirstAndLastName.lastName.asc())
-                .limit(1)
-                .offset(1));
+            .select(repository.entityProjection())
+            .from(personWithEmbeddedFirstAndLastName)
+            .where(personWithEmbeddedFirstAndLastName.firstName.in("John", "Jane"))
+            .orderBy(personWithEmbeddedFirstAndLastName.firstName.asc(),
+                     personWithEmbeddedFirstAndLastName.lastName.asc())
+            .limit(1)
+            .offset(1));
 
         then(actual).contains(johnDoe);
     }
@@ -120,13 +119,13 @@ public class PersonWithEmbeddedFirstAndLastNameRepositoryTest extends TestBase {
 
         // when
         var actual = repository.queryMany(query -> query
-                .select(repository.entityProjection())
-                .from(personWithEmbeddedFirstAndLastName)
-                .where(personWithEmbeddedFirstAndLastName.firstName.in("John", "Jane"))
-                .orderBy(personWithEmbeddedFirstAndLastName.firstName.asc(),
-                         personWithEmbeddedFirstAndLastName.lastName.asc())
-                .limit(1)
-                .offset(1));
+            .select(repository.entityProjection())
+            .from(personWithEmbeddedFirstAndLastName)
+            .where(personWithEmbeddedFirstAndLastName.firstName.in("John", "Jane"))
+            .orderBy(personWithEmbeddedFirstAndLastName.firstName.asc(),
+                     personWithEmbeddedFirstAndLastName.lastName.asc())
+            .limit(1)
+            .offset(1));
 
         then(actual).containsOnly(johnDoe);
     }
@@ -139,15 +138,15 @@ public class PersonWithEmbeddedFirstAndLastNameRepositoryTest extends TestBase {
 
         // when
         List<PersonProjection> actual = repository.query(query -> query
-                .select(Projections.constructor(PersonProjection.class,
-                                                personWithEmbeddedFirstAndLastName.firstName,
-                                                personWithEmbeddedFirstAndLastName.lastName))
-                .from(personWithEmbeddedFirstAndLastName)
-                .fetch());
+            .select(Projections.constructor(PersonProjection.class,
+                                            personWithEmbeddedFirstAndLastName.firstName,
+                                            personWithEmbeddedFirstAndLastName.lastName))
+            .from(personWithEmbeddedFirstAndLastName)
+            .fetch());
 
         // then
-        then(actual).containsExactly(new PersonProjection(johnDoe.getFirstAndLastName().getFirstName(),
-                                                          johnDoe.getFirstAndLastName().getLastName()));
+        then(actual).containsExactly(new PersonProjection(johnDoe.firstAndLastName().firstName(),
+                                                          johnDoe.firstAndLastName().lastName()));
     }
 
     @Test
@@ -160,12 +159,12 @@ public class PersonWithEmbeddedFirstAndLastNameRepositoryTest extends TestBase {
 
         // when
         Long actual = repository.update(query -> query
-                .set(personWithEmbeddedFirstAndLastName.firstName, "John")
-                .where(personWithEmbeddedFirstAndLastName.firstName.eq("Johny"))
-                .execute());
+            .set(personWithEmbeddedFirstAndLastName.firstName, "John")
+            .where(personWithEmbeddedFirstAndLastName.firstName.eq("Johny"))
+            .execute());
 
         then(actual).isEqualTo(1);
-        then(repository.findAll()).extracting(person -> person.getFirstAndLastName().getFirstName())
+        then(repository.findAll()).extracting(person -> person.firstAndLastName().firstName())
                                   .containsExactlyInAnyOrder("John", "John", "Jane")
                                   .hasSize(3);
     }
@@ -186,15 +185,16 @@ public class PersonWithEmbeddedFirstAndLastNameRepositoryTest extends TestBase {
         then(actual).isEqualTo(3L);
     }
 
-    @Value
-    public static class PersonProjection {
+    public record PersonProjection(
+        String firstName,
+        String lastName
+    ) {
 
-        private final String firstName;
-        private final String lastName;
     }
 
     private PersonWithEmbeddedFirstAndLastName givenSavedPerson(String firstName, String lastName) {
         return repository.save(new PersonWithEmbeddedFirstAndLastName(null, new FirstAndLastName(firstName, lastName),
                                                                       BEGINNING_OF_2021));
     }
+
 }

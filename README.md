@@ -140,10 +140,11 @@ For examples how to construct projections refer to the official documentation - 
 Here is an example that uses constructor:
 
 ```$xslt
-@Value
-public static class PersonProjection {
-    private final String firstName;
-    private final String lastName;
+public record PersonProjection(
+    String firstName,
+    String lastName
+) {
+
 }
 ...
 
@@ -208,26 +209,26 @@ Entity fields marked with `@org.springframework.data.relational.core.mapping.Emb
 Model:
 ```java
 @Table("Person")
-@Value
-public class PersonWithEmbeddedFirstAndLastName {
+public record PersonWithEmbeddedFirstAndLastName(
 
-   @With
-   @Id
-   private final Long id;
+        @With
+        @Id
+        Long id,
 
-   @Embedded(onEmpty = Embedded.OnEmpty.USE_EMPTY)
-   private final FirstAndLastName firstAndLastName;
-   ...
+        @Embedded(onEmpty = Embedded.OnEmpty.USE_EMPTY)
+        FirstAndLastName firstAndLastName
+) {
+    
 }
 ```
 
 
 ```java
-@Value
-public class FirstAndLastName {
+public record FirstAndLastName(
+        String firstName,
+        String lastName
+) {
 
-    private final String firstName;
-    private final String lastName;
 }
 ```
 
@@ -243,20 +244,18 @@ repository.findAll(personWithEmbeddedFirstAndLastName.firstName.in("John", "John
 Model:
 
 ```java
+public record Student(
+        @Id
+        Long id,
 
-@Value
-public class Student {
+        String name,
 
-   @Id
-   Long id;
-
-   String name;
-
-   @MappedCollection(idColumn = "StudentId", keyColumn = "CourseId")
-   Set<StudentCourse> courses;
+        @MappedCollection(idColumn = "StudentId", keyColumn = "CourseId")
+        Set<StudentCourse> courses
+) {
 
    void addItem(Course course) {
-      var studentCourse = new StudentCourse(null, AggregateReference.to(course.getId()), null);
+      var studentCourse = new StudentCourse(null, AggregateReference.to(course.id()), null);
       courses.add(studentCourse);
    }
 
@@ -264,26 +263,25 @@ public class Student {
 ```
 
 ```java
-@Value
-public class Course {
+public record Course(
+        @Id
+        Long id,
+        String name
+) {
 
-   @Id
-   Long id;
-
-   String name;
 }
 ```
 
 ```java
-@Value
-public class StudentCourse {
+public record StudentCourse(
+        @Id
+        Long id,
 
-   @Id
-   Long id;
+        AggregateReference<Course, Long> courseId,
 
-   AggregateReference<Course,Long> courseId;
+        Long studentId
+) {
 
-   Long studentId;
 }
 ```
 
@@ -391,10 +389,11 @@ For examples how to construct projections refer to the official documentation - 
 Here is an example that uses constructor:
 
 ```$xslt
-@Value
-public static class PersonProjection {
-    private final String firstName;
-    private final String lastName;
+public record PersonProjection(
+    String firstName,
+    String lastName
+) {
+
 }
 ...
 
@@ -534,10 +533,11 @@ For examples how to construct projections refer to the official documentation - 
 Here is an example that uses constructor:
 
 ```$xslt
-@Value
-public class PersonProjection {
-    private final String firstName;
-    private final String lastName;
+public record PersonProjection(
+    String firstName,
+    String lastName
+) {
+
 }
 ...
  

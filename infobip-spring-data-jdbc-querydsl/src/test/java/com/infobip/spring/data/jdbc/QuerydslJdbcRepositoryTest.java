@@ -13,7 +13,6 @@ import com.infobip.spring.data.jdbc.extension.CustomQuerydslJdbcRepository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.sql.SQLQueryFactory;
 import lombok.AllArgsConstructor;
-import lombok.Value;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -97,13 +96,13 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
 
         // when
         var actual = repository.query(query -> query
-                .select(repository.entityProjection())
-                .from(person)
-                .where(person.firstName.in("John", "Jane"))
-                .orderBy(person.firstName.asc(), person.lastName.asc())
-                .limit(1)
-                .offset(1)
-                .fetch());
+            .select(repository.entityProjection())
+            .from(person)
+            .where(person.firstName.in("John", "Jane"))
+            .orderBy(person.firstName.asc(), person.lastName.asc())
+            .limit(1)
+            .offset(1)
+            .fetch());
 
         then(actual).containsOnly(johnDoe);
     }
@@ -120,12 +119,12 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
 
         // when
         var actual = repository.queryOne(query -> query
-                .select(repository.entityProjection())
-                .from(person)
-                .where(person.firstName.in("John", "Jane"))
-                .orderBy(person.firstName.asc(), person.lastName.asc())
-                .limit(1)
-                .offset(1));
+            .select(repository.entityProjection())
+            .from(person)
+            .where(person.firstName.in("John", "Jane"))
+            .orderBy(person.firstName.asc(), person.lastName.asc())
+            .limit(1)
+            .offset(1));
 
         then(actual).contains(johnDoe);
     }
@@ -142,12 +141,12 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
 
         // when
         var actual = repository.queryMany(query -> query
-                .select(repository.entityProjection())
-                .from(person)
-                .where(person.firstName.in("John", "Jane"))
-                .orderBy(person.firstName.asc(), person.lastName.asc())
-                .limit(1)
-                .offset(1));
+            .select(repository.entityProjection())
+            .from(person)
+            .where(person.firstName.in("John", "Jane"))
+            .orderBy(person.firstName.asc(), person.lastName.asc())
+            .limit(1)
+            .offset(1));
 
         then(actual).containsOnly(johnDoe);
     }
@@ -160,13 +159,13 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
 
         // when
         List<PersonProjection> actual = repository.query(query -> query
-                .select(Projections.constructor(PersonProjection.class, person.firstName,
-                                                person.lastName))
-                .from(person)
-                .fetch());
+            .select(Projections.constructor(PersonProjection.class, person.firstName,
+                                            person.lastName))
+            .from(person)
+            .fetch());
 
         // then
-        then(actual).containsExactly(new PersonProjection(johnDoe.getFirstName(), johnDoe.getLastName()));
+        then(actual).containsExactly(new PersonProjection(johnDoe.firstName(), johnDoe.lastName()));
     }
 
     @Test
@@ -179,12 +178,12 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
 
         // when
         Long actual = repository.update(query -> query
-                .set(person.firstName, "John")
-                .where(person.firstName.eq("Johny"))
-                .execute());
+            .set(person.firstName, "John")
+            .where(person.firstName.eq("Johny"))
+            .execute());
 
         then(actual).isEqualTo(1);
-        then(repository.findAll()).extracting(Person::getFirstName)
+        then(repository.findAll()).extracting(Person::firstName)
                                   .containsExactlyInAnyOrder("John", "John", "Jane")
                                   .hasSize(3);
     }
@@ -216,14 +215,14 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
 
         // when
         var actual = repository.query(query -> query
-                .select(repository.entityProjection())
-                .from(person)
-                .innerJoin(personSettings)
-                .on(person.id.eq(personSettings.personId))
-                .where(personSettings.id.eq(johnDoeSettings.getId()))
-                .fetch());
+            .select(repository.entityProjection())
+            .from(person)
+            .innerJoin(personSettings)
+            .on(person.id.eq(personSettings.personId))
+            .where(personSettings.id.eq(johnDoeSettings.id()))
+            .fetch());
 
-        then(actual).extracting(Person::getFirstName).containsExactly(johnDoe.getFirstName());
+        then(actual).extracting(Person::firstName).containsExactly(johnDoe.firstName());
     }
 
     @Test
@@ -233,10 +232,10 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
 
         // when
         var actual = noArgsRepository.query(query -> query
-                .select(noArgsRepository.entityProjection())
-                .from(QNoArgsEntity.noArgsEntity)
-                .limit(1)
-                .fetch());
+            .select(noArgsRepository.entityProjection())
+            .from(QNoArgsEntity.noArgsEntity)
+            .limit(1)
+            .fetch());
 
         then(actual).containsExactly(givenNoArgsEntity);
     }
@@ -248,10 +247,10 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
 
         // when
         List<NoArgsEntity> actual = noArgsRepository.query(query -> query
-                .select(QNoArgsEntity.noArgsEntity)
-                .from(QNoArgsEntity.noArgsEntity)
-                .limit(1)
-                .fetch());
+            .select(QNoArgsEntity.noArgsEntity)
+            .from(QNoArgsEntity.noArgsEntity)
+            .limit(1)
+            .fetch());
 
         then(actual).containsExactly(givenNoArgsEntity);
     }
@@ -272,7 +271,7 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
         // when
         sqlQueryFactory.insert(person)
                        .columns(person.firstName, person.lastName, person.createdAt)
-                       .values(givenPerson.getFirstName(), givenPerson.getLastName(), givenPerson.getCreatedAt())
+                       .values(givenPerson.firstName(), givenPerson.lastName(), givenPerson.createdAt())
                        .execute();
         repository.save(givenPerson);
 
@@ -298,11 +297,11 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
         then(actual).containsOnly(johnDoe);
     }
 
-    @Value
-    public static class PersonProjection {
+    public record PersonProjection(
+        String firstName,
+        String lastName
+    ) {
 
-        private final String firstName;
-        private final String lastName;
     }
 
     private Person givenSavedPerson(String firstName, String lastName) {
@@ -314,6 +313,7 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
     }
 
     private PersonSettings givenSavedPersonSettings(Person person) {
-        return settingsRepository.save(new PersonSettings(null, person.getId()));
+        return settingsRepository.save(new PersonSettings(null, person.id()));
     }
+
 }

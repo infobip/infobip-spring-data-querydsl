@@ -18,9 +18,9 @@ public class TransientEntityRepositoryTest extends TestBase {
         var givenEntity = repository.save(new TransientEntity(null, "givenValue", "givenTransientValue"));
 
         // when
-        var actual = repository.findOne(transientEntity.id.eq(givenEntity.getId()));
+        var actual = repository.findOne(transientEntity.id.eq(givenEntity.id()));
 
         // then
-        then(actual).contains(new TransientEntity(givenEntity.getId(), givenEntity.getValue(), null));
+        then(actual).contains(new TransientEntity(givenEntity.id(), givenEntity.value(), null));
     }
 }

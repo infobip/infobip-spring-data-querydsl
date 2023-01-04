@@ -25,13 +25,13 @@ public class PagingEntityPagingRepositoryTest extends TestBase {
 
         // then
         StepVerifier.create(actual)
-                    .expectNextMatches(pagingEntity(givenEntity.getValue()))
+                    .expectNextMatches(pagingEntity(givenEntity.value()))
                     .verifyComplete();
     }
 
     private Predicate<PagingEntity> pagingEntity(String value) {
         return entity -> {
-            BDDAssertions.then(entity).isEqualTo(new PagingEntity(entity.getId(), value));
+            BDDAssertions.then(entity).isEqualTo(new PagingEntity(entity.id(), value));
             return true;
         };
     }

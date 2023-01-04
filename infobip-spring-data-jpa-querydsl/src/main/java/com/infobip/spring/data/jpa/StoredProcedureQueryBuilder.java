@@ -62,43 +62,34 @@ public class StoredProcedureQueryBuilder {
         return this;
     }
 
-    private static final class Parameter {
-        private final Class<?> type;
-        private final String name;
-        private final Object value;
-
-        private Parameter(Class<?> type, String name, Object value) {
-            this.type = type;
-            this.name = name;
-            this.value = value;
-        }
+    private record Parameter(
+        Class<?> type,
+        String name,
+        Object value
+    ) {
 
         @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-            var parameter = (Parameter) o;
-            return Objects.equals(type, parameter.type) &&
+            public boolean equals(Object o) {
+                if (this == o) {
+                    return true;
+                }
+                if (o == null || getClass() != o.getClass()) {
+                    return false;
+                }
+                var parameter = (Parameter) o;
+                return Objects.equals(type, parameter.type) &&
                     Objects.equals(name, parameter.name) &&
                     Objects.equals(value, parameter.value);
-        }
+            }
 
         @Override
-        public int hashCode() {
-            return Objects.hash(type, name, value);
-        }
-
-        @Override
-        public String toString() {
-            return "Parameter{" +
+            public String toString() {
+                return "Parameter{" +
                     "type=" + type +
                     ", name='" + name + '\'' +
                     ", value=" + value +
                     '}';
-        }
+            }
+
     }
 }

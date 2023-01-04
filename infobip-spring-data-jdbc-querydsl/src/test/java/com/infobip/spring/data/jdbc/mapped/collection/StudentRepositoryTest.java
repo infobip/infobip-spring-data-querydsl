@@ -36,15 +36,15 @@ public class StudentRepositoryTest extends TestBase {
         var actual = studentRepository.findAll();
 
         // then
-        var givenStudentCourse = givenStudent.getCourses()
+        var givenStudentCourse = givenStudent.courses()
                                              .stream()
                                              .findFirst()
                                              .orElseThrow(NullPointerException::new);
-        then(actual).containsExactly(new Student(givenStudent.getId(),
-                                                 givenStudent.getName(),
-                                                 Collections.singleton(new StudentCourse(givenStudentCourse.getId(),
-                                                                                         AggregateReference.to(givenCourse.getId()),
-                                                                                         givenStudent.getId()))));
+        then(actual).containsExactly(new Student(givenStudent.id(),
+                                                 givenStudent.name(),
+                                                 Collections.singleton(new StudentCourse(givenStudentCourse.id(),
+                                                                                         AggregateReference.to(givenCourse.id()),
+                                                                                         givenStudent.id()))));
     }
 
     @Test
@@ -62,15 +62,15 @@ public class StudentRepositoryTest extends TestBase {
                                                            .fetch());
 
         // then
-        var givenStudentCourse = givenStudent.getCourses()
+        var givenStudentCourse = givenStudent.courses()
                                              .stream()
                                              .findFirst()
                                              .orElseThrow(NullPointerException::new);
-        then(actual).containsExactly(new Student(givenStudent.getId(),
-                                                 givenStudent.getName(),
-                                                 Collections.singleton(new StudentCourse(givenStudentCourse.getId(),
-                                                                                         AggregateReference.to(givenCourse.getId()),
-                                                                                         givenStudent.getId()))));
+        then(actual).containsExactly(new Student(givenStudent.id(),
+                                                 givenStudent.name(),
+                                                 Collections.singleton(new StudentCourse(givenStudentCourse.id(),
+                                                                                         AggregateReference.to(givenCourse.id()),
+                                                                                         givenStudent.id()))));
     }
 
     private Course givenCourse() {
