@@ -1,18 +1,19 @@
 package com.infobip.spring.data.jdbc;
 
-import lombok.Value;
+import java.time.Instant;
+
 import lombok.With;
 import org.springframework.data.annotation.Id;
 
-import java.time.Instant;
+public record Person(
 
-@Value
-public class Person {
+    @With
+    @Id
+    Long id,
 
-	@With
-	@Id
-	private final Long id;
-	private final String firstName;
-	private final String lastName;
-	private final Instant createdAt;
+    String firstName,
+    String lastName,
+    Instant createdAt
+) {
+
 }

@@ -2,26 +2,24 @@ package com.infobip.spring.data.jdbc.embedded;
 
 import java.time.Instant;
 
-import lombok.Value;
 import lombok.With;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.relational.core.mapping.Embedded;
 import org.springframework.data.relational.core.mapping.Table;
 
-;
-
 @Table("Person")
-@Value
-public class PersonWithEmbeddedFirstAndLastName {
-
+public record PersonWithEmbeddedFirstAndLastName(
+    
     @With
     @Id
-    private final Long id;
+    Long id,
 
     @Embedded(onEmpty = Embedded.OnEmpty.USE_EMPTY)
-    private final FirstAndLastName firstAndLastName;
-    private final Instant createdAt;
+    FirstAndLastName firstAndLastName,
+    Instant createdAt
+) {
+
 
     @PersistenceCreator
     public PersonWithEmbeddedFirstAndLastName(Long id,
@@ -36,9 +34,8 @@ public class PersonWithEmbeddedFirstAndLastName {
                                               String firstName,
                                               String lastName,
                                               Instant createdAt) {
-        this.id = id;
-        this.firstAndLastName = new FirstAndLastName(firstName, lastName);
-        this.createdAt = createdAt;
+        this(id, new FirstAndLastName(firstName, lastName), createdAt);
     }
+
 }
 

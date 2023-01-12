@@ -8,7 +8,6 @@ import static org.assertj.core.api.BDDAssertions.then;
 import java.util.function.Predicate;
 
 import lombok.AllArgsConstructor;
-import lombok.Value;
 import org.assertj.core.api.BDDAssertions;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
@@ -54,7 +53,7 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
                                                                    .from(person)
                                                                    .where(person.firstName.in("John", "Jane"))
                                                                    .orderBy(person.firstName.asc(),
-                                                                                     person.lastName.asc())
+                                                                            person.lastName.asc())
                                                                    .limit(1)
                                                                    .offset(1))
                                               .all());
@@ -135,7 +134,7 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
                                                               .innerJoin(personSettings)
                                                               .on(person.id.eq(personSettings.personId))
                                                               .where(personSettings.id.eq(
-                                                                  johnDoeSettings.getId())))
+                                                                  johnDoeSettings.id())))
                                          .all());
 
         // then
@@ -169,12 +168,10 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
         then(repository).isInstanceOf(QuerydslR2dbcRepository.class);
     }
 
-    @Value
-    public static class PersonProjection {
-
-        private final String firstName;
-
-        private final String lastName;
+    public record PersonProjection(
+        String firstName,
+        String lastName
+    ) {
 
     }
 
@@ -188,12 +185,12 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
 
     private Mono<PersonSettings> givenSavedPersonAndSettings(String firstName, String lastName) {
         return repository.save(new Person(null, firstName, lastName)).flatMap(
-            person -> settingsRepository.save(new PersonSettings(null, person.getId())));
+            person -> settingsRepository.save(new PersonSettings(null, person.id())));
     }
 
     private Predicate<? super Person> person(String firstName, String lastName) {
         return person -> {
-            BDDAssertions.then(person).isEqualTo(new Person(person.getId(), firstName, lastName));
+            BDDAssertions.then(person).isEqualTo(new Person(person.id(), firstName, lastName));
             return true;
         };
     }

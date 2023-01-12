@@ -26,7 +26,7 @@ import com.querydsl.codegen.TypeMappings;
 import com.querydsl.codegen.utils.model.TypeCategory;
 import org.springframework.data.relational.core.mapping.Table;
 
-class CustomExtendedTypeFactory extends ExtendedTypeFactory {
+public class CustomExtendedTypeFactory extends ExtendedTypeFactory {
 
     public static final String IS_EMBEDDED_DATA_KEY = "isEmbedded";
 

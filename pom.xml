@@ -4,7 +4,7 @@
 
 	<groupId>com.infobip</groupId>
 	<artifactId>infobip-spring-data-querydsl</artifactId>
-	<version>8.0.1-SNAPSHOT</version>
+	<version>8.1.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>Infobip Spring Data Querydsl</name>
@@ -68,7 +68,7 @@
 		<spring-boot.version>3.0.0</spring-boot.version>
 		<querydsl.version>5.0.0</querydsl.version>
 
-		<infobip-mssql-testcontainers.version>3.5.0</infobip-mssql-testcontainers.version>
+		<infobip-mssql-testcontainers.version>4.0.1</infobip-mssql-testcontainers.version>
 
 		<auto-service.version>1.0.1</auto-service.version>
 

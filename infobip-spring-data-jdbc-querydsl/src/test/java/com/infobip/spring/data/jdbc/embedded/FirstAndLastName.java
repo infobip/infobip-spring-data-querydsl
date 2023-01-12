@@ -1,10 +1,8 @@
 package com.infobip.spring.data.jdbc.embedded;
 
-import lombok.Value;
+public record FirstAndLastName(
+    String firstName,
+    String lastName
+) {
 
-@Value
-public class FirstAndLastName {
-
-    private final String firstName;
-    private final String lastName;
 }

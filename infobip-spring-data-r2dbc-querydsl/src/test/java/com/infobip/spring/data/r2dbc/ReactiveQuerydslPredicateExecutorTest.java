@@ -143,6 +143,6 @@ public class ReactiveQuerydslPredicateExecutorTest extends TestBase {
     }
 
     private Predicate<? super Person> person(String firstName, String lastName) {
-        return person -> person.equals(new Person(person.getId(), firstName, lastName));
+        return person -> person.equals(new Person(person.id(), firstName, lastName));
     }
 }
