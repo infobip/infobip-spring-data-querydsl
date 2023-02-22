@@ -75,8 +75,7 @@ public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> 
                         .collect(Collectors.joining("\n"));
         return databaseClient.sql(sql)
                              .fetch()
-                             .rowsUpdated()
-                             .as(TransactionalOperator.create(reactiveTransactionManager)::transactional);
+                             .rowsUpdated();
     }
 
     @Override
@@ -91,8 +90,7 @@ public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> 
                         .collect(Collectors.joining("\n"));
         return databaseClient.sql(sql)
                              .fetch()
-                             .rowsUpdated()
-                             .as(TransactionalOperator.create(reactiveTransactionManager)::transactional);
+                             .rowsUpdated();
     }
 
     @Override
