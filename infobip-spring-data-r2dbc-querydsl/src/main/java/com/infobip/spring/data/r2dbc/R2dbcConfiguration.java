@@ -24,7 +24,9 @@ public class R2dbcConfiguration {
     @ConditionalOnMissingBean
     @Bean
     public com.querydsl.sql.Configuration querydslSqlConfiguration(SQLTemplates sqlTemplates) {
-        return new com.querydsl.sql.Configuration(sqlTemplates);
+        var configuration = new com.querydsl.sql.Configuration(sqlTemplates);
+        configuration.setUseLiterals(true);
+        return configuration;
     }
 
     @ConditionalOnMissingBean
