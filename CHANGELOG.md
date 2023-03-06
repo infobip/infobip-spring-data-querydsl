@@ -1,3 +1,7 @@
+### 8.1.1
+
+* removed redundant transactions from SimpleQuerydslR2dbcFragment update and delete [#83](/../../pull/83
+
 ### 8.1.0
 
 * made CustomExtendedTypeFactory class public in order to allow customization [#80](/../../issues/80)

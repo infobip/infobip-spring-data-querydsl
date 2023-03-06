@@ -75,7 +75,7 @@ See [this answer](https://stackoverflow.com/a/26563841/607767) by Oliver Drotboh
 <a id="JDBCRequirements"></a>
 ###  Requirements:
 
-- Java 8 with [parameter names preserved in byte code](https://stackoverflow.com/a/20594685/607767) (used to map columns to constructor parameters)
+- Java 17 with [parameter names preserved in byte code](https://stackoverflow.com/a/20594685/607767) (used to map columns to constructor parameters)
 - Spring Data JDBC
 - entities must have an all argument constructor (`@AllArgsConstructor`), can have others as well
 - entity class and all argument constructor must be public (limitation of Querydsl)
@@ -325,7 +325,7 @@ Take a look at [extension package in tests](infobip-spring-data-jdbc-querydsl/sr
 <a id="R2DBCRequirements"></a>
 ###  Requirements:
 
-- Java 8 with [parameter names preserved in byte code](https://stackoverflow.com/a/20594685/607767) (used to map columns to constructor parameters)
+- Java 17 with [parameter names preserved in byte code](https://stackoverflow.com/a/20594685/607767) (used to map columns to constructor parameters)
 - Spring Data R2DBC
 - entities must have an all argument constructor (`@AllArgsConstructor`), can have others as well
 - entity class and all argument constructor must be public (limitation of Querydsl)
@@ -455,7 +455,7 @@ Take a look at [extension package in tests](infobip-spring-data-r2dbc-querydsl/s
 <a id="JPARequirements"></a>
 ###  Requirements:
 
-- Java 8
+- Java 17
 - Spring Data JPA
 
 <a id="JPASetup"></a>
