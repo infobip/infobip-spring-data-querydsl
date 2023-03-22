@@ -68,7 +68,6 @@ public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> 
     @Transactional
     public Mono<Long> update(Function<SQLUpdateClause, SQLUpdateClause> update) {
         var clause = sqlQueryFactory.update(path);
-        clause.setUseLiterals(true);
         var sql = update.apply(clause).getSQL()
                         .stream()
                         .map(SQLBindings::getSQL)
@@ -83,7 +82,6 @@ public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> 
     public Mono<Long> deleteWhere(Predicate predicate) {
         var clause = sqlQueryFactory.delete(path)
                                     .where(predicate);
-        clause.setUseLiterals(true);
         var sql = clause.getSQL()
                         .stream()
                         .map(SQLBindings::getSQL)
@@ -100,7 +98,6 @@ public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> 
 
     private <O> RowsFetchSpec<O> createQuery(Function<SQLQuery<?>, SQLQuery<O>> query) {
         var result = query.apply(sqlQueryFactory.query());
-        result.setUseLiterals(true);
         var sql = result.getSQL().getSQL();
         var mapper = new EntityRowMapper<O>(result.getType(), converter);
         return new SimpleRowsFetchSpec<>(databaseClient.sql(sql)
