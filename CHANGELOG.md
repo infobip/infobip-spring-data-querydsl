@@ -1,3 +1,6 @@
+### 8.1.2
+* fixed a bug in R2dbcSQLTemplatesConfiguration - wrong type of sql server templates was registered [#85](/../../issues/85)
+
 ### 8.1.1
 
 * removed redundant transactions from SimpleQuerydslR2dbcFragment update and delete [#83](/../../pull/83

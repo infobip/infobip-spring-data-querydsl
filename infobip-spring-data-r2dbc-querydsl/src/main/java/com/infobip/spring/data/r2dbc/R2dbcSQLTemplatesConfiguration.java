@@ -28,7 +28,7 @@ public class R2dbcSQLTemplatesConfiguration {
 
         var templates = sqlTemplatesRegistry.getTemplates(metaData);
 
-        if (templates instanceof SQLServerTemplates || metaData.getDatabaseMajorVersion() > 11) {
+        if (templates instanceof SQLServerTemplates && metaData.getDatabaseMajorVersion() > 11) {
             return new SQLServer2012Templates();
         }
 
