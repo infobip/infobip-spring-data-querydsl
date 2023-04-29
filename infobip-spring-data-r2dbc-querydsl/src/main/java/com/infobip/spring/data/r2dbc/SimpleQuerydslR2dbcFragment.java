@@ -15,12 +15,15 @@
  */
 package com.infobip.spring.data.r2dbc;
 
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
+import com.querydsl.core.QueryMetadata;
+import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.PathImpl;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.PredicateOperation;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.sql.RelationalPath;
 import com.querydsl.sql.SQLBindings;
 import com.querydsl.sql.SQLQuery;
@@ -28,12 +31,17 @@ import com.querydsl.sql.SQLQueryFactory;
 import com.querydsl.sql.dml.SQLUpdateClause;
 import org.springframework.data.r2dbc.convert.EntityRowMapper;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
+import org.springframework.data.util.TypeInformation;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.r2dbc.core.RowsFetchSpec;
 import org.springframework.transaction.ReactiveTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Mono;
+
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static java.util.Objects.requireNonNull;
 
 public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> {
 
@@ -98,9 +106,38 @@ public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> 
 
     private <O> RowsFetchSpec<O> createQuery(Function<SQLQuery<?>, SQLQuery<O>> query) {
         var result = query.apply(sqlQueryFactory.query());
+
+        applyConverterToWhere(result.getMetadata());
+
         var sql = result.getSQL().getSQL();
         var mapper = new EntityRowMapper<O>(result.getType(), converter);
         return new SimpleRowsFetchSpec<>(databaseClient.sql(sql)
                                                        .map(mapper));
+    }
+
+    private void applyConverterToWhere(QueryMetadata queryMetadata) {
+        if (queryMetadata.getWhere() != null) {
+            var where = (Predicate) doApplyConverter(queryMetadata.getWhere());
+            queryMetadata.clearWhere();
+            queryMetadata.addWhere(where);
+        }
+    }
+
+    private Expression<?> doApplyConverter(Expression<?> expression) {
+        if (expression instanceof PredicateOperation predicateOperation && predicateOperation.getArgs().size() == 2) {
+            var left = predicateOperation.getArg(0);
+            var right = predicateOperation.getArg(1);
+
+            if (left instanceof PathImpl<?> && right instanceof ConstantImpl<?> c) {
+                right = Expressions.constant(
+                    requireNonNull(converter.writeValue(c.getConstant(), TypeInformation.of(left.getType())))
+                );
+            } else {
+                left = doApplyConverter(left);
+                right = doApplyConverter(right);
+            }
+            return ExpressionUtils.predicate(predicateOperation.getOperator(), left, right);
+        }
+        return expression;
     }
 }
