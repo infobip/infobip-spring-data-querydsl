@@ -24,6 +24,7 @@ import com.querydsl.core.types.PathImpl;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.PredicateOperation;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.SimpleOperation;
 import com.querydsl.sql.RelationalPath;
 import com.querydsl.sql.SQLBindings;
 import com.querydsl.sql.SQLQuery;
@@ -107,7 +108,7 @@ public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> 
     private <O> RowsFetchSpec<O> createQuery(Function<SQLQuery<?>, SQLQuery<O>> query) {
         var result = query.apply(sqlQueryFactory.query());
 
-        applyConverterToWhere(result.getMetadata());
+        applyConverter(result.getMetadata());
 
         var sql = result.getSQL().getSQL();
         var mapper = new EntityRowMapper<O>(result.getType(), converter);
@@ -115,11 +116,41 @@ public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> 
                                                        .map(mapper));
     }
 
+    private void applyConverter(QueryMetadata queryMetadata) {
+        applyConverterToSubQuery(queryMetadata);
+        applyConverterToWhere(queryMetadata);
+    }
+
+    private void checkExpression(Expression<?> expression) {
+        if (expression instanceof SQLQuery<?>) {
+            applyConverter(((SQLQuery<?>) expression).getMetadata());
+        } else if (expression instanceof SimpleOperation<?>) {
+            for (Expression<?> arg : ((SimpleOperation<?>) expression).getArgs()) {
+                checkExpression(arg);
+            }
+        }
+    }
+
+    private void applyConverterToSubQuery(QueryMetadata queryMetadata) {
+        if (queryMetadata.getProjection() instanceof ConstructorExpression<?> projection) {
+            for (Expression<?> arg : projection.getArgs()) checkExpression(arg);
+        }
+
+        if (queryMetadata.getWhere() instanceof PredicateOperation where) {
+            for (Expression<?> arg : where.getArgs()) checkExpression(arg);
+        }
+
+        if (queryMetadata.getHaving() instanceof PredicateOperation having) {
+            for (Expression<?> arg : having.getArgs()) checkExpression(arg);
+        }
+    }
+
     private void applyConverterToWhere(QueryMetadata queryMetadata) {
         if (queryMetadata.getWhere() != null) {
-            var where = (Predicate) doApplyConverter(queryMetadata.getWhere());
+            Predicate where = queryMetadata.getWhere();
+            Predicate convertedWhere = (Predicate) doApplyConverter(where);
             queryMetadata.clearWhere();
-            queryMetadata.addWhere(where);
+            queryMetadata.addWhere(convertedWhere);
         }
     }
 
