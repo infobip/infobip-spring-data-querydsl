@@ -121,36 +121,36 @@ public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> 
         applyConverterToWhere(queryMetadata);
     }
 
-    private void checkExpression(Expression<?> expression) {
-        if (expression instanceof SQLQuery<?>) {
-            applyConverter(((SQLQuery<?>) expression).getMetadata());
-        } else if (expression instanceof SimpleOperation<?>) {
-            for (Expression<?> arg : ((SimpleOperation<?>) expression).getArgs()) {
-                checkExpression(arg);
-            }
-        }
-    }
-
     private void applyConverterToSubQuery(QueryMetadata queryMetadata) {
         if (queryMetadata.getProjection() instanceof ConstructorExpression<?> projection) {
-            for (Expression<?> arg : projection.getArgs()) checkExpression(arg);
+            for (Expression<?> arg : projection.getArgs()) applyToSubQueryExpression(arg);
         }
 
         if (queryMetadata.getWhere() instanceof PredicateOperation where) {
-            for (Expression<?> arg : where.getArgs()) checkExpression(arg);
+            for (Expression<?> arg : where.getArgs()) applyToSubQueryExpression(arg);
         }
 
         if (queryMetadata.getHaving() instanceof PredicateOperation having) {
-            for (Expression<?> arg : having.getArgs()) checkExpression(arg);
+            for (Expression<?> arg : having.getArgs()) applyToSubQueryExpression(arg);
+        }
+    }
+
+    private void applyToSubQueryExpression(Expression<?> expression) {
+        if (expression instanceof SQLQuery<?> subQuery) {
+            applyConverter(subQuery.getMetadata());
+        } else if (expression instanceof SimpleOperation<?> operation) {
+            for (Expression<?> arg : operation.getArgs()) {
+                applyToSubQueryExpression(arg);
+            }
         }
     }
 
     private void applyConverterToWhere(QueryMetadata queryMetadata) {
         if (queryMetadata.getWhere() != null) {
-            Predicate where = queryMetadata.getWhere();
-            Predicate convertedWhere = (Predicate) doApplyConverter(where);
+            var where = (Predicate) doApplyConverter(queryMetadata.getWhere());
+
             queryMetadata.clearWhere();
-            queryMetadata.addWhere(convertedWhere);
+            queryMetadata.addWhere(where);
         }
     }
 
