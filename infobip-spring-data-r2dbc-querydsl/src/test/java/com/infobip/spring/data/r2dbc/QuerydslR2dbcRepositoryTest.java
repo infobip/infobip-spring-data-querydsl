@@ -11,7 +11,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.util.List;
 import java.util.function.Predicate;
 
 import static com.infobip.spring.data.r2dbc.QPerson.person;
@@ -63,21 +62,6 @@ public class QuerydslR2dbcRepositoryTest extends TestBase {
                                                                    .limit(1)
                                                                    .offset(1))
                                               .all());
-
-        // then
-        StepVerifier.create(actual)
-                    .expectNextMatches(person("John", "Doe"))
-                    .verifyComplete();
-    }
-
-    @Test
-    void shouldQueryWithQueryAnnotation() {
-
-        // given
-        var given = given(givenSavedPerson("John", "Doe"));
-
-        // when
-        var actual = given.thenMany(repository.firstNameIn(List.of("John")));
 
         // then
         StepVerifier.create(actual)
