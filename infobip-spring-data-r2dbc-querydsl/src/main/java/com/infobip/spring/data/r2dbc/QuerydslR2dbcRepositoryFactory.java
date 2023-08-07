@@ -18,9 +18,7 @@ package com.infobip.spring.data.r2dbc;
 import com.infobip.spring.data.common.Querydsl;
 import com.infobip.spring.data.common.QuerydslExpressionFactory;
 import com.querydsl.core.types.ConstructorExpression;
-import com.querydsl.sql.RelationalPath;
-import com.querydsl.sql.RelationalPathBase;
-import com.querydsl.sql.SQLQueryFactory;
+import com.querydsl.sql.*;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
 import org.springframework.data.r2dbc.repository.support.R2dbcRepositoryFactory;
@@ -28,28 +26,28 @@ import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.core.support.RepositoryComposition;
 import org.springframework.data.repository.core.support.RepositoryFragment;
 import org.springframework.r2dbc.core.DatabaseClient;
-import org.springframework.transaction.ReactiveTransactionManager;
+import org.springframework.r2dbc.core.binding.BindMarkersFactoryResolver;
 
 public class QuerydslR2dbcRepositoryFactory extends R2dbcRepositoryFactory {
 
     private final Class<?> REPOSITORY_TARGET_TYPE = QuerydslR2dbcFragment.class;
 
     private final SQLQueryFactory sqlQueryFactory;
-    private final ReactiveTransactionManager reactiveTransactionManager;
     private final DatabaseClient databaseClient;
     private final R2dbcConverter converter;
     private final QuerydslExpressionFactory querydslExpressionFactory = new QuerydslExpressionFactory(
             REPOSITORY_TARGET_TYPE);
+    private final QuerydslParameterBinder querydslParameterBinder;
 
     public QuerydslR2dbcRepositoryFactory(R2dbcEntityOperations operations,
                                           SQLQueryFactory sqlQueryFactory,
-                                          ReactiveTransactionManager reactiveTransactionManager,
                                           DatabaseClient databaseClient) {
         super(operations);
         this.sqlQueryFactory = sqlQueryFactory;
         this.converter = operations.getConverter();
-        this.reactiveTransactionManager = reactiveTransactionManager;
         this.databaseClient = databaseClient;
+        this.querydslParameterBinder = new QuerydslParameterBinder(
+                BindMarkersFactoryResolver.resolve(databaseClient.getConnectionFactory()));
     }
 
     @Override
@@ -80,9 +78,9 @@ public class QuerydslR2dbcRepositoryFactory extends R2dbcRepositoryFactory {
                                                                          sqlQueryFactory,
                                                                          constructor,
                                                                          path,
-                                                                         reactiveTransactionManager,
                                                                          databaseClient,
-                                                                         converter);
+                                                                         converter,
+                                                                         querydslParameterBinder);
         return RepositoryFragment.implemented(simpleJPAQuerydslFragment);
     }
 
@@ -101,7 +99,8 @@ public class QuerydslR2dbcRepositoryFactory extends R2dbcRepositoryFactory {
                 sqlQueryFactory,
                 querydsl,
                 databaseClient,
-                converter);
+                converter,
+                querydslParameterBinder);
         return RepositoryFragment.implemented(querydslJdbcPredicateExecutor);
     }
 }

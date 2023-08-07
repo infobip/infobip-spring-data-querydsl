@@ -1,15 +1,9 @@
 package com.infobip.spring.data.r2dbc;
 
-import java.util.function.Function;
-
 import com.infobip.spring.data.common.Querydsl;
-import com.querydsl.core.types.ConstructorExpression;
-import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.SimpleExpression;
-import com.querydsl.sql.RelationalPath;
-import com.querydsl.sql.SQLQuery;
-import com.querydsl.sql.SQLQueryFactory;
+import com.querydsl.sql.*;
 import org.reactivestreams.Publisher;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.querydsl.QSort;
@@ -25,6 +19,8 @@ import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.function.Function;
+
 @Transactional(readOnly = true)
 public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQuerydslPredicateExecutor<T> {
 
@@ -34,19 +30,22 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
     private final Querydsl querydsl;
     private final DatabaseClient databaseClient;
     private final R2dbcConverter converter;
+    private final QuerydslParameterBinder querydslParameterBinder;
 
     public ReactiveQuerydslR2dbcPredicateExecutor(ConstructorExpression<T> constructorExpression,
                                                   RelationalPath<T> path,
                                                   SQLQueryFactory sqlQueryFactory,
                                                   Querydsl querydsl,
                                                   DatabaseClient databaseClient,
-                                                  R2dbcConverter converter) {
+                                                  R2dbcConverter converter,
+                                                  QuerydslParameterBinder querydslParameterBinder) {
         this.constructorExpression = constructorExpression;
         this.path = path;
         this.sqlQueryFactory = sqlQueryFactory;
         this.querydsl = querydsl;
         this.databaseClient = databaseClient;
         this.converter = converter;
+        this.querydslParameterBinder = querydslParameterBinder;
     }
 
     @Override
@@ -138,10 +137,8 @@ public class ReactiveQuerydslR2dbcPredicateExecutor<T> implements ReactiveQueryd
     }
 
     private <O> RowsFetchSpec<O> query(SQLQuery<O> query) {
-        query.setUseLiterals(true);
-        var sql = query.getSQL().getSQL();
-        var mapper = new EntityRowMapper<O>(query.getType(), converter);
-        return databaseClient.sql(sql)
-                             .map(mapper);
+        var mapper = new EntityRowMapper<>(query.getType(), converter);
+        var sql = query.getSQL();
+        return querydslParameterBinder.bind(databaseClient, sql.getNullFriendlyBindings(), sql.getSQL()).map(mapper);
     }
 }
