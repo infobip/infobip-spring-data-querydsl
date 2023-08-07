@@ -71,12 +71,6 @@ public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> 
                                       .rowsUpdated();
     }
 
-    private List<Object> getBindings(List<SQLBindings> sqlBindings) {
-        return sqlBindings.stream()
-                          .flatMap(bindings -> bindings.getNullFriendlyBindings().stream())
-                          .toList();
-    }
-
     @Override
     @Transactional
     public Mono<Long> deleteWhere(Predicate predicate) {
@@ -103,5 +97,11 @@ public class SimpleQuerydslR2dbcFragment<T> implements QuerydslR2dbcFragment<T> 
         var sql = result.getSQL();
         return new SimpleRowsFetchSpec<>(
                 querydslParameterBinder.bind(databaseClient, sql.getNullFriendlyBindings(), sql.getSQL()).map(mapper));
+    }
+
+    private List<Object> getBindings(List<SQLBindings> sqlBindings) {
+        return sqlBindings.stream()
+                          .flatMap(bindings -> bindings.getNullFriendlyBindings().stream())
+                          .toList();
     }
 }
