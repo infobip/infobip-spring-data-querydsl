@@ -1,4 +1,5 @@
 ### 9.0.0
+* upgraded to Spring Boot 3.1.2
 * remove use of setUseLiteral in r2dbc module and added use of r2dbc binding API [#69](/../../issues/69)
   * this was done to increase security
   * negative side is there can be cases where this breaks previously working code even though all tests pass hence major version bump, to increase awareness
