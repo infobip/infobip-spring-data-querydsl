@@ -1,23 +1,19 @@
 package com.infobip.spring.data.common;
 
-import java.lang.reflect.Constructor;
-import java.util.Arrays;
-import java.util.Comparator;
-
 import kotlin.jvm.JvmClassMappingKt;
 import kotlin.reflect.full.KClasses;
 import kotlin.reflect.jvm.ReflectJvmMapping;
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.data.annotation.PersistenceCreator;
-import org.springframework.data.mapping.Parameter;
-import org.springframework.data.mapping.PersistentEntity;
-import org.springframework.data.mapping.PersistentProperty;
-import org.springframework.data.mapping.PreferredConstructor;
-import org.springframework.data.util.ClassTypeInformation;
+import org.springframework.data.mapping.*;
 import org.springframework.data.util.KotlinReflectionUtils;
 import org.springframework.data.util.TypeInformation;
 import org.springframework.lang.Nullable;
+
+import java.lang.reflect.Constructor;
+import java.util.Arrays;
+import java.util.Comparator;
 
 ;
 
@@ -29,7 +25,7 @@ interface PreferredConstructorDiscoverer {
     @Nullable
     static <T, P extends PersistentProperty<P>> PreferredConstructor<T, P> discover(Class<T> type) {
         return Discoverers.findDiscoverer(type)
-                .discover(ClassTypeInformation.from(type), null);
+                .discover(TypeInformation.of(type), null);
     }
 
     enum Discoverers {

@@ -5,14 +5,11 @@ import org.junit.jupiter.api.Test
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.PersistenceCreator
 
-import org.springframework.data.mapping.PersistentProperty
-
 class PreferredConstructorTest {
 
     @Test
     internal fun `it should prefer persistence constructors`() {
-        val preferredConstructor = PreferredConstructorDiscoverer
-                .discover<EntityWithPersistenceCreator, PersistentProperty<*>>(EntityWithPersistenceCreator::class.java)
+        val preferredConstructor = PreferredConstructorDiscoverer.discover(EntityWithPersistenceCreator::class.java)
 
         then(preferredConstructor.parameters).hasSize(3)
         then(preferredConstructor.parameters.map { it.name }).containsExactly("id", "firstName", "lastName")
@@ -20,8 +17,7 @@ class PreferredConstructorTest {
 
     @Test
     internal fun `if no persistence constructor, it should take primary constructor`() {
-        val preferredConstructor = PreferredConstructorDiscoverer
-                .discover<DataClass, PersistentProperty<*>>(DataClass::class.java)
+        val preferredConstructor = PreferredConstructorDiscoverer.discover(DataClass::class.java)
 
         then(preferredConstructor.parameters).hasSize(3)
         then(preferredConstructor.parameters.map { it.name }).containsExactly("id", "firstName", "lastName")
@@ -29,8 +25,7 @@ class PreferredConstructorTest {
 
     @Test
     internal fun `if no primary constructor, it should take constructor with most arguments`() {
-        val preferredConstructor = PreferredConstructorDiscoverer
-                .discover<EntityWithoutPersistenceCreator, PersistentProperty<*>>(EntityWithoutPersistenceCreator::class.java)
+        val preferredConstructor = PreferredConstructorDiscoverer.discover(EntityWithoutPersistenceCreator::class.java)
 
         then(preferredConstructor.parameters).hasSize(3)
         then(preferredConstructor.parameters.map { it.name }).containsExactly("id", "firstName", "lastName")
