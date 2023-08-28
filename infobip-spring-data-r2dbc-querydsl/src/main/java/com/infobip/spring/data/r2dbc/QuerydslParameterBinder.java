@@ -38,8 +38,16 @@ class QuerydslParameterBinder {
         var sqlWithParameterNames = sql;
 
         for (String parameterName : parameterNameToParameterValue.keySet()) {
-            sqlWithParameterNames = sqlWithParameterNames.replaceFirst("\\?", parameterName);
+            String paramName = escape(parameterName);
+            sqlWithParameterNames = sqlWithParameterNames.replaceFirst("\\?", paramName);
         }
         return sqlWithParameterNames;
+    }
+
+    private String escape(String parameterName) {
+        if (parameterName.startsWith("$")) {
+            return parameterName.replace("$", "\\$");
+        }
+        return parameterName;
     }
 }
