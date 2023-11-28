@@ -65,7 +65,7 @@
 
 	<properties>
 		<!-- DEPENDENCY VERSIONS -->
-		<spring-boot.version>3.1.2</spring-boot.version>
+		<spring-boot.version>3.1.6</spring-boot.version>
 		<querydsl.version>5.0.0</querydsl.version>
 
 		<infobip-mssql-testcontainers.version>4.0.1</infobip-mssql-testcontainers.version>
