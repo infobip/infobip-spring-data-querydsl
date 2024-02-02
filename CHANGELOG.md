@@ -1,3 +1,6 @@
+### 9.0.3
+* upgraded to Spring Boot 3.2.2 and Querydsl 5.1.0
+
 ### 9.0.2
 * fixed a bug with replacing sql parameters and postgresql/h2 [#94](/../../issues/94)
 
