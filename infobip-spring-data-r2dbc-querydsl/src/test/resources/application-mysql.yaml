@@ -1,0 +1,5 @@
+spring:
+  r2dbc:
+    url: r2dbc:pool:mssql://<host>:<port>/InfobipSpringDataJdbcQuerydslTest
+  flyway:
+    url: jdbc:sqlserver://<host>:<port>;database=InfobipSpringDataJdbcQuerydslTest;trustServerCertificate=true
