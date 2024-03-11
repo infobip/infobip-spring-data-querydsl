@@ -69,5 +69,18 @@
             <artifactId>HikariCP</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>io.asyncer</groupId>
+            <artifactId>r2dbc-mysql</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.infobip</groupId>
+            <artifactId>infobip-mysql-testcontainers-spring-boot-starter</artifactId>
+            <version>${infobip-testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>
