@@ -11,6 +11,10 @@
 
     <artifactId>infobip-spring-data-r2dbc-querydsl</artifactId>
 
+    <properties>
+        <jasync-r2dbc-mysql.version>2.1.13</jasync-r2dbc-mysql.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -83,8 +87,9 @@
         </dependency>
 
         <dependency>
-            <groupId>io.asyncer</groupId>
-            <artifactId>r2dbc-mysql</artifactId>
+            <groupId>com.github.jasync-sql</groupId>
+            <artifactId>jasync-r2dbc-mysql</artifactId>
+            <version>${jasync-r2dbc-mysql.version}</version>
             <scope>test</scope>
         </dependency>
 
