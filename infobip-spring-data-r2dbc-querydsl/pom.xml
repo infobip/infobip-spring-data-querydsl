@@ -51,6 +51,12 @@
             <optional>true</optional>
         </dependency>
 
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-mysql</artifactId>
+            <optional>true</optional>
+        </dependency>
+
         <!--TEST-->
         <dependency>
             <groupId>io.r2dbc</groupId>
@@ -67,6 +73,12 @@
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
             <scope>test</scope>
         </dependency>
 
