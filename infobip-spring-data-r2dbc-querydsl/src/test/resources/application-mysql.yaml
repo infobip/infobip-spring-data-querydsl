@@ -3,3 +3,9 @@ spring:
     url: r2dbc:pool:mysql://<host>:<port>/InfobipSpringDataJdbcQuerydslTest
   datasource:
     url: jdbc:mysql://<host>:<port>/InfobipSpringDataJdbcQuerydslTest
+  flyway:
+    locations: "classpath:db/migration/mysql"
+    url: jdbc:mysql://<host>:<port>/InfobipSpringDataJdbcQuerydslTest
+
+testcontainers.mysql.docker.image: mysql:8.0
+

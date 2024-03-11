@@ -16,6 +16,7 @@ public class TestConfiguration {
     public Flyway flyway() {
         return new Flyway(Flyway.configure()
                                 .baselineOnMigrate(true)
+                                  .locations(env.getRequiredProperty("spring.flyway.locations"))
                                 .dataSource(
                                         env.getRequiredProperty("spring.flyway.url"),
                                         env.getRequiredProperty("spring.flyway.username"),
