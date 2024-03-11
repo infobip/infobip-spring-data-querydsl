@@ -68,7 +68,7 @@
 		<spring-boot.version>3.2.2</spring-boot.version>
 		<querydsl.version>5.1.0</querydsl.version>
 
-		<infobip-mssql-testcontainers.version>4.0.1</infobip-mssql-testcontainers.version>
+		<infobip-testcontainers.version>4.3.2</infobip-testcontainers.version>
 
 		<auto-service.version>1.0.1</auto-service.version>
 
@@ -147,7 +147,7 @@
 		<dependency>
 			<groupId>com.infobip</groupId>
 			<artifactId>infobip-mssql-testcontainers-spring-boot-starter</artifactId>
-			<version>${infobip-mssql-testcontainers.version}</version>
+			<version>${infobip-testcontainers.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
