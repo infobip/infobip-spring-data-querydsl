@@ -1,3 +1,6 @@
+### 9.0.7
+* added support for r2dbc mysql index based parameter binding [#97](/../../issues/97)
+
 ### 9.0.4
 * upgraded to Spring Boot 3.2.2 and Querydsl 5.1.0
 
