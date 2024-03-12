@@ -16,6 +16,7 @@
 package com.infobip.spring.data.r2dbc;
 
 import com.querydsl.sql.SQLQueryFactory;
+import com.querydsl.sql.SQLTemplates;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
 import org.springframework.data.r2dbc.repository.support.R2dbcRepositoryFactoryBean;
@@ -30,6 +31,7 @@ public class QuerydslR2dbcRepositoryFactoryBean<T extends Repository<S, ID>, S, 
 
     private SQLQueryFactory sqlQueryFactory;
     private DatabaseClient databaseClient;
+    private SQLTemplates sqlTemplates;
 
     protected QuerydslR2dbcRepositoryFactoryBean(Class<? extends T> repositoryInterface) {
         super(repositoryInterface);
@@ -37,7 +39,7 @@ public class QuerydslR2dbcRepositoryFactoryBean<T extends Repository<S, ID>, S, 
 
     @Override
     protected RepositoryFactorySupport getFactoryInstance(R2dbcEntityOperations operations) {
-        return new QuerydslR2dbcRepositoryFactory(operations, sqlQueryFactory, databaseClient);
+        return new QuerydslR2dbcRepositoryFactory(operations, sqlQueryFactory, databaseClient, sqlTemplates);
     }
 
     @Autowired
@@ -49,5 +51,10 @@ public class QuerydslR2dbcRepositoryFactoryBean<T extends Repository<S, ID>, S, 
     public void setDatabaseClient(DatabaseClient databaseClient) {
         super.setDatabaseClient(databaseClient);
         this.databaseClient = databaseClient;
+    }
+
+    @Autowired
+    public void setSqlTemplates(SQLTemplates sqlTemplates) {
+        this.sqlTemplates = sqlTemplates;
     }
 }
