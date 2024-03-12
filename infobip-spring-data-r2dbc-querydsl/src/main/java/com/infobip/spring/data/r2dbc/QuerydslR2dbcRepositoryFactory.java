@@ -41,13 +41,14 @@ public class QuerydslR2dbcRepositoryFactory extends R2dbcRepositoryFactory {
 
     public QuerydslR2dbcRepositoryFactory(R2dbcEntityOperations operations,
                                           SQLQueryFactory sqlQueryFactory,
-                                          DatabaseClient databaseClient) {
+                                          DatabaseClient databaseClient,
+                                          SQLTemplates sqlTemplates) {
         super(operations);
         this.sqlQueryFactory = sqlQueryFactory;
         this.converter = operations.getConverter();
         this.databaseClient = databaseClient;
         this.querydslParameterBinder = new QuerydslParameterBinder(
-                BindMarkersFactoryResolver.resolve(databaseClient.getConnectionFactory()));
+                BindMarkersFactoryResolver.resolve(databaseClient.getConnectionFactory()), sqlTemplates);
     }
 
     @Override
