@@ -20,6 +20,7 @@ import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.OrderSpecifier.NullHandling;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.sql.RelationalPath;
 import com.querydsl.sql.SQLQuery;
 import com.querydsl.sql.SQLQueryFactory;
 import org.springframework.data.domain.Pageable;
@@ -47,7 +48,7 @@ public class Querydsl {
 		return sqlQueryFactory.query();
 	}
 
-	public SQLQuery<?> createQuery(EntityPath<?>... paths) {
+	public SQLQuery<?> createQuery(RelationalPath<?>... paths) {
 
 		Assert.notNull(paths, "Paths must not be null!");
 

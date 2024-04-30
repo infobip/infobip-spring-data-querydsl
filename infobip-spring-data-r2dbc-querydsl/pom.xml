@@ -23,7 +23,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.querydsl</groupId>
+            <groupId>io.github.openfeign.querydsl</groupId>
             <artifactId>querydsl-apt</artifactId>
             <exclusions>
                 <exclusion>

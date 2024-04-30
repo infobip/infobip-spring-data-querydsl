@@ -1,8 +1,8 @@
 package com.infobip.spring.data.jdbc.annotation.processor;
 
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.ElementFilter;
 import java.io.IOException;

@@ -17,9 +17,8 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.querydsl</groupId>
+			<groupId>io.github.openfeign.querydsl</groupId>
 			<artifactId>querydsl-apt</artifactId>
-			<version>${querydsl.version}</version>
 			<classifier>jakarta</classifier>
 			<exclusions>
 				<exclusion>
@@ -35,15 +34,13 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.querydsl</groupId>
+			<groupId>io.github.openfeign.querydsl</groupId>
 			<artifactId>querydsl-sql</artifactId>
 		</dependency>
 
 		<dependency>
-			<groupId>com.querydsl</groupId>
+			<groupId>io.github.openfeign.querydsl</groupId>
 			<artifactId>querydsl-jpa</artifactId>
-			<version>${querydsl.version}</version>
-			<classifier>jakarta</classifier>
 		</dependency>
 
 		<dependency>
