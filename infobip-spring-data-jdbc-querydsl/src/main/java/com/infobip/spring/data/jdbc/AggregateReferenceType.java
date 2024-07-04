@@ -19,7 +19,7 @@ public class AggregateReferenceType implements Type<AggregateReference> {
 
     @Override
     public String getLiteral(AggregateReference value) {
-        return Optional.of(value).map(AggregateReference::getId).map(Object::toString).orElseGet(null);
+        return Optional.ofNullable(value).map(AggregateReference::getId).map(Object::toString).orElseGet(null);
     }
 
     @Override
