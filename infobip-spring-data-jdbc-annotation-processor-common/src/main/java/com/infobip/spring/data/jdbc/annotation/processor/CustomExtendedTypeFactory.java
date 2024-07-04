@@ -13,7 +13,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.google.common.base.CaseFormat;
@@ -65,7 +64,7 @@ public class CustomExtendedTypeFactory extends ExtendedTypeFactory {
         var element = types.asElement(typeMirror);
         var entityType = super.getEntityType(typeMirror, deep);
         var embeddedlessProperties =
-                entityType.getProperties()
+                Objects.requireNonNull(entityType).getProperties()
                           .stream()
                           .flatMap(property -> {
                               if (Embeddeds.isEmbedded(configuration, element, property)) {
@@ -74,12 +73,12 @@ public class CustomExtendedTypeFactory extends ExtendedTypeFactory {
 
                               return Stream.of(property);
                           })
-                          .collect(Collectors.toList());
+                          .toList();
         entityType.getProperties().clear();
         entityType.getProperties().addAll(embeddedlessProperties);
         entityType.getPropertyNames().clear();
         entityType.getPropertyNames()
-                  .addAll(embeddedlessProperties.stream().map(Property::getName).collect(Collectors.toList()));
+                  .addAll(embeddedlessProperties.stream().map(Property::getName).toList());
         updateModel(element, entityType);
         return entityType;
     }

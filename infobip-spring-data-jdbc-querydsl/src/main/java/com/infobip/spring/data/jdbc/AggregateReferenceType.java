@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.Objects;
 import java.util.Optional;
 
 import com.querydsl.sql.types.Type;
@@ -18,7 +19,7 @@ public class AggregateReferenceType implements Type<AggregateReference> {
 
     @Override
     public String getLiteral(AggregateReference value) {
-        return Optional.ofNullable(value).map(AggregateReference::getId).map(Object::toString).orElse(null);
+        return Objects.requireNonNull(Optional.of(value).map(AggregateReference::getId).map(Object::toString).orElse(null));
     }
 
     @Override
