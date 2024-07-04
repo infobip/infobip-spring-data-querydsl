@@ -55,7 +55,7 @@ public class QuerydslExpressionFactory {
                                                                                        columnNameToExpression,
                                                                                        embeddedConstructorParameterNameToPath,
                                                                                        parameter))
-                          .collect(Collectors.toList());
+                          .toList();
 
         Class<?>[] paramTypes = pairs.stream().map(ParameterAndExpressionPair::parameterType).toArray(Class[]::new);
         Expression<?>[] expressions = pairs.stream().map(ParameterAndExpressionPair::expression).toArray(Expression[]::new);
@@ -133,24 +133,20 @@ public class QuerydslExpressionFactory {
     }
 
     private Constructor<?> getConstructor(Class<?> type) {
-        PreferredConstructor<?, ?> preferredConstructor = PreferredConstructorDiscoverer.discover(type);
-
-        if (preferredConstructor == null) {
-            return null;
-        }
-
-        return preferredConstructor.getConstructor();
+        return Optional.ofNullable(PreferredConstructorDiscoverer.discover(type))
+                .map(PreferredConstructor::getConstructor)
+                .orElseGet(null);
     }
 
     public RelationalPathBase<?> getRelationalPathBaseFromQueryRepositoryClass(Class<?> repositoryInterface) {
 
-        var entityType = ResolvableType.forClass(repositoryInterface)
-                                       .as(repositoryTargetType)
-                                       .getGeneric(0)
-                                       .resolve();
-        if (entityType == null) {
-            throw new IllegalArgumentException("Could not resolve query class for " + repositoryInterface);
-        }
+        var entityType = Optional.ofNullable(
+                        ResolvableType.forClass(repositoryInterface)
+                                .as(repositoryTargetType)
+                                .getGeneric(0)
+                                .resolve()
+                )
+                .orElseThrow(() -> new IllegalArgumentException("Could not resolve query class for " + repositoryInterface));
 
         return getRelationalPathBaseFromQueryClass(getQueryClass(entityType));
     }
@@ -166,11 +162,8 @@ public class QuerydslExpressionFactory {
 
     private RelationalPathBase<?> getRelationalPathBaseFromQueryClass(Class<?> queryClass) {
         var fieldName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, queryClass.getSimpleName().substring(1));
-        var field = ReflectionUtils.findField(queryClass, fieldName);
-
-        if (field == null) {
-            throw new IllegalArgumentException("Did not find a static field of the same type in " + queryClass);
-        }
+        var field = Optional.ofNullable(ReflectionUtils.findField(queryClass, fieldName))
+                .orElseThrow(() -> new IllegalArgumentException("Did not find a static field of the same type in " + queryClass));
 
         return (RelationalPathBase<?>) ReflectionUtils.getField(field, null);
     }
