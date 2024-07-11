@@ -64,7 +64,7 @@ public class CustomExtendedTypeFactory extends ExtendedTypeFactory {
         var element = types.asElement(typeMirror);
         var entityType = super.getEntityType(typeMirror, deep);
         var embeddedlessProperties =
-                Objects.requireNonNull(entityType).getProperties()
+                entityType.getProperties()
                           .stream()
                           .flatMap(property -> {
                               if (Embeddeds.isEmbedded(configuration, element, property)) {
