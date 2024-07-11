@@ -19,7 +19,12 @@ class QuerydslParameterBinder {
     }
 
     private boolean resolve(SQLTemplates sqlTemplates) {
-        return sqlTemplates instanceof MySQLTemplates;
+
+        if(sqlTemplates instanceof MySQLTemplates) {
+            return true;
+        }
+
+        return false;
     }
 
     DatabaseClient.GenericExecuteSpec bind(DatabaseClient databaseClient, List<Object> bindings, String sql) {
