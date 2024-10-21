@@ -65,10 +65,10 @@
 
 	<properties>
 		<!-- DEPENDENCY VERSIONS -->
-		<spring-boot.version>3.2.2</spring-boot.version>
+		<spring-boot.version>3.3.4</spring-boot.version>
 		<querydsl.version>5.1.0</querydsl.version>
 
-		<infobip-testcontainers.version>4.3.2</infobip-testcontainers.version>
+		<infobip-testcontainers.version>4.3.4</infobip-testcontainers.version>
 
 		<auto-service.version>1.0.1</auto-service.version>
 
@@ -85,7 +85,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>17</java.version>
 
-		<kotlin.version>1.8.0</kotlin.version>
+		<kotlin.version>1.9.0</kotlin.version>
 	</properties>
 
 	<dependencyManagement>
