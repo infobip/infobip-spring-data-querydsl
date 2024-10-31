@@ -1,0 +1,16 @@
+package com.infobip.test;
+
+import lombok.With;
+import org.springframework.data.annotation.Id;
+
+public record Person(
+    @With
+    @Id
+    Long id,
+
+    String firstName,
+    
+    String lastName
+) {
+
+}
