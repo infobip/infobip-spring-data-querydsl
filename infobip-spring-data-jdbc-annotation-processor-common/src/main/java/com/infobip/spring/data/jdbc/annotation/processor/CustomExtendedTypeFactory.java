@@ -24,6 +24,7 @@ import com.querydsl.codegen.QueryTypeFactory;
 import com.querydsl.codegen.TypeMappings;
 import com.querydsl.codegen.utils.model.TypeCategory;
 import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.util.StringUtils;
 
 public class CustomExtendedTypeFactory extends ExtendedTypeFactory {
 
@@ -142,6 +143,7 @@ public class CustomExtendedTypeFactory extends ExtendedTypeFactory {
         return Optional.ofNullable(elements.getTypeElement(className)
                                            .getAnnotation(Table.class))
                        .map(this::getTableName)
+                       .filter(StringUtils::hasText)
                        .orElse(tableName);
     }
 
