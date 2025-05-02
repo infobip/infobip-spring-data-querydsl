@@ -1,3 +1,6 @@
+### 9.0.8
+* ProjectTableCaseFormat and ProjectColumnCaseFormat does not work [#107](/../../issues/107)
+
 ### 9.0.7
 * added support for r2dbc mysql index based parameter binding [#97](/../../issues/97)
 
