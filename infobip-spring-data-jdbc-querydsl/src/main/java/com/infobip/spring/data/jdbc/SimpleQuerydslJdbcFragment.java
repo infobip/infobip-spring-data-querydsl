@@ -15,14 +15,21 @@
  */
 package com.infobip.spring.data.jdbc;
 
-import com.querydsl.core.types.*;
-import com.querydsl.sql.*;
-import com.querydsl.sql.dml.SQLUpdateClause;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.querydsl.core.types.ConstructorExpression;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.sql.RelationalPath;
+import com.querydsl.sql.SQLQuery;
+import com.querydsl.sql.SQLQueryFactory;
+import com.querydsl.sql.dml.SQLUpdateClause;
 
 @Transactional(readOnly = true)
 public class SimpleQuerydslJdbcFragment<T> implements QuerydslJdbcFragment<T> {
@@ -57,6 +64,11 @@ public class SimpleQuerydslJdbcFragment<T> implements QuerydslJdbcFragment<T> {
     public List<T> queryMany(Function<SQLQuery<?>, SQLQuery<T>> query) {
         return querydslJdbcPredicateExecutor.queryMany(query.apply(sqlQueryFactory.query()));
     }
+
+	@Override
+	public Page<T> queryMany(Function<SQLQuery<?>, SQLQuery<T>> query, Pageable pageable) {
+		return querydslJdbcPredicateExecutor.queryMany(query.apply(sqlQueryFactory.query()), pageable);
+	}
 
     @Override
     @Transactional
