@@ -184,6 +184,15 @@ public class QuerydslJdbcPredicateExecutor<T> implements QuerydslPredicateExecut
         return result;
     }
 
+    Page<T> queryMany(SQLQuery<T> query, Pageable pageable) {
+        Assert.notNull(query, "Query must not be null!");
+        Assert.notNull(pageable, "Pageable must not be null!");
+
+        var content = queryMany(querydsl.applyPagination(pageable, query).select(constructorExpression));
+
+        return PageableExecutionUtils.getPage(content, pageable, query::fetchCount);
+    }
+
     @Nullable
     private List<T> query(SQLQuery<T> query,
                   RowMapperResultSetExtractor<T> rowMapperResultSetExtractor) {

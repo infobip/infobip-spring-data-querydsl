@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 public interface QuerydslJdbcFragment<T> {
 
     /**
@@ -23,6 +26,8 @@ public interface QuerydslJdbcFragment<T> {
     Optional<T> queryOne(Function<SQLQuery<?>, SQLQuery<T>> query);
 
     List<T> queryMany(Function<SQLQuery<?>, SQLQuery<T>> query);
+
+    Page<T> queryMany(Function<SQLQuery<?>, SQLQuery<T>> query, Pageable pageable);
 
     /**
      * @return amount of affected rows
