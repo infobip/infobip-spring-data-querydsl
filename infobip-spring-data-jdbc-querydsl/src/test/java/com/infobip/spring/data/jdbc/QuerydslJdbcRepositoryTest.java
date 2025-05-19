@@ -1,22 +1,26 @@
 package com.infobip.spring.data.jdbc;
 
-import static com.infobip.spring.data.jdbc.QPerson.person;
-import static com.infobip.spring.data.jdbc.QPersonSettings.personSettings;
-import static org.assertj.core.api.BDDAssertions.then;
+import static com.infobip.spring.data.jdbc.QPerson.*;
+import static com.infobip.spring.data.jdbc.QPersonSettings.*;
+import static org.assertj.core.api.BDDAssertions.*;
 
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
 
-import com.infobip.spring.data.jdbc.extension.CustomQuerydslJdbcRepository;
-import com.querydsl.core.types.Projections;
-import com.querydsl.sql.SQLQueryFactory;
-import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.infobip.spring.data.jdbc.extension.CustomQuerydslJdbcRepository;
+import com.querydsl.core.types.Projections;
+import com.querydsl.sql.SQLQueryFactory;
+
+import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class QuerydslJdbcRepositoryTest extends TestBase {
@@ -53,7 +57,8 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
             actual = stream.collect(Collectors.toList());
         }
 
-        then(actual).usingRecursiveFieldByFieldElementComparator().containsExactlyInAnyOrder(johnDoe, johnyRoe, janeDoe);
+        then(actual).usingRecursiveFieldByFieldElementComparator()
+            .containsExactlyInAnyOrder(johnDoe, johnyRoe, janeDoe);
     }
 
     @Test
@@ -152,6 +157,27 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
     }
 
     @Test
+    void shouldQueryManyWithPageable() {
+        // given
+        givenSavedPerson("John", "Doe");
+        givenSavedPerson("Johny", "Roe");
+        var janeDoe = givenSavedPerson("Jane", "Doe");
+        givenSavedPerson("John", "Roe");
+        givenSavedPerson("Janie", "Doe");
+        var janeStone = givenSavedPerson("Jane", "Stone");
+
+        var page = PageRequest.of(0, 2, Sort.by(Sort.Order.asc("firstName")));
+
+        var actual = repository.queryMany(sqlQuery -> sqlQuery.from(person)
+            .where(person.firstName.in("John", "Jane")), page);
+
+        then(actual.getSize()).isEqualTo(2);
+        then(actual.getTotalElements()).isEqualTo(4);
+        then(actual.getTotalPages()).isEqualTo(2);
+        then(actual).containsExactlyInAnyOrder(janeDoe, janeStone);
+    }
+
+    @Test
     void shouldProject() {
 
         // given
@@ -184,8 +210,8 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
 
         then(actual).isEqualTo(1);
         then(repository.findAll()).extracting(Person::firstName)
-                                  .containsExactlyInAnyOrder("John", "John", "Jane")
-                                  .hasSize(3);
+            .containsExactlyInAnyOrder("John", "John", "Jane")
+            .hasSize(3);
     }
 
     @Test
@@ -259,7 +285,7 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
     void shouldExtendSimpleQuerydslJdbcRepository() {
         // then
         then(repository).isInstanceOf(QuerydslJdbcRepository.class)
-                        .isNotInstanceOf(CustomQuerydslJdbcRepository.class);
+            .isNotInstanceOf(CustomQuerydslJdbcRepository.class);
     }
 
     @Transactional
@@ -270,9 +296,9 @@ public class QuerydslJdbcRepositoryTest extends TestBase {
 
         // when
         sqlQueryFactory.insert(person)
-                       .columns(person.firstName, person.lastName, person.createdAt)
-                       .values(givenPerson.firstName(), givenPerson.lastName(), givenPerson.createdAt())
-                       .execute();
+            .columns(person.firstName, person.lastName, person.createdAt)
+            .values(givenPerson.firstName(), givenPerson.lastName(), givenPerson.createdAt())
+            .execute();
         repository.save(givenPerson);
 
         // then
