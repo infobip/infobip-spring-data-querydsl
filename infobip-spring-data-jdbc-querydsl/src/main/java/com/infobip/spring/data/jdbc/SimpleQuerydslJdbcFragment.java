@@ -66,8 +66,9 @@ public class SimpleQuerydslJdbcFragment<T> implements QuerydslJdbcFragment<T> {
     }
 
 	@Override
-	public Page<T> queryMany(Function<SQLQuery<?>, SQLQuery<T>> query, Pageable pageable) {
-		return querydslJdbcPredicateExecutor.queryMany(query.apply(sqlQueryFactory.query()), pageable);
+	public Page<T> queryMany(Function<SQLQuery<T>, SQLQuery<T>> query, Pageable pageable) {
+        var newQuery = sqlQueryFactory.query().select(entityProjection());
+		return querydslJdbcPredicateExecutor.queryMany(query.apply(newQuery), pageable);
 	}
 
     @Override

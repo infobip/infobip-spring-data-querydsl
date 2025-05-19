@@ -27,7 +27,7 @@ public interface QuerydslJdbcFragment<T> {
 
     List<T> queryMany(Function<SQLQuery<?>, SQLQuery<T>> query);
 
-    Page<T> queryMany(Function<SQLQuery<?>, SQLQuery<T>> query, Pageable pageable);
+    Page<T> queryMany(Function<SQLQuery<T>, SQLQuery<T>> query, Pageable pageable);
 
     /**
      * @return amount of affected rows

@@ -188,7 +188,7 @@ public class QuerydslJdbcPredicateExecutor<T> implements QuerydslPredicateExecut
         Assert.notNull(query, "Query must not be null!");
         Assert.notNull(pageable, "Pageable must not be null!");
 
-        var content = queryMany(querydsl.applyPagination(pageable, query).select(constructorExpression));
+        var content = queryMany(querydsl.applyPagination(pageable, query));
 
         return PageableExecutionUtils.getPage(content, pageable, query::fetchCount);
     }
