@@ -1,3 +1,6 @@
+### 9.1.0
+* Paging query in My Custom Repostiory [#108](/../../issues/108)
+
 ### 9.0.8
 * ProjectTableCaseFormat and ProjectColumnCaseFormat does not work [#107](/../../issues/107)
 
