@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.infobip</groupId>
+	<artifactId>infobip-spring-data-bom</artifactId>
+	<version>9.2.0-SNAPSHOT</version>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.infobip</groupId>
+				<artifactId>infobip-spring-data-common</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.infobip</groupId>
+				<artifactId>infobip-spring-data-jpa-querydsl</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.infobip</groupId>
+				<artifactId>infobip-spring-data-jpa-querydsl-boot-starter</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.infobip</groupId>
+				<artifactId>infobip-spring-data-jdbc-querydsl</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.infobip</groupId>
+				<artifactId>infobip-spring-data-jdbc-querydsl-boot-starter</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.infobip</groupId>
+				<artifactId>infobip-spring-data-jdbc-annotation-processor</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.infobip</groupId>
+				<artifactId>infobip-spring-data-jdbc-annotation-processor-common</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.infobip</groupId>
+				<artifactId>infobip-spring-data-r2dbc-querydsl</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.infobip</groupId>
+				<artifactId>infobip-spring-data-r2dbc-querydsl-boot-starter</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+</project>

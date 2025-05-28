@@ -1,3 +1,6 @@
+### 9.2.0
+* Added BOM (Bill of materials)
+
 ### 9.1.0
 * Paging query in My Custom Repostiory [#108](/../../issues/108)
 
