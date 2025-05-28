@@ -7,6 +7,55 @@
 	<groupId>com.infobip</groupId>
 	<artifactId>infobip-spring-data-bom</artifactId>
 	<version>9.2.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>Infobip Spring Data Querydsl</name>
+
+	<description>
+		Infobip Spring Data Querydsl provides new functionality that enables the user to leverage the full power of Querydsl API on top of Spring Data repository infrastructure.
+	</description>
+
+	<organization>
+		<name>Infobip Ltd.</name>
+		<url>https://www.infobip.com/</url>
+	</organization>
+
+	<url>https://github.com/infobip/infobip-spring-data-querydsl</url>
+
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+			<comments>A business-friendly OSS license</comments>
+		</license>
+	</licenses>
+
+	<scm>
+		<url>https://github.com/infobip/infobip-spring-data-querydsl.git</url>
+		<connection>scm:git:git://github.com:infobip/infobip-spring-data-querydsl.git</connection>
+		<developerConnection>scm:git:git@github.com:infobip/infobip-spring-data-querydsl.git</developerConnection>
+		<tag>HEAD</tag>
+	</scm>
+
+	<developers>
+		<developer>
+			<id>lpandzic</id>
+			<name>Lovro Pandžić</name>
+			<email>lovro.pandzic@infobip.com</email>
+			<organization>Infobip Ltd.</organization>
+		</developer>
+		<developer>
+			<id>tstavinoha</id>
+			<name>Tin Stavinoha</name>
+			<email>tin.stavinoha@infobip.com</email>
+			<organization>Infobip Ltd.</organization>
+		</developer>
+	</developers>
+
+	<properties>
+		<maven-gpg-plugin.version>3.1.0</maven-gpg-plugin.version>
+	</properties>
 
 	<dependencyManagement>
 		<dependencies>
@@ -57,5 +106,43 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+
+	<profiles>
+		<profile>
+			<id>release-sign-artifacts</id>
+			<activation>
+				<property>
+					<name>performRelease</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>${maven-gpg-plugin.version}</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<distributionManagement>
+		<repository>
+			<id>ossrh</id>
+			<name>SonatypeReleases</name>
+			<url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
 
 </project>
