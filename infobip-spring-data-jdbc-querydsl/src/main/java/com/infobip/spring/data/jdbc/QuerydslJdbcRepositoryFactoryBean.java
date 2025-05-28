@@ -145,10 +145,8 @@ public class QuerydslJdbcRepositoryFactoryBean<T extends Repository<S, ID>, S, I
 
                                                           var sqlGeneratorSource = new SqlGeneratorSource(this.mappingContext, this.converter,
                                                                                                           this.dialect);
-                                                          var sqlParametersFactory = new SqlParametersFactory(this.mappingContext, this.converter,
-                                                                                                              this.dialect);
-                                                          var insertStrategyFactory = new InsertStrategyFactory(this.operations,
-                                                                                                                new BatchJdbcOperations(this.operations.getJdbcOperations()), this.dialect);
+                                                          var sqlParametersFactory = new SqlParametersFactory(this.mappingContext, this.converter);
+                                                          var insertStrategyFactory = new InsertStrategyFactory(this.operations, this.dialect);
                                                           return new DefaultDataAccessStrategy(sqlGeneratorSource, this.mappingContext, this.converter,
                                                                                                this.operations, sqlParametersFactory, insertStrategyFactory);
                                                       });
