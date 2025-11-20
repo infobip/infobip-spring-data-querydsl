@@ -1,3 +1,6 @@
+### 10.0.0
+* upgraded to Spring Boot 4
+
 ### 9.2.0
 * Added BOM (Bill of materials)
 

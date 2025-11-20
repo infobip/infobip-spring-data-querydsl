@@ -14,12 +14,15 @@ public class TestConfiguration {
 
     @Bean(initMethod = "migrate")
     public Flyway flyway() {
-        return new Flyway(Flyway.configure()
-                                .baselineOnMigrate(true)
-                                .dataSource(
-                                        env.getRequiredProperty("spring.flyway.url"),
-                                        env.getRequiredProperty("spring.flyway.username"),
-                                        env.getRequiredProperty("spring.flyway.password"))
+        var flyway = new Flyway(Flyway.configure()
+                                      .cleanDisabled(false)
+                                      .baselineOnMigrate(true)
+                                      .dataSource(
+                                              env.getRequiredProperty("spring.flyway.url"),
+                                              env.getRequiredProperty("spring.flyway.username"),
+                                              env.getRequiredProperty("spring.flyway.password"))
         );
+        flyway.clean();
+        return flyway;
     }
 }
