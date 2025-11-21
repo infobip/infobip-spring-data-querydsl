@@ -66,12 +66,12 @@
 
 	<properties>
 		<!-- DEPENDENCY VERSIONS -->
-		<spring-boot.version>3.5.0</spring-boot.version>
+		<spring-boot.version>4.0.0</spring-boot.version>
 		<querydsl.version>5.1.0</querydsl.version>
 
-		<infobip-testcontainers.version>4.4.4</infobip-testcontainers.version>
+		<infobip-testcontainers.version>5.0.0</infobip-testcontainers.version>
 
-		<auto-service.version>1.0.1</auto-service.version>
+		<auto-service.version>1.1.1</auto-service.version>
 
 		<!-- PLUGIN VERSIONS -->
 		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
@@ -149,6 +149,12 @@
 			<groupId>com.infobip</groupId>
 			<artifactId>infobip-mssql-testcontainers-spring-boot-starter</artifactId>
 			<version>${infobip-testcontainers.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-flyway</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

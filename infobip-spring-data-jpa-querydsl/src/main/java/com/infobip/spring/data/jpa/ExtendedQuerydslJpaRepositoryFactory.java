@@ -35,11 +35,11 @@ public class ExtendedQuerydslJpaRepositoryFactory extends JpaRepositoryFactory {
         var fragments = super.getRepositoryFragments(metadata);
         JpaEntityInformation<?, Serializable> entityInformation = getEntityInformation(metadata.getDomainType());
         var path = entityPathResolver.createPath(entityInformation.getJavaType());
-        var simpleJPAQuerydslFragment = getTargetRepositoryViaReflection(SimpleQuerydslJpaFragment.class,
-                                                                         path,
-                                                                         jpaQueryFactory,
-                                                                         jpaSQLQueryFactory,
-                                                                         entityManager);
+        var simpleJPAQuerydslFragment = instantiateClass(SimpleQuerydslJpaFragment.class,
+                                                         path,
+                                                         jpaQueryFactory,
+                                                         jpaSQLQueryFactory,
+                                                         entityManager);
         var fragment = RepositoryFragment.implemented(simpleJPAQuerydslFragment);
         return fragments.append(fragment);
     }

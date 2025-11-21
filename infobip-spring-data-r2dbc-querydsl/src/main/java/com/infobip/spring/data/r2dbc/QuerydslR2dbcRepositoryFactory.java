@@ -75,13 +75,13 @@ public class QuerydslR2dbcRepositoryFactory extends R2dbcRepositoryFactory {
 
     private RepositoryFragment<Object> createSimpleQuerydslR2dbcFragment(RelationalPath<?> path,
                                                                          ConstructorExpression<?> constructor) {
-        var simpleJPAQuerydslFragment = getTargetRepositoryViaReflection(SimpleQuerydslR2dbcFragment.class,
-                                                                         sqlQueryFactory,
-                                                                         constructor,
-                                                                         path,
-                                                                         databaseClient,
-                                                                         converter,
-                                                                         querydslParameterBinder);
+        var simpleJPAQuerydslFragment = instantiateClass(SimpleQuerydslR2dbcFragment.class,
+                                                         sqlQueryFactory,
+                                                         constructor,
+                                                         path,
+                                                         databaseClient,
+                                                         converter,
+                                                         querydslParameterBinder);
         return RepositoryFragment.implemented(simpleJPAQuerydslFragment);
     }
 
@@ -93,7 +93,7 @@ public class QuerydslR2dbcRepositoryFactory extends R2dbcRepositoryFactory {
         var entity = context.getRequiredPersistentEntity(constructorExpression.getType());
 
         var querydsl = new Querydsl(sqlQueryFactory, entity);
-        var querydslJdbcPredicateExecutor = getTargetRepositoryViaReflection(
+        var querydslJdbcPredicateExecutor = instantiateClass(
                 ReactiveQuerydslR2dbcPredicateExecutor.class,
                 constructorExpression,
                 path,

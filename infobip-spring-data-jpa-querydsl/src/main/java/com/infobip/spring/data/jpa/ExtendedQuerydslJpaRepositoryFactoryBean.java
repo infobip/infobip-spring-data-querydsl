@@ -58,14 +58,6 @@ public class ExtendedQuerydslJpaRepositoryFactoryBean<T extends Repository<S, ID
     }
 
     @Autowired
-    public void setQueryMethodFactory(@Nullable JpaQueryMethodFactory factory) {
-        super.setQueryMethodFactory(factory);
-        if (factory != null) {
-            this.queryMethodFactory = factory;
-        }
-    }
-
-    @Autowired
     public void setJPAQueryFactory(JPAQueryFactory jpaQueryFactory) {
         this.jpaQueryFactory = jpaQueryFactory;
     }

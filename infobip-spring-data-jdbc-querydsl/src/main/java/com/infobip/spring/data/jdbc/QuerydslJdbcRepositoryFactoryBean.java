@@ -22,7 +22,6 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.jdbc.core.convert.*;
-import org.springframework.data.jdbc.repository.QueryMappingConfiguration;
 import org.springframework.data.jdbc.repository.support.JdbcRepositoryFactoryBean;
 import org.springframework.data.mapping.callback.EntityCallbacks;
 import org.springframework.data.relational.core.dialect.Dialect;
@@ -42,7 +41,6 @@ public class QuerydslJdbcRepositoryFactoryBean<T extends Repository<S, ID>, S, I
     private DataAccessStrategy dataAccessStrategy;
     private QueryMappingConfiguration queryMappingConfiguration = QueryMappingConfiguration.EMPTY;
     private NamedParameterJdbcOperations operations;
-    private EntityCallbacks entityCallbacks;
     private SQLQueryFactory sqlQueryFactory;
     private Dialect dialect;
 
@@ -68,7 +66,6 @@ public class QuerydslJdbcRepositoryFactoryBean<T extends Repository<S, ID>, S, I
                                                                       operations,
                                                                       sqlQueryFactory);
         jdbcRepositoryFactory.setQueryMappingConfiguration(queryMappingConfiguration);
-        jdbcRepositoryFactory.setEntityCallbacks(entityCallbacks);
 
         return jdbcRepositoryFactory;
     }
@@ -134,6 +131,10 @@ public class QuerydslJdbcRepositoryFactoryBean<T extends Repository<S, ID>, S, I
             this.operations = beanFactory.getBean(NamedParameterJdbcOperations.class);
         }
 
+        if (this.queryMappingConfiguration == null) {
+            this.queryMappingConfiguration = QueryMappingConfiguration.EMPTY;
+        }
+
         if (this.dataAccessStrategy == null) {
 
             Assert.state(beanFactory != null, "If no DataAccessStrategy is set a BeanFactory must be available.");
@@ -148,16 +149,8 @@ public class QuerydslJdbcRepositoryFactoryBean<T extends Repository<S, ID>, S, I
                                                           var sqlParametersFactory = new SqlParametersFactory(this.mappingContext, this.converter);
                                                           var insertStrategyFactory = new InsertStrategyFactory(this.operations, this.dialect);
                                                           return new DefaultDataAccessStrategy(sqlGeneratorSource, this.mappingContext, this.converter,
-                                                                                               this.operations, sqlParametersFactory, insertStrategyFactory);
+                                                                                               this.operations, sqlParametersFactory, insertStrategyFactory, queryMappingConfiguration);
                                                       });
-        }
-
-        if (this.queryMappingConfiguration == null) {
-            this.queryMappingConfiguration = QueryMappingConfiguration.EMPTY;
-        }
-
-        if (beanFactory != null) {
-            entityCallbacks = EntityCallbacks.create(beanFactory);
         }
 
         super.afterPropertiesSet();

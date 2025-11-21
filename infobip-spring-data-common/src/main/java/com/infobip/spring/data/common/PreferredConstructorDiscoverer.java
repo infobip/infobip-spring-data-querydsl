@@ -6,9 +6,9 @@ import kotlin.reflect.jvm.ReflectJvmMapping;
 import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.data.annotation.PersistenceCreator;
+import org.springframework.data.core.TypeInformation;
 import org.springframework.data.mapping.*;
 import org.springframework.data.util.KotlinReflectionUtils;
-import org.springframework.data.util.TypeInformation;
 import org.springframework.lang.Nullable;
 
 import java.lang.reflect.Constructor;

@@ -79,7 +79,7 @@ public class QuerydslJdbcRepositoryFactory extends JdbcRepositoryFactory {
                 constructorExpression,
                 path,
                 querydslJdbcPredicateExecutor
-                                                                         );
+        );
         return fragments.append(implemented(simpleQuerydslJdbcFragment))
                         .append(implemented(querydslJdbcPredicateExecutor));
     }
@@ -89,21 +89,21 @@ public class QuerydslJdbcRepositoryFactory extends JdbcRepositoryFactory {
                                                                                  RelationalPathBase<?> path) {
         var entity = context.getRequiredPersistentEntity(metadata.getDomainType());
         var querydsl = new Querydsl(sqlQueryFactory, entity);
-        return getTargetRepositoryViaReflection(QuerydslJdbcPredicateExecutor.class,
-                                                entity,
-                                                converter,
-                                                constructorExpression,
-                                                path,
-                                                querydsl);
+        return instantiateClass(QuerydslJdbcPredicateExecutor.class,
+                                entity,
+                                converter,
+                                constructorExpression,
+                                path,
+                                querydsl);
     }
 
     private SimpleQuerydslJdbcFragment<?> createSimpleQuerydslJdbcFragment(ConstructorExpression<?> constructor,
                                                                            RelationalPath<?> path,
                                                                            QuerydslPredicateExecutor<?> executor) {
-        return getTargetRepositoryViaReflection(SimpleQuerydslJdbcFragment.class,
-                                                executor,
-                                                sqlQueryFactory,
-                                                constructor,
-                                                path);
+        return instantiateClass(SimpleQuerydslJdbcFragment.class,
+                                executor,
+                                sqlQueryFactory,
+                                constructor,
+                                path);
     }
 }
