@@ -1,4 +1,7 @@
-### 10.0.0
+### 10.0.3
+Fixed release for all modules
+
+### 10.0.0 - 10.0.2 (failed or semi failed releases)
 * upgraded to Spring Boot 4
 
 ### 9.2.0
