@@ -9,6 +9,7 @@
 	</parent>
 
 	<artifactId>infobip-spring-data-jpa-querydsl</artifactId>
+	<name>infobip-spring-data-jpa-querydsl</name>
 
 	<properties>
 		<!-- PLUGIN VERSIONS -->

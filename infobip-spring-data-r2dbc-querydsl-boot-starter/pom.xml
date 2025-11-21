@@ -9,6 +9,7 @@
     </parent>
 
     <artifactId>infobip-spring-data-r2dbc-querydsl-boot-starter</artifactId>
+    <name>infobip-spring-data-r2dbc-querydsl-boot-starter</name>
 
     <dependencies>
         <dependency>

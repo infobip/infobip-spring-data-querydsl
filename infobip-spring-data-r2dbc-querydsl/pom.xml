@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>infobip-spring-data-r2dbc-querydsl</artifactId>
+    <name>infobip-spring-data-r2dbc-querydsl</name>
 
     <properties>
         <jasync-r2dbc-mysql.version>2.1.13</jasync-r2dbc-mysql.version>

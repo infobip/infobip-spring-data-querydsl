@@ -7,7 +7,7 @@
 	<version>10.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>Infobip Spring Data Querydsl</name>
+	<name>infobip-spring-data-bom</name>
 
 	<description>
 		Infobip Spring Data Querydsl provides new functionality that enables the user to leverage the full power of Querydsl API on top of Spring Data repository infrastructure.

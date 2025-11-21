@@ -9,6 +9,7 @@
     </parent>
 
     <artifactId>infobip-spring-data-common</artifactId>
+    <name>infobip-spring-data-common</name>
 
     <properties>
         <guava.version>32.0.0-jre</guava.version>

@@ -10,6 +10,7 @@
 	</parent>
 
 	<artifactId>infobip-spring-data-jdbc-querydsl</artifactId>
+	<name>infobip-spring-data-jdbc-querydsl</name>
 
 	<dependencies>
 		<dependency>

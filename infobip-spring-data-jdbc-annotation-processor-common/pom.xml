@@ -9,6 +9,7 @@
     </parent>
 
     <artifactId>infobip-spring-data-jdbc-annotation-processor-common</artifactId>
+    <name>infobip-spring-data-jdbc-annotation-processor-common</name>
 
     <properties>
         <!-- DEPENDENCY VERSIONS -->
