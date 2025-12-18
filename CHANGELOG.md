@@ -1,3 +1,6 @@
+### 10.0.4
+* Fix for build failed when an entity is defined as a nested class [#111](/../../issues/111)
+
 ### 10.0.3
 Fixed release for all modules
 
