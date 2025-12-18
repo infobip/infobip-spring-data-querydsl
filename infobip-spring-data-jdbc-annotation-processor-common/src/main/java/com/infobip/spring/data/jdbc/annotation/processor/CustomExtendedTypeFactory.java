@@ -138,7 +138,10 @@ public class CustomExtendedTypeFactory extends ExtendedTypeFactory {
 
     protected String getTableName(EntityType model) {
         var simpleName = model.getSimpleName();
-        var className = model.getPackageName() + "." + simpleName;
+        var enclosingType = Optional.ofNullable(model.getEnclosingType())
+                                    .map(type -> "." + type.getSimpleName())
+                                    .orElse("");
+        var className = model.getPackageName() + enclosingType + "." + simpleName;
         var tableName = CaseFormat.UPPER_CAMEL.to(tableCaseFormat, simpleName);
         return Optional.ofNullable(elements.getTypeElement(className)
                                            .getAnnotation(Table.class))

@@ -76,6 +76,19 @@ public class SpringDataJdbcAnnotationProcessorTest {
     }
 
     @Test
+    void shouldCreateNestedQClassWithTableAndColumnAnnotationsWithCompileTesting() {
+
+        // given
+        var givenSource = givenSource(Nest.NestedFoo.class);
+
+        // when
+        var actual = whenCompile(givenSource);
+
+        // then
+        thenShouldGenerateSourceFile(actual, QNest_NestedFoo.class);
+    }
+
+    @Test
     void shouldCreateSimpleQClassWithTableNameAndColumnAnnotationsWithCompileTesting() {
 
         // given
