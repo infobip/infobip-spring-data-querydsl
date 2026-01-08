@@ -19,7 +19,6 @@ public class MatchRepositoryTest extends TestBase {
 
         // when
         var actual = repository.queryMany(q -> q.select(repository.entityProjection()).from(QMatch.match));
-//        var actual = repository.findAll();
 
         // then
         then(actual).usingRecursiveFieldByFieldElementComparatorIgnoringFields("matchId")
