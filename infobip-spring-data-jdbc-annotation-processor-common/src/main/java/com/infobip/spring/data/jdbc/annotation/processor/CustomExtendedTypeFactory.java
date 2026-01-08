@@ -69,7 +69,7 @@ public class CustomExtendedTypeFactory extends ExtendedTypeFactory {
                           .stream()
                           .flatMap(property -> {
                               if (Embeddeds.isEmbedded(configuration, element, property)) {
-                                  return flattenEmbeddedProperty(property);
+                                  return flattenEmbeddedProperty(element, property);
                               }
 
                               return Stream.of(property);
@@ -98,14 +98,42 @@ public class CustomExtendedTypeFactory extends ExtendedTypeFactory {
         return defaultSchemaElements.iterator().next().getAnnotation(DefaultSchema.class).value();
     }
 
-    private Stream<Property> flattenEmbeddedProperty(Property property) {
+    private Stream<Property> flattenEmbeddedProperty(Element parentElement, Property property) {
         var type = property.getType();
 
         if (!type.getCategory().equals(TypeCategory.ENTITY)) {
             return Stream.of(property);
         }
 
-        return ((EntityType) type).getProperties().stream();
+        var prefix = getEmbeddedPrefix(parentElement, property);
+
+        return ((EntityType) type).getProperties().stream()
+                .map(embeddedProperty -> createPrefixedProperty(property, embeddedProperty, prefix));
+    }
+
+    private String getEmbeddedPrefix(Element parentElement, Property property) {
+        return parentElement.getEnclosedElements()
+                           .stream()
+                           .filter(element -> element.getKind().equals(ElementKind.FIELD))
+                           .filter(element -> element.getSimpleName().toString().equals(property.getName()))
+                           .findFirst()
+                           .map(element -> element.getAnnotation(org.springframework.data.relational.core.mapping.Embedded.class))
+                           .map(org.springframework.data.relational.core.mapping.Embedded::prefix)
+                           .orElse("");
+    }
+
+    private Property createPrefixedProperty(Property parentProperty, Property embeddedProperty, String prefix) {
+        var prefixedName = prefix.isEmpty() ? embeddedProperty.getName() :
+                          prefix + StringUtils.capitalize(embeddedProperty.getName());
+
+        var prefixedProperty = new Property(parentProperty.getDeclaringType(),
+                                           prefixedName,
+                                           embeddedProperty.getType());
+
+        prefixedProperty.getData().put("columnPrefix", prefix);
+        prefixedProperty.getData().putAll(embeddedProperty.getData());
+
+        return prefixedProperty;
     }
 
     private void updateModel(Element element, EntityType type) {

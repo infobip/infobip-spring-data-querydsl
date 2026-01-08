@@ -189,6 +189,19 @@ public class SpringDataJdbcAnnotationProcessorTest {
        thenShouldGenerateSourceFile(actual, QEntityWithMappedCollection.class);
     }
 
+    @Test
+    void shouldGenerateMatchWithPrefixedPlayers() {
+        // given
+        var givenSource = givenSource(Match.class);
+
+        // when
+        var actual = whenCompile(givenSource);
+
+        // then
+        thenShouldGenerateSourceFile(actual, QMatch.class);
+        thenShouldGenerateSourceFile(actual, QPlayer.class);
+    }
+
     private void thenShouldGenerateSourceFile(Compilation actual, Class<?> typeClass) {
         assertThat(actual).succeeded();
         assertThat(actual)

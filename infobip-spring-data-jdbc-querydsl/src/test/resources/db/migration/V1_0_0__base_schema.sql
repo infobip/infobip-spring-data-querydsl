@@ -67,3 +67,12 @@ CREATE TABLE StudentCourse
     CONSTRAINT FK_StudentCourseStudent FOREIGN KEY (StudentId) REFERENCES Student (Id)
 );
 
+CREATE TABLE matches
+(
+    matchId        BIGINT IDENTITY,
+    player1_id BIGINT,
+    player1_name NVARCHAR(20),
+    player2_id BIGINT,
+    player2_name NVARCHAR(20),
+)
+
