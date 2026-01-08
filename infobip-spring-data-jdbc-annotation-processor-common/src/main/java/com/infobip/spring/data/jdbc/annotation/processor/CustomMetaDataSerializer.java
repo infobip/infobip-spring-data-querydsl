@@ -93,15 +93,37 @@ public class CustomMetaDataSerializer extends MetaDataSerializer {
     protected String getColumnName(Property property) {
         var parentType = processingEnvironment.getElementUtils()
                                               .getTypeElement(property.getDeclaringType().getFullName());
-        return parentType.getEnclosedElements()
+
+        // Check if property has a column prefix from embedded fields
+        var columnPrefix = (String) property.getData().get("columnPrefix");
+
+        var columnNameFromAnnotation = parentType.getEnclosedElements()
                          .stream()
                          .filter(element -> element instanceof VariableElement)
                          .map(element -> (VariableElement) element)
                          .filter(element -> element.getSimpleName().toString().equals(property.getName()))
                          .filter(element -> element.getAnnotation(Column.class) != null)
                          .map(element -> element.getAnnotation(Column.class).value())
-                         .findAny()
-                         .orElseGet(() -> CaseFormat.LOWER_CAMEL.to(columnCaseFormat, property.getName()));
+                         .findAny();
+
+        if (columnNameFromAnnotation.isPresent()) {
+            return columnNameFromAnnotation.get();
+        }
+
+        // For prefixed embedded properties, extract the original property name after the prefix
+        var propertyName = property.getName();
+        if (columnPrefix != null && !columnPrefix.isEmpty() && propertyName.startsWith(columnPrefix)) {
+            // Extract the original field name (e.g., "player1_Id" -> "Id")
+            var originalFieldName = propertyName.substring(columnPrefix.length());
+            // Convert first char to lowercase to get proper camelCase (e.g., "Id" -> "id")
+            if (!originalFieldName.isEmpty()) {
+                originalFieldName = Character.toLowerCase(originalFieldName.charAt(0)) + originalFieldName.substring(1);
+            }
+            // Generate column name: prefix + converted field name
+            return columnPrefix + CaseFormat.LOWER_CAMEL.to(columnCaseFormat, originalFieldName);
+        }
+
+        return CaseFormat.LOWER_CAMEL.to(columnCaseFormat, propertyName);
     }
 
     static class CustomPropertiesEntityType extends EntityType {
