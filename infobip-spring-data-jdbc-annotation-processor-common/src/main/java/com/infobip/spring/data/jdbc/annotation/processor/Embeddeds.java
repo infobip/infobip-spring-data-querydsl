@@ -2,10 +2,12 @@ package com.infobip.spring.data.jdbc.annotation.processor;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.util.ElementFilter;
+import java.lang.annotation.Annotation;
 import java.util.Objects;
 
 import com.querydsl.apt.Configuration;
 import com.querydsl.codegen.Property;
+import org.springframework.data.relational.core.mapping.Embedded;
 
 class Embeddeds {
 
@@ -24,8 +26,7 @@ class Embeddeds {
                             .filter(enclosedElement -> enclosedElement.getSimpleName()
                                                                       .toString()
                                                                       .equals(property.getName()))
-                            .allMatch(enclosedElement -> Objects.nonNull(
-                                    enclosedElement.getAnnotation(embeddedAnnotation)));
+                            .allMatch(Embeddeds::hasEmbeddedAnnotation);
     }
 
     static boolean isEmbedded(Configuration configuration, Element element) {
@@ -36,6 +37,16 @@ class Embeddeds {
             return false;
         }
 
-        return Objects.nonNull(element.getAnnotation(embeddedAnnotation));
+        return hasEmbeddedAnnotation(element);
+    }
+
+    private static boolean hasEmbeddedAnnotation(Element element) {
+        return hasAnnotation(element, Embedded.class)
+               || hasAnnotation(element, Embedded.Empty.class)
+               || hasAnnotation(element, Embedded.Nullable.class);
+    }
+
+    private static boolean hasAnnotation(Element element, Class<? extends Annotation> annotationType) {
+        return Objects.nonNull(element.getAnnotation(annotationType));
     }
 }

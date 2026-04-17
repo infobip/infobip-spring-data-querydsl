@@ -23,6 +23,7 @@ import com.querydsl.codegen.Property;
 import com.querydsl.codegen.QueryTypeFactory;
 import com.querydsl.codegen.TypeMappings;
 import com.querydsl.codegen.utils.model.TypeCategory;
+import org.springframework.data.relational.core.mapping.Embedded;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.util.StringUtils;
 
@@ -117,9 +118,27 @@ public class CustomExtendedTypeFactory extends ExtendedTypeFactory {
                            .filter(element -> element.getKind().equals(ElementKind.FIELD))
                            .filter(element -> element.getSimpleName().toString().equals(property.getName()))
                            .findFirst()
-                           .map(element -> element.getAnnotation(org.springframework.data.relational.core.mapping.Embedded.class))
-                           .map(org.springframework.data.relational.core.mapping.Embedded::prefix)
+                           .map(CustomExtendedTypeFactory::extractEmbeddedPrefix)
                            .orElse("");
+    }
+
+    private static String extractEmbeddedPrefix(Element element) {
+        var embedded = element.getAnnotation(Embedded.class);
+        if (Objects.nonNull(embedded)) {
+            return embedded.prefix();
+        }
+
+        var embeddedEmpty = element.getAnnotation(Embedded.Empty.class);
+        if (Objects.nonNull(embeddedEmpty)) {
+            return embeddedEmpty.prefix();
+        }
+
+        var embeddedNullable = element.getAnnotation(Embedded.Nullable.class);
+        if (Objects.nonNull(embeddedNullable)) {
+            return embeddedNullable.prefix();
+        }
+
+        return "";
     }
 
     private Property createPrefixedProperty(Property parentProperty, Property embeddedProperty, String prefix) {
