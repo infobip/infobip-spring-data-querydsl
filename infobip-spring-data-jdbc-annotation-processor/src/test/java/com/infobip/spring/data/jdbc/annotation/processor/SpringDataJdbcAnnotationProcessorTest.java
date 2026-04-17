@@ -190,6 +190,32 @@ public class SpringDataJdbcAnnotationProcessorTest {
     }
 
     @Test
+    void shouldGenerateEmbeddedEmptyQClass() {
+        // given
+        var givenSource = givenSource(EntityWithEmbeddedEmpty.class);
+
+        // when
+        var actual = whenCompile(givenSource);
+
+        // then
+        thenShouldGenerateSourceFile(actual, "QEntityWithEmbeddedEmpty");
+        thenShouldGenerateSourceFile(actual, "QEmbeddedClass");
+    }
+
+    @Test
+    void shouldGenerateEmbeddedNullableQClass() {
+        // given
+        var givenSource = givenSource(EntityWithEmbeddedNullable.class);
+
+        // when
+        var actual = whenCompile(givenSource);
+
+        // then
+        thenShouldGenerateSourceFile(actual, "QEntityWithEmbeddedNullable");
+        thenShouldGenerateSourceFile(actual, "QEmbeddedClass");
+    }
+
+    @Test
     void shouldGenerateMatchWithPrefixedPlayers() {
         // given
         var givenSource = givenSource(Match.class);
@@ -203,10 +229,15 @@ public class SpringDataJdbcAnnotationProcessorTest {
     }
 
     private void thenShouldGenerateSourceFile(Compilation actual, Class<?> typeClass) {
+        thenShouldGenerateSourceFile(actual, typeClass.getSimpleName());
+    }
+
+    private void thenShouldGenerateSourceFile(Compilation actual, String simpleClassName) {
+        var fullName = "com.infobip.spring.data.jdbc.annotation.processor." + simpleClassName;
         assertThat(actual).succeeded();
         assertThat(actual)
-                .generatedSourceFile(typeClass.getName())
-                .hasSourceEquivalentTo(JavaFileObjects.forResource("expected/" + typeClass.getSimpleName() + ".java"));
+                .generatedSourceFile(fullName)
+                .hasSourceEquivalentTo(JavaFileObjects.forResource("expected/" + simpleClassName + ".java"));
     }
 
     private JavaFileObject givenSource(Class<?> type) {
