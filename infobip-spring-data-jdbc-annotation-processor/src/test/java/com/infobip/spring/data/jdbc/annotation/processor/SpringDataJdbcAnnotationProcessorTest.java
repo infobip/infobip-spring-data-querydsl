@@ -199,7 +199,7 @@ public class SpringDataJdbcAnnotationProcessorTest {
 
         // then
         thenShouldGenerateSourceFile(actual, QEntityWithEmbeddedEmpty.class);
-        thenShouldGenerateSourceFile(actual, QEmbeddedClass.class);
+        thenShouldGenerateSourceFile(actual, QEntityWithEmbeddedEmptyEmbeddedClass.class);
     }
 
     @Test
@@ -212,7 +212,7 @@ public class SpringDataJdbcAnnotationProcessorTest {
 
         // then
         thenShouldGenerateSourceFile(actual, QEntityWithEmbeddedNullable.class);
-        thenShouldGenerateSourceFile(actual, QEmbeddedClass.class);
+        thenShouldGenerateSourceFile(actual, QEntityWithEmbeddedNullableEmbeddedClass.class);
     }
 
     @Test

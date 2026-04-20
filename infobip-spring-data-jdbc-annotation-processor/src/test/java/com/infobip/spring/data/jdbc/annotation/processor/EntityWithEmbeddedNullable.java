@@ -10,10 +10,10 @@ public class EntityWithEmbeddedNullable {
     private final Long id;
 
     @Embedded.Nullable
-    private final EmbeddedClass embeddedClass;
+    private final EntityWithEmbeddedNullableEmbeddedClass embeddedClass;
 
     public EntityWithEmbeddedNullable(Long id,
-                                      EmbeddedClass embeddedClass) {
+                                      EntityWithEmbeddedNullableEmbeddedClass embeddedClass) {
         this.id = id;
         this.embeddedClass = embeddedClass;
     }

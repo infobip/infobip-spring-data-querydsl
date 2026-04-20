@@ -10,10 +10,10 @@ public class EntityWithEmbeddedEmpty {
     private final Long id;
 
     @Embedded.Empty
-    private final EmbeddedClass embeddedClass;
+    private final EntityWithEmbeddedEmptyEmbeddedClass embeddedClass;
 
     public EntityWithEmbeddedEmpty(Long id,
-                                   EmbeddedClass embeddedClass) {
+                                   EntityWithEmbeddedEmptyEmbeddedClass embeddedClass) {
         this.id = id;
         this.embeddedClass = embeddedClass;
     }
