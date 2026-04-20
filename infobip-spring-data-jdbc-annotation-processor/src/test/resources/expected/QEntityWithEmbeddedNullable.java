@@ -20,7 +20,7 @@ import java.sql.Types;
 @Generated("com.infobip.spring.data.jdbc.annotation.processor.CustomMetaDataSerializer")
 public class QEntityWithEmbeddedNullable extends com.querydsl.sql.RelationalPathBase<EntityWithEmbeddedNullable> {
 
-    private static final long serialVersionUID = -229043138;
+    private static final long serialVersionUID = 1557633471;
 
     public static final QEntityWithEmbeddedNullable entityWithEmbeddedNullable = new QEntityWithEmbeddedNullable("EntityWithEmbeddedNullable");
 

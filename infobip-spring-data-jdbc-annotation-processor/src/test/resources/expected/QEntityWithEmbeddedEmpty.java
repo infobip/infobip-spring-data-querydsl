@@ -20,7 +20,7 @@ import java.sql.Types;
 @Generated("com.infobip.spring.data.jdbc.annotation.processor.CustomMetaDataSerializer")
 public class QEntityWithEmbeddedEmpty extends com.querydsl.sql.RelationalPathBase<EntityWithEmbeddedEmpty> {
 
-    private static final long serialVersionUID = -229043138;
+    private static final long serialVersionUID = 738162607;
 
     public static final QEntityWithEmbeddedEmpty entityWithEmbeddedEmpty = new QEntityWithEmbeddedEmpty("EntityWithEmbeddedEmpty");
 
