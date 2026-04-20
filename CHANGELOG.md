@@ -1,3 +1,6 @@
+### 10.0.6
+* Add support for @Embedded.Empty and @Embedded.Nullable prefix attribute in annotation processor [#118](/../../issues/118)
+
 ### 10.0.5
 * Add support for @Embedded prefix attribute in annotation processor [#113](/../../issues/113)
 
