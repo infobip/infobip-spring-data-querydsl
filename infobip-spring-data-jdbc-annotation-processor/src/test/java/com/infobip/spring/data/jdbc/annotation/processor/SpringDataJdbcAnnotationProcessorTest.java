@@ -198,8 +198,8 @@ public class SpringDataJdbcAnnotationProcessorTest {
         var actual = whenCompile(givenSource);
 
         // then
-        thenShouldGenerateSourceFile(actual, "QEntityWithEmbeddedEmpty");
-        thenShouldGenerateSourceFile(actual, "QEmbeddedClass");
+        thenShouldGenerateSourceFile(actual, QEntityWithEmbeddedEmpty.class);
+        thenShouldGenerateSourceFile(actual, QEmbeddedClass.class);
     }
 
     @Test
@@ -211,8 +211,8 @@ public class SpringDataJdbcAnnotationProcessorTest {
         var actual = whenCompile(givenSource);
 
         // then
-        thenShouldGenerateSourceFile(actual, "QEntityWithEmbeddedNullable");
-        thenShouldGenerateSourceFile(actual, "QEmbeddedClass");
+        thenShouldGenerateSourceFile(actual, QEntityWithEmbeddedNullable.class);
+        thenShouldGenerateSourceFile(actual, QEmbeddedClass.class);
     }
 
     @Test
