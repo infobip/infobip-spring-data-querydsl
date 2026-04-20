@@ -5,7 +5,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
 import java.lang.annotation.Annotation;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
@@ -142,9 +141,7 @@ public abstract class SpringDataJdbcAnnotationProcessorBase extends AbstractQuer
         var types = processingEnv.getTypeUtils();
         var embeddedElements = ElementFilter.fieldsIn(entityElement.getEnclosedElements())
                                             .stream()
-                                            .filter(enclosedElement -> Objects.nonNull(
-                                                                    enclosedElement.getAnnotation(
-                                                                            conf.getEmbeddedAnnotation())))
+                                            .filter(enclosedElement -> Embeddeds.isEmbedded(conf, enclosedElement))
                                             .map(element -> types.asElement(element.asType()))
                                             .filter(element -> element instanceof TypeElement)
                                             .map(element -> (TypeElement) element)
