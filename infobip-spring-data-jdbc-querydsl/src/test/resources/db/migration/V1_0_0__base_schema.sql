@@ -15,6 +15,14 @@ CREATE TABLE PersonSettings
     CONSTRAINT FK_PersonSettings_PersonId FOREIGN KEY (PersonId) REFERENCES Person (Id) ON DELETE CASCADE
 );
 
+CREATE TABLE PersonWithEmbeddedId
+(
+    FirstName NVARCHAR(20) NOT NULL,
+    LastName  NVARCHAR(20) NOT NULL,
+    CreatedAt DATETIME2,
+    CONSTRAINT PK_PersonWithEmbeddedId PRIMARY KEY (FirstName, LastName)
+);
+
 CREATE TABLE NoArgsEntity
 (
     Id    BIGINT IDENTITY,
