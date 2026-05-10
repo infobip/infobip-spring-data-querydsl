@@ -138,12 +138,12 @@ public class QuerydslExpressionFactory {
     private Optional<Field> getEmbeddedField(Class<?> type, Parameter parameter) {
         return Stream.of(type.getDeclaredFields())
                      .filter(field -> field.getName().equals(parameter.getName()))
-                     .filter(field -> field.isAnnotationPresent(Embedded.class))
+                     .filter(field -> Objects.nonNull(AnnotationUtils.findAnnotation(field, Embedded.class)))
                      .findAny();
     }
 
     private String getEmbeddedPrefix(Field field) {
-        var embedded = field.getAnnotation(Embedded.class);
+        var embedded = AnnotationUtils.findAnnotation(field, Embedded.class);
         return embedded != null ? embedded.prefix() : "";
     }
 
@@ -209,7 +209,7 @@ public class QuerydslExpressionFactory {
     private Optional<Class<?>> getEmbeddedType(Class<?> type, Parameter parameter) {
         return Stream.of(type.getDeclaredFields())
                      .filter(field -> field.getName().equals(parameter.getName()))
-                     .filter(field -> field.isAnnotationPresent(Embedded.class))
+                     .filter(field -> Objects.nonNull(AnnotationUtils.findAnnotation(field, Embedded.class)))
                      .<Class<?>>map(Field::getType)
                      .findAny();
     }
