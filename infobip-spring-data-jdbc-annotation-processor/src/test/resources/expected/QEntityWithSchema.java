@@ -4,8 +4,10 @@ import static com.querydsl.core.types.PathMetadataFactory.*;
 
 import com.querydsl.core.types.dsl.*;
 
+import com.querydsl.core.types.dsl.StringTemplate;
+
 import com.querydsl.core.types.PathMetadata;
-import javax.annotation.processing.Generated;
+import com.querydsl.core.annotations.Generated;
 import com.querydsl.core.types.Path;
 
 import com.querydsl.sql.ColumnMetadata;
@@ -17,6 +19,7 @@ import java.sql.Types;
 /**
  * QEntityWithSchema is a Querydsl query type for EntityWithSchema
  */
+@SuppressWarnings("this-escape")
 @Generated("com.infobip.spring.data.jdbc.annotation.processor.CustomMetaDataSerializer")
 public class QEntityWithSchema extends com.querydsl.sql.RelationalPathBase<EntityWithSchema> {
 
