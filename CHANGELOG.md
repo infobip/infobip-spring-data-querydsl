@@ -1,3 +1,6 @@
+### 10.0.8
+* Switch Querydsl dependencies from `com.querydsl:*` to `io.github.openfeign.querydsl:*` [#100](/../../issues/100)
+
 ### 10.0.6
 * Add support for @Embedded.Empty and @Embedded.Nullable prefix attribute in annotation processor [#118](/../../issues/118)
 
