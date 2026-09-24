@@ -1,4 +1,4 @@
-### 10.0.8
+### 11.0.0
 * Switch Querydsl dependencies from `com.querydsl:*` to `io.github.openfeign.querydsl:*` [#100](/../../issues/100)
 
 ### 10.0.6
