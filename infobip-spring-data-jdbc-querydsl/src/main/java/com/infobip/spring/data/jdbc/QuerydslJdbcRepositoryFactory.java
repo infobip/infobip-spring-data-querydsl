@@ -41,7 +41,7 @@ public class QuerydslJdbcRepositoryFactory extends JdbcRepositoryFactory {
     private final RelationalMappingContext context;
     private final JdbcConverter converter;
     private final SQLQueryFactory sqlQueryFactory;
-    private final QuerydslExpressionFactory querydslExpressionFactory = new QuerydslExpressionFactory(
+    private final QuerydslExpressionFactory querydslExpressionFactory = new QuerydslJdbcExpressionFactory(
             REPOSITORY_TARGET_TYPE);
 
     public QuerydslJdbcRepositoryFactory(DataAccessStrategy dataAccessStrategy,

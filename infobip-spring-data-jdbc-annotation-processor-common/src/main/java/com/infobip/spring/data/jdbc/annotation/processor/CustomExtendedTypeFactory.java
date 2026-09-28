@@ -5,6 +5,7 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
@@ -22,6 +23,7 @@ import com.querydsl.codegen.EntityType;
 import com.querydsl.codegen.Property;
 import com.querydsl.codegen.QueryTypeFactory;
 import com.querydsl.codegen.TypeMappings;
+import com.querydsl.codegen.utils.model.Type;
 import com.querydsl.codegen.utils.model.TypeCategory;
 import org.springframework.data.relational.core.mapping.Embedded;
 import org.springframework.data.relational.core.mapping.Table;
@@ -30,6 +32,9 @@ import org.springframework.util.StringUtils;
 public class CustomExtendedTypeFactory extends ExtendedTypeFactory {
 
     public static final String IS_EMBEDDED_DATA_KEY = "isEmbedded";
+
+    private static final String AGGREGATE_REFERENCE_TYPE_NAME =
+            "org.springframework.data.jdbc.core.mapping.AggregateReference";
 
     private final Configuration configuration;
     private final Elements elements;
@@ -59,6 +64,35 @@ public class CustomExtendedTypeFactory extends ExtendedTypeFactory {
                || typeElement.getEnclosedElements()
                              .stream()
                              .anyMatch(element -> element.getAnnotation(entityAnn) != null);
+    }
+
+    @Override
+    public Type getType(TypeMirror typeMirror, boolean deep) {
+        return getAggregateReferenceIdType(typeMirror)
+                .map(idType -> super.getType(idType, deep))
+                .orElseGet(() -> super.getType(typeMirror, deep));
+    }
+
+    /**
+     * {@code AggregateReference<T, ID>} is just a wrapper around its identifier of type {@code ID}. To be able
+     * to use it as any other identifier path, the identifier type is extracted and used instead.
+     */
+    private Optional<? extends TypeMirror> getAggregateReferenceIdType(TypeMirror typeMirror) {
+        if (!(typeMirror instanceof DeclaredType declaredType)) {
+            return Optional.empty();
+        }
+
+        if (!(declaredType.asElement() instanceof TypeElement typeElement)
+            || !AGGREGATE_REFERENCE_TYPE_NAME.equals(typeElement.getQualifiedName().toString())) {
+            return Optional.empty();
+        }
+
+        var typeArguments = declaredType.getTypeArguments();
+        if (typeArguments.size() < 2) {
+            return Optional.empty();
+        }
+
+        return Optional.of(typeArguments.get(1));
     }
 
     @Override

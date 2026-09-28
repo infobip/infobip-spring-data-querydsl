@@ -228,6 +228,18 @@ public class SpringDataJdbcAnnotationProcessorTest {
         thenShouldGenerateSourceFile(actual, QPlayer.class);
     }
 
+    @Test
+    void shouldGenerateQClassForAggregateReference() {
+        // given
+        var givenSource = givenSource(EntityWithAggregateReference.class);
+
+        // when
+        var actual = whenCompile(givenSource);
+
+        // then
+        thenShouldGenerateSourceFile(actual, QEntityWithAggregateReference.class);
+    }
+
     private void thenShouldGenerateSourceFile(Compilation actual, Class<?> typeClass) {
         thenShouldGenerateSourceFile(actual, typeClass.getSimpleName());
     }
