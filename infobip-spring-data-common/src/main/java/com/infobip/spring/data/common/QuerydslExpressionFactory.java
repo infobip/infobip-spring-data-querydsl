@@ -75,7 +75,16 @@ public class QuerydslExpressionFactory {
             return resolveNonColumnParameter(type, embeddedConstructorParameterNameToPath, parameter);
         }
 
-        return new ParameterAndExpressionPair(parameter.getType(), path);
+        return new ParameterAndExpressionPair(parameter.getType(), toExpression(parameter, path));
+    }
+
+    /**
+     * Adapts the column {@code expression} so that its type matches the given constructor {@code parameter}. This
+     * allows wrapping expressions, such as Spring Data JDBC's {@code AggregateReference}, whose type is not directly
+     * represented by the generated query path.
+     */
+    protected Expression<?> toExpression(Parameter parameter, Expression<?> expression) {
+        return expression;
     }
 
     private ParameterAndExpressionPair resolveNonColumnParameter(Class<?> type,
@@ -104,8 +113,9 @@ public class QuerydslExpressionFactory {
         if (Set.class.isAssignableFrom(collectionType)) {
             var resolvableType = ResolvableType.forType(parameter.getParameterizedType()).as(Set.class).getGeneric(0);
             var target = Objects.requireNonNull(resolvableType.resolve());
-            Expression<?> qClass = getRelationalPathBaseFromQueryClass(getQueryClass(target));
-            return new ParameterAndExpressionPair(collectionType, new QSet(qClass));
+            var relationalPath = (RelationalPath<?>) getRelationalPathBaseFromQueryClass(getQueryClass(target));
+            return new ParameterAndExpressionPair(collectionType,
+                                                  new QSet(getConstructorExpression(target, relationalPath)));
         }
 
         throw new IllegalArgumentException("Unsupported collection type " + collectionType);
@@ -178,7 +188,7 @@ public class QuerydslExpressionFactory {
                                           "Failed to match parameter " + parameter.getName() +
                                           " to QClass column for " + type);
                               }
-                              return new ParameterAndExpressionPair(parameter.getType(), path);
+                              return new ParameterAndExpressionPair(parameter.getType(), toExpression(parameter, path));
                           })
                           .toList();
 

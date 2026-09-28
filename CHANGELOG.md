@@ -1,3 +1,6 @@
+### 11.0.1
+* Support for AggregateReference field type in annotation processor [#117](/../../issues/117)
+
 ### 11.0.0
 * Switch Querydsl dependencies from `com.querydsl:*` to `io.github.openfeign.querydsl:*` [#100](/../../issues/100)
 

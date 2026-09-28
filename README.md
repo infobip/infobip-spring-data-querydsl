@@ -295,6 +295,9 @@ List<Student> actual = studentRepository.query(query -> query.select(studentRepo
                                                              .fetch());
 ```
 
+`AggregateReference` fields are generated as a path of their identifier type, so `courseId` above is a `NumberPath<Long>` and
+can be used like any other identifier path (e.g. `studentCourse.courseId.eq(courseId)`).
+
 <a id="JDBCStreaming"></a>
 ###  Streaming
 

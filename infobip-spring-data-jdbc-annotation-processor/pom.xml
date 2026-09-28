@@ -33,6 +33,11 @@
 			<version>${compile-testing.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-jdbc</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
     <build>
