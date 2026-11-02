@@ -12,7 +12,7 @@
     <name>infobip-spring-data-common</name>
 
     <properties>
-        <guava.version>32.0.0-jre</guava.version>
+        <guava.version>33.7.1-jre</guava.version>
     </properties>
 
     <dependencies>
