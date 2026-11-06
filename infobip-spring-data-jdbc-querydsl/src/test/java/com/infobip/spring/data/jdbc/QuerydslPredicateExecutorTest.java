@@ -6,6 +6,7 @@ import static org.assertj.core.api.BDDAssertions.then;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
@@ -99,6 +100,21 @@ public class QuerydslPredicateExecutorTest extends TestBase {
         then(actual.getTotalElements()).isEqualTo(2);
         then(actual.getTotalPages()).isEqualTo(2);
         then(actual).containsExactlyInAnyOrder(janeDoe);
+    }
+
+    @Test
+    void shouldFindAllWithPredicateAndUnpagedSortedPageable() {
+        // given
+        var johnDoe = givenSavedPerson("John", "Doe");
+        var johnyRoe = givenSavedPerson("Johny", "Roe");
+        var janeDoe = givenSavedPerson("Jane", "Doe");
+
+        // when
+        Page<Person> actual = executor.findAll(person.lastName.eq("Doe"),
+                Pageable.unpaged(Sort.by(Sort.Order.asc("firstName"))));
+
+        then(actual).containsExactly(janeDoe, johnDoe);
+        then(actual.getTotalElements()).isEqualTo(2);
     }
 
     @Test
