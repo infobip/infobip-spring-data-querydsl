@@ -1,3 +1,6 @@
+### 11.0.2
+* allow a Sort to be applied with Pageable.unpaged(sort) [#125](/../../pull/117)
+
 ### 11.0.1
 * Support for AggregateReference field type in annotation processor [#117](/../../issues/117)
 
