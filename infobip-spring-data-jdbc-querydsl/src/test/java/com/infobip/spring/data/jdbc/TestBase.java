@@ -1,5 +1,6 @@
 package com.infobip.spring.data.jdbc;
 
+import com.infobip.spring.data.jdbc.mapped.collection.StudentCourseRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,12 @@ public abstract class TestBase {
     @Autowired
     private List<CrudRepository<?, ?>> repositories;
 
+    @Autowired
+    private StudentCourseRepository studentCourseRepository;
+
     @AfterEach
     public void clearRepositories() {
+        studentCourseRepository.deleteAll();
         repositories.forEach(CrudRepository::deleteAll);
     }
 }
